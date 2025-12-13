@@ -1,0 +1,54 @@
+<ion-card
+  [style.border]="'2px solid ' + collection()?.color"
+  [style.box-shadow]="'-8px 8px 14px ' + collection()?.color + '50'"
+  class="favorite-card">
+  <ion-fab horizontal="end" class="card-fab">
+    <ion-fab-button size="small" class="option-button-card">
+      <ion-icon name="ellipsis-horizontal-sharp" class="options"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="bottom" class="icon-fab-button" >
+      <ion-button
+        (click)="confirmDelete()"
+        class="delete-collection-button" >
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-fab-list>
+    <ion-fab-list side="start" class="icon-fab-button-horizontal" >
+      <ion-button
+        (click)="addRecipe()"
+        class="add-collection-button" >
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-card-header
+    [style.background]="collection()?.color"
+    class="header-collection ion-padding-horizontal ion-padding">
+    <ion-card-subtitle
+      [style.background]="collection()?.color"
+      class="ion-display-flex ion-text-end ion-justify-content-between">
+      <ion-item
+        lines="none" class="name-collection no-bg-item">
+        <span class="counter-recipe">({{collection()?.recipes?.length ?? 0}})</span>
+        <ion-label>{{collection()?.title}}</ion-label>
+      </ion-item>
+    </ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content class="ion-margin-vertical">
+    <ion-list >
+      @for(recipe of collection()?.recipes; track recipe.id){
+        <ion-item
+          (click)= navToRecipe(recipe.id)
+          [button]="true">
+          <ion-thumbnail slot="start" class="item-recipe">
+            <ion-img
+              class="logo-recipe"
+              alt="recipe image"
+              [src]="recipe.imageUrl"/>
+          </ion-thumbnail>
+          <ion-label>{{recipe.name}}</ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  </ion-card-content>
+</ion-card>

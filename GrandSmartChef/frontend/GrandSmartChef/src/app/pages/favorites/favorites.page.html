@@ -1,0 +1,42 @@
+<app-header></app-header>
+<ion-content (ionScroll)="onScroll($event)" [scrollEvents]="true" [fullscreen]="true">
+  <ion-grid>
+    <ion-row class="header-section-row">
+      <ion-col class="header-section" size="2">
+        <ion-icon class="go-back" name="chevron-back-sharp" (click)="goToBack()"></ion-icon>
+      </ion-col>
+      <ion-col size="10" class="header-section">
+        <ion-icon class="icon-section-title" name="star-half-outline"></ion-icon>
+        <span class="section-title">Mis Favoritos</span>
+      </ion-col>
+    </ion-row>
+    <ion-row class="collection-add">
+      <span class="collection-title">Mis Colecciones</span>
+      <ion-button (click)="openModal()" fill="clear" class="collection-button">
+      <ion-icon class="folder-icon"  name="folder-outline"></ion-icon>
+    </ion-button>
+    </ion-row>
+
+ @if (collections().length === 0) {
+    <ion-row class="empty-collections">
+      <ion-col class="ion-text-center">
+        <ion-icon name="folder-open-outline" size="large"></ion-icon>
+        <p>No existen colecciones creadas</p>
+      </ion-col>
+    </ion-row>
+  } @else {
+    @for (collect of collections(); track collect.id) {
+    <ion-col>
+      <app-collection
+        [collection]="collect"
+        (deleted)="onCollectionDeleted($event)">
+      </app-collection>
+    </ion-col>
+    }
+  }
+  </ion-grid>
+    <app-add-recipe-to-collection-sheet
+    (recipesToAdd)="onRecipesAdded($event)"></app-add-recipe-to-collection-sheet>
+    <app-collection-modal></app-collection-modal>
+  </ion-content>
+<app-footer-nav></app-footer-nav>

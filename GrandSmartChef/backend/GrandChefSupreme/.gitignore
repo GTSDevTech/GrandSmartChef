@@ -1,0 +1,60 @@
+# =========================
+# Java
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+
+# =========================
+# Maven
+# =========================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# =========================
+# Gradle (si se usa)
+# =========================
+.gradle/
+build/
+
+# =========================
+# Lombok
+# =========================
+lombok.config
+
+# =========================
+# Spring Boot
+# =========================
+logs/
+*.log
+
+# =========================
+# Environment / Secrets
+# =========================
+application-local.yml
+application-local.properties
+application-prod.yml
+application-prod.properties
+.env
+
+# =========================
+# IDEs
+# =========================
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db

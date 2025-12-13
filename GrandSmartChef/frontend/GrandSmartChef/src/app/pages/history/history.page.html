@@ -1,0 +1,28 @@
+<app-header></app-header>
+<ion-content (ionScroll)="onScroll($event)" [scrollEvents]="true" [fullscreen]="true">
+  <ion-grid>
+    <ion-row class="header-section-row">
+      <ion-col class="header-section" size="2">
+        <ion-icon class="go-back" name="chevron-back-sharp"></ion-icon>
+      </ion-col>
+      <ion-col size="10" class="header-section">
+        <ion-icon class="icon-section-title" name="calendar"></ion-icon><span class="section-title">Mi Historial</span>
+      </ion-col>
+    </ion-row>
+    <app-data-history-user></app-data-history-user>
+    <ion-row class="ion-display-flex ion-justify-content-center">
+      <ion-col class="container-datepicker">
+        <ion-input
+          class="input-date"
+          type="date"
+          label="Fecha"
+          labelPlacement="floating"
+          errorText="Fecha incorrecta">
+        </ion-input>
+      </ion-col>
+    </ion-row>
+    <app-history-card></app-history-card>
+  </ion-grid>
+
+</ion-content>
+<app-footer-nav></app-footer-nav>

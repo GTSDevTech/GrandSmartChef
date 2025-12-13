@@ -1,0 +1,60 @@
+.edit-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary-green-color);
+  font-size: 1.4rem;
+
+
+}
+
+.icon-profile{
+  color: var(--primary-green-color);
+}
+
+.row-register-form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.custom-input {
+  --background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  --min-height: 56px;
+  border: 1px solid #ccc;
+  margin-bottom: 2.2rem;
+  width: 80vw;
+}
+
+
+ion-icon{
+  color: var(--primary-gray-color);
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+
+}
+
+.user-image-profile {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.fab-bottom-right {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.5rem;
+  transform: translate(20%, 20%);
+}
+
+ion-icon.camera-icon{
+  color: white;
+}
+

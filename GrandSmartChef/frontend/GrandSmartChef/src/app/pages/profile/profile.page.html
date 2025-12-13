@@ -1,0 +1,47 @@
+<app-header></app-header>
+<ion-content (ionScroll)="onScroll($event)" [scrollEvents]="true" [fullscreen]="true">
+  <ion-grid>
+    <ion-row class="header-section-row">
+      <ion-col class="header-section" size="2">
+        <ion-icon (click)="onClose()" class="go-back" name="chevron-back-sharp"></ion-icon>
+      </ion-col>
+      <ion-col size="10" class="header-section">
+        <ion-icon class="icon-section-title" name="person"></ion-icon><span class="section-title">Mi Perfil</span>
+      </ion-col>
+    </ion-row>
+    <app-img-profile></app-img-profile>
+    <ion-row class="ion-display-flex ion-justify-content-center ion-align-items-center">
+      <ion-label class="center-container-row label-data-profile">
+        <h1>{{ this.user()?.fullName }}</h1>
+        <p>{{this.user()?.email}}</p>
+      </ion-label>
+      <ion-button routerLink="/profile-edit" fill="outline" class="edit-profile">
+        <ion-icon size="large" slot="start" name="create" class="icon-profile"></ion-icon>
+        Editar Perfil
+      </ion-button>
+    </ion-row>
+    <ion-row class="data-row-profile">
+      <ion-col size="auto" class="ion-text-center">
+      <ion-label class="cooked">
+        <h3>13</h3>
+        <p>Cocinadas</p>
+      </ion-label>
+      </ion-col>
+      <ion-col size="auto">
+        <ion-label class="favorites">
+          <h3>2</h3>
+          <p>Favoritas</p>
+        </ion-label>
+      </ion-col>
+      <ion-col size="auto">
+      <ion-label class="collections">
+        <h3>1</h3>
+        <p>Colecciones</p>
+      </ion-label>
+      </ion-col>
+    </ion-row>
+    <app-filter-profile></app-filter-profile>
+  </ion-grid>
+
+</ion-content>
+<app-footer-nav></app-footer-nav>

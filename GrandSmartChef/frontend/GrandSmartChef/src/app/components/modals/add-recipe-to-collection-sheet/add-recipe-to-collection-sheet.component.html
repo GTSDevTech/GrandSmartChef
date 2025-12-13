@@ -1,0 +1,38 @@
+<ion-modal
+  [isOpen]="isOpen()"
+  (didDismiss)="onModalDismiss()"
+  [backdropDismiss]="true">
+  <ng-template>
+    <ion-content class="ion-padding">
+      <ion-searchbar
+        placeholder="Buscar receta..."
+        (ionInput)="updateSearch($event)">
+      </ion-searchbar>
+      <ion-list>
+        @for(recipe of filteredRecipes(); track recipe.id){
+          <ion-item
+            button
+            (click)="toggleSelection(recipe.id)"
+            [class.selected]="selectedRecipes().includes(recipe.id)">>
+            <ion-avatar slot="start">
+              <ion-img [src]="recipe.imageUrl"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ recipe.name }}</h2>
+              <p> ⭐ {{recipe.averageRating}}</p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+      <ion-row class="ion-padding-top ion-justify-content-end">
+        <ion-col size="auto">
+          <ion-button
+            (click)="confirm()"
+            [disabled]="selectedRecipes().length === 0">
+            Añadir
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-content>
+  </ng-template>
+</ion-modal>

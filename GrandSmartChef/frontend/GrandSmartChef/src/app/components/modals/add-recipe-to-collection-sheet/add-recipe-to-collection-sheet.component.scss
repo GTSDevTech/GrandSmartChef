@@ -1,0 +1,16 @@
+
+ion-item.selected {
+  --background: var(--ion-color-primary);
+  --color: #fff;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+ion-item.selected h2,
+ion-item.selected p {
+  color: #fff;
+}
+
+ion-item {
+  cursor: pointer;
+}

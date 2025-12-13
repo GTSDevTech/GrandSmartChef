@@ -1,0 +1,33 @@
+<ion-grid>
+  <ion-row class="ion-margin-top center-container-row">
+      <ion-img src="assets/images/logo.png" alt="Logo GrandSmartChef" class="logo-session-smart"></ion-img>
+      <ion-img src="assets/images/name_slogan.png" alt="Nombre GrandSmartChef"></ion-img>
+  </ion-row>
+   <form (ngSubmit)="submit()">
+    <ion-item lines="none" class="custom-input">
+      <ion-label position="stacked">Usuario</ion-label>
+      <ion-input
+        [value]="username()"
+        (ionInput)="onUsernameChange($event)"
+        placeholder="Ingresa tu usuario" class="form-input-login"></ion-input>
+    </ion-item>
+    <ion-item lines="none" class="custom-input ">
+      <ion-label position="stacked">Contraseña</ion-label>
+      <ion-input
+        [value]="password()"
+        (ionInput)="onPasswordChange($event)"
+        type="password" placeholder="Ingresa tu contraseña" class="form-input-login"></ion-input>
+    </ion-item>
+    <ion-row class="remember-row">
+      <ion-checkbox class="small-checkbox"></ion-checkbox>
+      <span>Recordar usuario</span>
+    </ion-row>
+    <ion-row class="forgot-row">
+      <a href="#">¿Has olvidado tu contraseña?</a>
+    </ion-row>
+    <ion-row class="center-container-row">
+      <ion-button type="submit" expand="block" class="form-buttons login-client">Iniciar Sesión</ion-button>
+      <a><ion-button (click)=goToCreateRecipe() class="form-buttons login-demo">Cuenta Demo</ion-button></a>
+    </ion-row>
+  </form>
+</ion-grid>
