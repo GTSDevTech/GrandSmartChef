@@ -23,7 +23,7 @@ export class ClientService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    const url = `${this.apiUrl}/me`;
+    const url = `${this.apiUrl}/profile`;
 
     return this.http.get<ClientDTO>(url, { headers });
 

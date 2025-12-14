@@ -1,6 +1,4 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
@@ -16,7 +14,6 @@ import {
   IonGrid, IonIcon, IonImg, IonInput, IonItem, IonLabel,
   IonRow,
 } from '@ionic/angular/standalone';
-import {EditProfileFormComponent} from "../../components/input-forms/edit-profile-form/edit-profile-form.component";
 import {AuthService} from "../../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {ClientService} from "../../services/client/client.service";
@@ -32,14 +29,14 @@ import { FilterProfileComponent } from "src/app/components/filters/filter-profil
   styleUrls: ['./post-create-account.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, IonRow,
-    IonGrid, ReactiveFormsModule, EditProfileFormComponent, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, FilterProfileComponent]
+    IonGrid, ReactiveFormsModule, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, FilterProfileComponent]
 })
 export class PostCreateAccountPage implements OnInit {
 
   private auth = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
-  private  clientService = inject(ClientService);
+  private clientService = inject(ClientService);
   private cameraService = inject(CameraService);
 
   selectedFile: File | null = null;
@@ -54,7 +51,8 @@ export class PostCreateAccountPage implements OnInit {
   }));
 
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
 
@@ -98,34 +96,36 @@ export class PostCreateAccountPage implements OnInit {
   }
 
 
-
   CompleteRegister() {
     const form: FormGroup = this.formSignal();
 
     form.get('preferences')?.setValue([
-      { id: 1, name: 'ECONOMICA' },
-      { id: 4, name: 'RAPIDAS' }
+      {id: 1, name: 'Vegetariano'},
     ]);
+
     if (form.invalid) return;
 
     const data = form.value;
 
     const formData = new FormData();
 
+    const isoBirthdate = data.birthdate
+      ? data.birthdate.split('/').reverse().join('-')
+      : null;
+
     const profileData = {
       fullName: data.fullName,
-      birthdate: data.birthdate,
+      birthdate: isoBirthdate,
       country: data.country,
-      preferences: data.preferences,
+      preferences: data.preferences ?? [],
     };
-
 
     formData.append(
       'profile',
-      new Blob([JSON.stringify(profileData)], { type: 'application/json' })
+      new Blob([JSON.stringify(profileData)], {type: 'application/json'})
     );
 
-    if(this.selectedFile){
+    if (this.selectedFile) {
       formData.append('photoProfile', this.selectedFile, this.selectedFile.name);
     }
 
@@ -138,4 +138,3 @@ export class PostCreateAccountPage implements OnInit {
   }
 
 }
-

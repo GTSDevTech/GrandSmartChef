@@ -41,4 +41,17 @@ export class IngredientService {
     return this.http.get<IngredientDTO[]>(url, {headers, params});
   }
 
+
+  getAllIngredients() {
+    if(!this.token){
+      return throwError(() => new Error('No authentication token'));
+    }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    const url = `${this.apiUrl}/all`;
+    return this.http.get<IngredientDTO[]>(url, {headers});
+  }
+
+
 }

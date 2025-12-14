@@ -1,7 +1,6 @@
 package com.grandchefsupreme.service;
 
-import com.grandchefsupreme.dto.ClientRegisterDTO;
-import com.grandchefsupreme.dto.UserDTO;
+import com.grandchefsupreme.dto.RegisterStep1DTO;
 import com.grandchefsupreme.mapper.ClientMapper;
 import com.grandchefsupreme.mapper.UserMapper;
 import com.grandchefsupreme.model.User;
@@ -32,21 +31,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findTopByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public UserDTO getByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findTopByUsername(username).orElse(null);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }else{
-            return  userMapper.toDTO(user);
-        }
-    }
-
     public User getByEmail(String email) throws Exception {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public boolean validateCredentials(ClientRegisterDTO clientDTO) {
+    public boolean validateCredentials(RegisterStep1DTO clientDTO) {
 
         User user = userRepository.findTopByUsername(clientDTO.getUsername()).orElse(null);
 

@@ -2,10 +2,10 @@ package com.grandchefsupreme.mapper;
 
 
 import com.grandchefsupreme.dto.ClientDTO;
-import com.grandchefsupreme.dto.ClientRegisterDTO;
-import com.grandchefsupreme.dto.RecipeCardDTO;
+import com.grandchefsupreme.dto.ClientLoginDTO;
+import com.grandchefsupreme.dto.RegisterStep1DTO;
+import com.grandchefsupreme.dto.RegisterStep2DTO;
 import com.grandchefsupreme.model.Client;
-import com.grandchefsupreme.model.Recipe;
 import org.mapstruct.*;
 
 import java.time.LocalDate;
@@ -13,48 +13,43 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring")
 public interface ClientMapper {
 
-    @InheritConfiguration(name = "toDTO")
-    @Mapping(target = "birthdate", qualifiedByName = "converterDateToString")
+
+    @Mapping(target = "birthdate", qualifiedByName = "dateToString")
     ClientDTO toDTO(Client client);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "username", target = "username")
+    ClientLoginDTO toLoginDTO(Client client);
 
-    @InheritConfiguration(name = "toEntity")
-    @Mapping(target = "birthdate", qualifiedByName = "converterStringToDate")
-    Client toEntity(ClientDTO clientDTO);
 
-    @InheritConfiguration(name = "toDTO")
-    @Mapping(target = "birthdate", qualifiedByName = "converterStringToDate")
-    @Mapping(target = "password", source = "password")
-    Client toEntity(ClientRegisterDTO clientRegisterDTO);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "fullName", ignore = true)
+    @Mapping(target = "birthdate", ignore = true)
+    @Mapping(target = "country", ignore = true)
+    @Mapping(target = "photoProfile", ignore = true)
+    @Mapping(target = "preferences", ignore = true)
+    Client toEntity(RegisterStep1DTO dto);
 
-    @InheritConfiguration(name = "toDTO")
-    @Mapping(target = "birthdate", qualifiedByName = "converterDateToString")
-    ClientRegisterDTO toRegisterDTO(Client client);
 
-    List<ClientDTO> toDTO(List<Client> listEntity);
-    List<Client> toEntity(List<ClientDTO> listDTOs);
+    @Mapping(target = "birthdate", qualifiedByName = "stringToDate")
+    Client toEntity(RegisterStep2DTO dto);
 
-    @Named(value ="converterDateToString")
-    default String converterDateToString(LocalDate fecha){
-        if (fecha == null) {
-            return null;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return fecha.format(formatter);
+
+    @Named("dateToString")
+    default String dateToString(LocalDate date) {
+        return date != null
+                ? date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                : null;
     }
 
-    @Named(value ="converterStringToDate")
-    default LocalDate converterStringToDate(String fecha){
-        if (fecha == null || fecha.isEmpty()) {
-            return null;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return LocalDate.parse(fecha,formatter);
+    @Named("stringToDate")
+    default LocalDate stringToDate(String date) {
+        return (date != null && !date.isBlank())
+                ? LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                : null;
     }
-
-
-
 }
+

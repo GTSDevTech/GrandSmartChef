@@ -48,6 +48,12 @@ public class IngredientService {
         return ingredientMapper.toDTO(ingredients);
     }
 
+    @Transactional
+    public List<IngredientDTO> findAllIngredients(){
+        List<Ingredient> ingredients = ingredientRepository.findAll();
+        return ingredientMapper.toDTO(ingredients);
+    }
+
 
 
 

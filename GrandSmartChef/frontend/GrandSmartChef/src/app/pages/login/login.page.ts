@@ -29,21 +29,25 @@ export class LoginPage implements OnInit {
   private router = inject(Router);
   private clientService = inject(ClientService);
 
-  onLogin(formData: {username:string;password:string}){
+  onLogin(formData: { username: string; password: string; redirectToCreate: boolean }) {
     this.auth.login(formData.username, formData.password).subscribe({
       next: (res) => {
-        this.auth.setToken(res.token);
-
+        this.auth.setToken(res.token);  // Guarda el token
         this.clientService.getCurrentClient().subscribe(client => {
-          this.auth.setCurrentUser(client);
-          this.router.navigate([`/home`]).then(() => {
-            (document.activeElement as HTMLDataElement)?.blur();
-          });
+          this.auth.setCurrentUser(client);  // Guarda el usuario autenticado
+
+          // Si el usuario quiere ir al home de creación de recetas, redirige allí
+          if (formData.redirectToCreate) {
+            this.router.navigate([`/recipe-home`]);  // Redirige a la página de crear recetas
+          } else {
+            this.router.navigate([`/home`]);  // Redirige al home normal
+          }
         });
       },
-      error: () => alert("Invalid Credentials")
+      error: () => alert("Invalid Credentials")  // Muestra un error si no se puede autenticar
     });
   }
+
 
   ngOnInit() {
 

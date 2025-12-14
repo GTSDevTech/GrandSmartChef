@@ -46,6 +46,8 @@ export class ProfilePage implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.authService.ensureCurrentUserLoaded();
+
   }
 
 

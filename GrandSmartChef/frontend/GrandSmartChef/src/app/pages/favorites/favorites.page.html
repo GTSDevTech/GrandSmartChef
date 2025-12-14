@@ -25,7 +25,7 @@
       </ion-col>
     </ion-row>
   } @else {
-    @for (collect of collections(); track collect.id) {
+    @for (collect of collections(); track collect.id ?? $index) {
     <ion-col>
       <app-collection
         [collection]="collect"

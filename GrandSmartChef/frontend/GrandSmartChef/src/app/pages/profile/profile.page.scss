@@ -11,16 +11,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100px;
-    height: 100px;
-    background: whitesmoke;
+    width: 60px;
+    height: 60px;
+    //background: whitesmoke;
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 
   }
-  ion-label.cooked { background: #FFD580; h3 { color: #FF6B00; } p{ color: #FF6B00; } }
-  ion-label.favorites { background: #B3E5FC; h3 { color: #0288D1;} p{color: #0288D1 } }
-  ion-label.collections { background: #E1BEE7; h3 { color: #8E24AA; } p{color: #8E24AA} }
+  //ion-label.cooked { background: #FFD580; h3 { color: #FF6B00; } p{ color: #FF6B00; } }
+  //ion-label.favorites { background: #B3E5FC; h3 { color: #0288D1;} p{color: #0288D1 } }
+  //ion-label.collections { background: #E1BEE7; h3 { color: #8E24AA; } p{color: #8E24AA} }
     h3{
       font-size: 1.5rem;
       font-weight: bold;

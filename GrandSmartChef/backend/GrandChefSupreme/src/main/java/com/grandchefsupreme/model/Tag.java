@@ -1,7 +1,6 @@
 package com.grandchefsupreme.model;
 
 
-import com.grandchefsupreme.model.Enums.Tags;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,8 +20,7 @@ public class Tag {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column (name = "name", nullable = false, unique = true, length = 100)
-    private Tags name;
+    @Column(name = "name", nullable = false, unique = true, length = 100)
+    private String name;
 
 }

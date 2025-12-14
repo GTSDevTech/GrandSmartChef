@@ -1,9 +1,11 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {RecipeCardDTO} from "../../models/recipe-card.model";
-import {environment} from "../../../environments/environment";
-import {Observable, of, throwError} from "rxjs";
-import {RecipeDTO} from "../../models/recipe.model";
+import { inject, Injectable } from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { RecipeCardDTO } from '../../models/recipe-card.model';
+import { RecipeDTO } from '../../models/recipe.model';
+import { RecipeCreateDTO } from '../../models/recipeCreateDTO.model';
+import {AuthService} from "../auth/auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,28 +13,39 @@ import {RecipeDTO} from "../../models/recipe.model";
 export class CreateRecipe {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/recipes`;
+  private authService = inject(AuthService);
 
-  getAllRecipes(){
-    const url = `${this.apiUrl}/create/all`;
-    console.log(url);
-    return this.http.get<RecipeCardDTO[]>(url);
+  // Método para obtener el token
+  private getAuthHeaders() {
+    const token = this.authService.getToken();
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
   }
 
+  getAllRecipes(): Observable<RecipeCardDTO[]> {
+    const headers = this.getAuthHeaders(); // Añadir el header con el token
+    return this.http.get<RecipeCardDTO[]>(`${this.apiUrl}/create/all`, { headers });
+  }
+
+  // Obtener detalle de receta
   getActiveRecipeDetails(id: number): Observable<RecipeDTO> {
-    const url = `${this.apiUrl}/create/detail`;
-
     const params = new HttpParams().set('id', id.toString());
-
-    return this.http.get<RecipeDTO>(url, { params });
+    const headers = this.getAuthHeaders(); // Añadir el header con el token
+    return this.http.get<RecipeDTO>(`${this.apiUrl}/create/detail`, { headers, params });
   }
 
-  updateRecipe(id: number | undefined, payload: any) {
-    console.log('Simulando updateRecipe', id, payload);
-    return of(null);
+  createRecipe(recipe: RecipeCreateDTO): Observable<RecipeDTO> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<RecipeDTO>(`${this.apiUrl}/create`, recipe, { headers });
   }
 
-  createRecipe(payload: any) {
-    console.log('Simulando createRecipe', payload);
-    return of(null);
+  updateRecipe(recipe: RecipeCreateDTO): Observable<RecipeDTO> {
+    const headers = this.getAuthHeaders();
+    console.log('Datos enviados al servidor:', recipe);
+    return this.http.put<RecipeDTO>(`${this.apiUrl}/update`, recipe, { headers });
   }
 }

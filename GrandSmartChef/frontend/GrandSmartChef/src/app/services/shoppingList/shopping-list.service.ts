@@ -14,69 +14,113 @@ export class ShoppingListService {
   private auth = inject(AuthService);
   private apiUrl = `${environment.apiUrl}/shopping-list`;
 
-  shoppingLists = signal<ShoppingListDTO[]>([])
+
+  shoppingLists = signal<ShoppingListDTO[]>([]);
 
 
-  getAllShoppingListByUserId(idUser: number): Observable<ShoppingListDTO[]>{
+  getAllShoppingListByUserId(idUser: number): Observable<ShoppingListDTO[]> {
     const token = this.auth.getToken();
-    if(!token) return throwError(() => new Error('No authentication token'));
-
-    const params = new HttpParams().set('id', idUser);
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}`});
-    const url = `${this.apiUrl}/user/${idUser}`;
-
-    return this.http.get<ShoppingListDTO[]>(url, { headers, params }).pipe(
-      tap(data => this.shoppingLists.set(data)),
-      catchError(err => {
-
-        this.shoppingLists.set([]);
-        return throwError(() => err);
-      })
-    );
-
-  }
-
-  addRecipeToShoppingList(userId: number, recipeId:number){
-    const token = this.auth.getToken();
-    if(!token) return throwError(() => new Error('No authentication token'));
+    if (!token) {
+      this.shoppingLists.set([]);
+      return throwError(() => new Error('No authentication token'));
+    }
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
 
+    const url = `${this.apiUrl}/user/${idUser}`;
 
-    return this.http.post<ShoppingListDTO>(
-      `${this.apiUrl}/create?userId=${userId}&recipeId=${recipeId}`,
-      {}, { headers }
+    return this.http.get<ShoppingListDTO[]>(url, { headers }).pipe(
+      tap(data => {
+        this.shoppingLists.set(data ?? []);
+      }),
+      catchError(err => {
+        this.shoppingLists.set([]);
+        return throwError(() => err);
+      })
     );
   }
 
-  markIngredientBought(listId: number, recipeId: number, ingredientId: number, bought: boolean) {
+
+  addRecipeToShoppingList(
+    userId: number,
+    recipeId: number
+  ): Observable<ShoppingListDTO> {
     const token = this.auth.getToken();
     if (!token) return throwError(() => new Error('No authentication token'));
 
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.post<ShoppingListDTO>(
+      `${this.apiUrl}/create?userId=${userId}&recipeId=${recipeId}`,
+      {},
+      { headers }
+    );
+  }
+
+  markIngredientBought(
+    listId: number,
+    recipeId: number,
+    ingredientId: number,
+    bought: boolean
+  ): Observable<void> {
+    const token = this.auth.getToken();
+    if (!token) return throwError(() => new Error('No authentication token'));
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
     const url = `${this.apiUrl}/${listId}/recipe/${recipeId}/ingredient/${ingredientId}/bought`;
 
-    return this.http.patch(url, null, { headers, params: new HttpParams().set('bought', bought) });
+    return this.http.patch<void>(
+      url,
+      null,
+      { headers, params: new HttpParams().set('bought', bought) }
+    );
   }
 
 
-  deleteShoppingListIngredient(listId: number, bought: boolean): Observable<void> {
+  deleteShoppingListIngredient(
+    listId: number,
+    bought: boolean
+  ): Observable<void> {
     const token = this.auth.getToken();
     if (!token) return throwError(() => new Error('No authentication token'));
 
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
     const url = `${this.apiUrl}/${listId}/ingredient/${bought}`;
 
     return this.http.delete<void>(url, { headers });
   }
 
+  deleteAllBoughtIngredientsByUser(userId: number): Observable<void> {
+    const token = this.auth.getToken();
+    if (!token) return throwError(() => new Error('No authentication token'));
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
 
-  addRecipeToCart(userId: number, recipeId: number): Observable<ShoppingListDTO> {
+    const url = `${this.apiUrl}/delete/boughtIngredients/${userId}`;
+
+    return this.http.delete<void>(url, { headers });
+  }
+
+  addRecipeToCart(
+    userId: number,
+    recipeId: number
+  ): Observable<ShoppingListDTO> {
     return this.addRecipeToShoppingList(userId, recipeId).pipe(
-      tap((newList) => {
+      tap(newList => {
+        if (!newList) return;
+
         const current = this.shoppingLists();
         const index = current.findIndex(l => l.id === newList.id);
 
@@ -86,19 +130,9 @@ export class ShoppingListService {
           current.push(newList);
         }
 
+        // 👇 fuerza nueva referencia
         this.shoppingLists.set([...current]);
       })
     );
-  }
-
-  deleteAllBoughtIngredientsByUser(userId:number): Observable<void> {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
-
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    const url = `${this.apiUrl}/delete/boughtIngredients/${userId}`;
-
-    return this.http.delete<void>(url, { headers });
-
   }
 }

@@ -1,12 +1,13 @@
 package com.grandchefsupreme.service;
 
 import com.grandchefsupreme.dto.ClientDTO;
-import com.grandchefsupreme.dto.ClientRegisterDTO;
+import com.grandchefsupreme.dto.ClientLoginDTO;
+import com.grandchefsupreme.dto.RegisterStep1DTO;
+import com.grandchefsupreme.dto.RegisterStep2DTO;
 import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.exceptions.NotFoundException;
 import com.grandchefsupreme.mapper.ClientMapper;
 import com.grandchefsupreme.model.Client;
-import com.grandchefsupreme.model.Tag;
 import com.grandchefsupreme.model.User;
 import com.grandchefsupreme.repository.ClientRepository;
 import com.grandchefsupreme.utils.FileStorageUtil;
@@ -15,9 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class ClientService {
     private final PasswordEncoder passwordEncoder;
     private final FileStorageUtil fileStorageUtil;
 
-    public Client createClient(ClientRegisterDTO clientDTO) {
+    public Client createClient(RegisterStep1DTO clientDTO) {
         Client client = clientMapper.toEntity(clientDTO);
         if (clientDTO.getPassword() == null || clientDTO.getPassword().isEmpty()) {
             throw new BadRequestException("Password cannot be null or empty");
@@ -41,11 +40,11 @@ public class ClientService {
 
     }
 
-    public Client updateProfile(ClientRegisterDTO clientRegisterDTO, Long userId, MultipartFile photoFile) throws IOException {
+    public Client updateProfile(RegisterStep2DTO registerStep2DTO, Long userId, MultipartFile photoFile) throws IOException {
         Client client = clientRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Client not found"));
 
-        Client clientMapped = clientMapper.toEntity(clientRegisterDTO);
+        Client clientMapped = clientMapper.toEntity(registerStep2DTO);
 
         client.setFullName(clientMapped.getFullName());
         client.setBirthdate(clientMapped.getBirthdate());
@@ -53,6 +52,15 @@ public class ClientService {
 
         if (clientMapped.getPreferences() != null && !clientMapped.getPreferences().isEmpty()) {
             client.setPreferences(clientMapped.getPreferences());
+        }
+
+        if (registerStep2DTO.getEmail() != null && !registerStep2DTO.getEmail().isBlank()) {
+            if (!registerStep2DTO.getEmail().equalsIgnoreCase(client.getEmail())) {
+                if (clientRepository.existsByEmail(registerStep2DTO.getEmail())) {
+                    throw new BadRequestException("El email ya está en uso");
+                }
+                client.setEmail(registerStep2DTO.getEmail());
+            }
         }
 
         if (photoFile != null && !photoFile.isEmpty()) {
@@ -66,8 +74,12 @@ public class ClientService {
 
 
     }
-
-    public ClientDTO getClient(User user) {
+    public ClientLoginDTO getClient(User user) {
+        Client client = clientRepository.findById(user.getId())
+                .orElseThrow(() -> new NotFoundException("Client not found"));
+        return clientMapper.toLoginDTO(client);
+    }
+    public ClientDTO getClientProfile(User user) {
         Client client = clientRepository.findById(user.getId())
                 .orElseThrow(() -> new NotFoundException("Client not found"));
         return clientMapper.toDTO(client);

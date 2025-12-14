@@ -39,14 +39,29 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
 
-    this.recipeService.getAllActiveRecipes().subscribe({
-      next: (data) => this.recipes.set(data),
-      error: (err) => console.error('Error cargando recetas', err)
-    });
+    this.loadRecipes();
+    this.loadUserCollections();
+  }
 
-    if (this.user?.id) {
-      this.collectionService.getAllFavoriteCollections(this.user.id).subscribe();
-    }
+
+  private loadRecipes(): void {
+    this.recipeService.getAllActiveRecipes().subscribe({
+      next: (recipes) => {
+        this.recipes.set(recipes ?? []);
+      },
+      error: (error) => {
+        console.error('Error cargando recetas', error);
+        this.recipes.set([]);
+      }
+    });
+  }
+
+  private loadUserCollections(): void {
+    if (!this.user?.id) return;
+
+    this.collectionService
+      .getAllFavoriteCollections(this.user.id)
+      .subscribe();
   }
 
 

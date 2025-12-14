@@ -44,14 +44,23 @@ export class ShoppingCartPage implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const user = this.auth.getCurrentUser();
     if (!user?.id) return;
 
-    this.shoppingListService.getAllShoppingListByUserId(user.id).subscribe((lists) => {
-      this.progressService.updateProgress(lists);
-    });
+    this.shoppingListService
+      .getAllShoppingListByUserId(user.id)
+      .subscribe({
+        next: (lists) => {
+          this.progressService.updateProgress(lists ?? []);
+        },
+        error: (err) => {
+          console.error('Error cargando listas', err);
+          this.progressService.updateProgress([]);
+        }
+      });
   }
+
 
   recalculateProgress() {
     const lists = this.shoppingLists();

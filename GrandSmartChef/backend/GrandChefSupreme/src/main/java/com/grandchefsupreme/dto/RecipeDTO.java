@@ -3,41 +3,47 @@ package com.grandchefsupreme.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RecipeDTO {
 
     private Long id;
-    @NotNull(message = "El nombre no puede ser nulo")
-    @NotBlank(message = "El nombre no puede estar vacío")
+
+    @NotBlank(message = "El nombre es obligatorio")
     private String name;
-    @NotNull(message = "El nombre no puede ser nulo")
-    @NotBlank(message = "El nombre no puede estar vacío")
+
+    @NotBlank(message = "La dificultad es obligatoria")
     private String difficulty;
-    @NotNull
+
+    @NotNull(message = "El número de raciones es obligatorio")
     private Integer servings;
-    @NotNull
+
+    @NotNull(message = "El tiempo de preparación es obligatorio")
     private Double prepTime;
-    @NotNull
+
     private Double averageRating;
-    @NotNull
-    @NotBlank
+
+    @NotBlank(message = "La descripción es obligatoria")
     private String description;
-    @NotNull
-    @NotBlank
+
+    @NotBlank(message = "La imagen es obligatoria")
     private String imageUrl;
-    @NotNull
-    @NotEmpty
+
+    @NotEmpty(message = "Debe tener al menos una etiqueta")
     private Set<TagDTO> tags;
-    @NotNull
-    @NotEmpty
+
+    @NotEmpty(message = "Debe tener ingredientes")
     private List<RecipeIngredientDTO> ingredients;
-    @NotNull
-    @NotEmpty
+
+    @NotEmpty(message = "Debe tener pasos")
     private List<RecipeStepDTO> steps;
 
     private NutritionInfoDTO nutritionInfo;

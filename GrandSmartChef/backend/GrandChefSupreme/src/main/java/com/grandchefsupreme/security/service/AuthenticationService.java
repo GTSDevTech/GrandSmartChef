@@ -1,8 +1,8 @@
 package com.grandchefsupreme.security.service;
 
-import com.grandchefsupreme.dto.ClientRegisterDTO;
+import com.grandchefsupreme.dto.RegisterStep1DTO;
+import com.grandchefsupreme.dto.LoginRequestDTO;
 import com.grandchefsupreme.exceptions.UnauthorizedException;
-import com.grandchefsupreme.mapper.ClientMapper;
 import com.grandchefsupreme.model.Client;
 import com.grandchefsupreme.model.User;
 import com.grandchefsupreme.security.auth.AuthenticationResponseDTO;
@@ -25,23 +25,25 @@ public class AuthenticationService {
 
 
     //Register
-    public AuthenticationResponseDTO register(ClientRegisterDTO clientDTO) {
+    public AuthenticationResponseDTO register(RegisterStep1DTO clientDTO) {
         Client savedClient = clientService.createClient(clientDTO);
         String token = jwtService.generateToken(savedClient);
         return AuthenticationResponseDTO.builder()
                 .token(token)
-                .message("Register success")
+                .message("Registro correcto")
                 .build();
     }
 
-    //Login
-    public AuthenticationResponseDTO login(ClientRegisterDTO clientDTO) {
+    public AuthenticationResponseDTO login(LoginRequestDTO clientDTO) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(clientDTO.getUsername(), clientDTO.getPassword())
+                    new UsernamePasswordAuthenticationToken(
+                            clientDTO.getUsername(),
+                            clientDTO.getPassword()
+                    )
             );
         } catch (AuthenticationException e) {
-            throw new UnauthorizedException("Invalid Credentials");
+            throw new UnauthorizedException("Credenciales incorrectas");
         }
 
         User user = (User) userService.loadUserByUsername(clientDTO.getUsername());
@@ -49,11 +51,11 @@ public class AuthenticationService {
 
         return AuthenticationResponseDTO.builder()
                 .token(token)
-                .message("Login successs")
+                .message("Login correcto")
                 .build();
     }
 
-    public boolean verifyPassword(ClientRegisterDTO clientDTO) {
+    public boolean verifyPassword(RegisterStep1DTO clientDTO) {
         return userService.validateCredentials(clientDTO);
     }
 

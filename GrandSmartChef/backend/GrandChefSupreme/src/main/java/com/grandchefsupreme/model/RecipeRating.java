@@ -3,8 +3,7 @@ package com.grandchefsupreme.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "recipe_rating")
@@ -33,7 +32,7 @@ public class RecipeRating {
     private Integer rating;
 
     @Column(name = "rating_date")
-    private Timestamp ratingDate;
+    private LocalDateTime ratingDate;
 
     @Column(name = "review", length = 400)
     private String review;

@@ -17,7 +17,7 @@ public class StatisticsService {
     private final IngredientRepository ingredientRepository;
 
     public List<TopClientDTO> getTopRecipes() {
-        return clientRepository.findByTopRecipes();
+        return clientRepository.findClientByTopRecipes();
     }
 
     public List<TopIngredientsDTO> getTop5Ingredients() {

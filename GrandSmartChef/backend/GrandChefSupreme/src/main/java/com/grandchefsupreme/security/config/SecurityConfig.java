@@ -30,8 +30,7 @@ public class SecurityConfig {
 
 
     private static final String[] WHITE_LIST_URLS = {
-            "/api/recipes/create/all",
-            "/api/recipes/create/detail",
+
             "/api/auth/**",
             "/auth/**",
             "/swagger-ui/**",

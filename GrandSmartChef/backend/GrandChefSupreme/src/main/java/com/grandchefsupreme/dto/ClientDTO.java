@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -15,5 +16,6 @@ public class ClientDTO extends UserDTO{
     private String birthdate;
     private String country;
     private String photoProfile;
+    private List<TagDTO> preferences;
 
 }

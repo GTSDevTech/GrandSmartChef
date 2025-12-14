@@ -1,9 +1,14 @@
 package com.grandchefsupreme.dto;
 import com.grandchefsupreme.model.Enums.Unit;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class IngredientDTO {
 
     private Long id;

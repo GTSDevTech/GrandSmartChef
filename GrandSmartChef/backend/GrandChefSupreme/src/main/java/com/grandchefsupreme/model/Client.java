@@ -46,7 +46,7 @@ public class Client extends User {
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<History> histories = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "client_tag",
         joinColumns = @JoinColumn(name = "id_client"),

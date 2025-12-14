@@ -1,15 +1,22 @@
 package com.grandchefsupreme.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.cglib.core.Local;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Data
 public class    HistoryDTO {
 
-    private Long id;
+    @NotNull(message = "Usuario no logueado")
     private Long clientId;
+
+    @NotNull(message = "Receta obligatoria")
     private Long recipeId;
-    private String date;
+
+    @NotNull(message = "Fecha obligatoria")
+    private LocalDate date;
 
 }

@@ -1,15 +1,17 @@
 package com.grandchefsupreme.security.auth;
 
 
-import com.grandchefsupreme.dto.ClientDTO;
-import com.grandchefsupreme.dto.ClientRegisterDTO;
+import com.grandchefsupreme.dto.*;
 import com.grandchefsupreme.mapper.ClientMapper;
 import com.grandchefsupreme.model.Client;
 import com.grandchefsupreme.model.User;
 import com.grandchefsupreme.security.service.AuthenticationService;
 import com.grandchefsupreme.service.ClientService;
+import com.grandchefsupreme.utils.ApiResponseMessage;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,35 +28,47 @@ public class AuthenticationController {
     private final ClientService clientService;
 
     @PostMapping("/register-step1")
-    public ResponseEntity<AuthenticationResponseDTO> register(
-            @RequestBody ClientRegisterDTO request
+    public AuthenticationResponseDTO registerStep1(
+            HttpServletRequest request,
+            @RequestBody @Valid RegisterStep1DTO dto
     ) {
-        AuthenticationResponseDTO responseDTO =
-                authenticationService.register(request);
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Usuario registrado correctamente"
+        );
 
-        return ResponseEntity.ok(responseDTO);
+        return authenticationService.register(dto);
     }
 
-    @PostMapping("/register-step2")
-    public ResponseEntity<ClientDTO> completeProfile(
+    @PutMapping(
+            value = "/register-step2",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ClientDTO completeProfile(
+            HttpServletRequest request,
             @AuthenticationPrincipal User user,
-            @RequestBody ClientRegisterDTO clientDTO,
-            @RequestPart(value = "photoProfile", required = false) MultipartFile photoProfileFile
+            @RequestPart("profile") @Valid RegisterStep2DTO dto,
+            @RequestPart(value = "photoProfile", required = false) MultipartFile photoProfile
     ) throws IOException {
 
-        Client updatedClient =
-                clientService.updateProfile(clientDTO, user.getId(), photoProfileFile);
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Perfil completado correctamente"
+        );
 
-        return ResponseEntity.ok(clientMapper.toDTO(updatedClient));
+        Client updatedClient =
+                clientService.updateProfile(dto, user.getId(), photoProfile);
+
+        return clientMapper.toDTO(updatedClient);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponseDTO> login(
-            @RequestBody ClientRegisterDTO clientRegisterDTO
-    ) {
-        AuthenticationResponseDTO responseDTO =
-                authenticationService.login(clientRegisterDTO);
 
-        return ResponseEntity.ok(responseDTO);
+    @PostMapping("/login")
+    public AuthenticationResponseDTO login(
+            HttpServletRequest request,
+            @RequestBody @Valid LoginRequestDTO dto
+    ) {
+
+        return authenticationService.login(dto);
     }
 }

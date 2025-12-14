@@ -31,25 +31,30 @@ export class RecipeHomePage implements OnInit {
   constructor() {
   }
 
-  ngOnInit() {
-
-    this.createRecipeService.getAllRecipes().subscribe({
-      next: (data) => this.recipesEdtiable.set(data),
-      error: (err) => console.error('Error cargando recetas', err)
-    });
-
+  ngOnInit(): void {
+    this.loadRecipes();
   }
 
-  onScroll(event?: CustomEvent) {
+  private loadRecipes(): void {
+    this.createRecipeService.getAllRecipes().subscribe({
+      next: (recipes) => {
+        this.recipesEdtiable.set(recipes ?? []);
+      },
+      error: (err) => {
+        console.error('Error cargando recetas', err);
+        this.recipesEdtiable.set([]);
+      }
+    });
+  }
+
+  onScroll(event?: CustomEvent): void {
     const scrollTop = (event?.detail as any)?.scrollTop;
     if (scrollTop != null) {
       this.scrollFooter.updateScroll(scrollTop);
     }
   }
 
-  goToRecipeForm() {
+  goToRecipeForm(): void {
     this.routes.navigate(['/recipe-form']);
   }
-
-
 }

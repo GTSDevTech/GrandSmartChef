@@ -1,9 +1,7 @@
 package com.grandchefsupreme.repository;
 
-import com.grandchefsupreme.dto.ClientDTO;
 import com.grandchefsupreme.dto.TopClientDTO;
 import com.grandchefsupreme.model.Client;
-import com.grandchefsupreme.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,7 +15,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findClientById(Long id);
 
-    Boolean existsByUsernameAndPassword(String username, String password);
+    Boolean existsByEmail(String username);
 
 
     @Query(value = """
@@ -36,6 +34,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
         ORDER BY COUNT(*) DESC
     	LIMIT 1)
     """, nativeQuery = true)
-    List<TopClientDTO> findByTopRecipes();
+    List<TopClientDTO> findClientByTopRecipes();
 
 }

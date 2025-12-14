@@ -25,11 +25,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserService userService;
 
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) {
+//        System.out.println(
+//                "JWT FILTER → " + request.getMethod() + " " + request.getServletPath()
+//        );
+//        String path = request.getServletPath();
+//
+//        return path.startsWith("/api/recipes/create");
+//
+//    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
+        System.out.println(
+                "JWT FILTER → " + request.getMethod() + " " + request.getServletPath()
+        );
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

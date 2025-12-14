@@ -1,10 +1,7 @@
 <ion-content (ionScroll)="onScroll($event)" [fullscreen]="true">
-
   <!-- IMAGEN -->
   <div class="image-container" style="position: relative;">
-    <!-- Imagen de la receta o preview -->
-    <ion-img *ngIf="previewUrl" [src]="previewUrl" class="recipe-image-preview" alt=""></ion-img>
-    <ion-img *ngIf="!previewUrl && recipe()?.imageUrl" [src]="recipe()?.imageUrl" class="recipe-image-preview" [alt]="recipe()?.name"></ion-img>
+    <ion-img [src]="previewUrl || recipe()?.imageUrl || 'assets/images/default_recipe_image.png'" class="recipe-image-preview" alt="Imagen de la receta"></ion-img>
 
     <!-- Botón volver atrás -->
     <ion-fab vertical="top" horizontal="start" slot="fixed" class="fab-top-left">
@@ -23,17 +20,12 @@
     <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)">
   </div>
 
-
   <ion-grid>
-
     <!-- NOMBRE -->
     <ion-row class="row-item">
       <h3>Título</h3>
       <ion-item lines="full" class="recipe-name-item">
-        <ion-input
-          [(ngModel)]="form.name"
-          placeholder="Nombre de la receta">
-        </ion-input>
+        <ion-input [(ngModel)]="form.name" placeholder="Nombre de la receta"></ion-input>
       </ion-item>
     </ion-row>
 
@@ -79,8 +71,7 @@
     <ion-row class="row-item">
       <h3>Descripción</h3>
       <ion-item class="recipe-name-item" lines="none">
-        <ion-textarea auto-grow="true" [(ngModel)]="form.description"
-                      placeholder="Describe la receta…"></ion-textarea>
+        <ion-textarea auto-grow="true" [(ngModel)]="form.description" placeholder="Describe la receta…"></ion-textarea>
       </ion-item>
     </ion-row>
 
@@ -88,9 +79,14 @@
     <ion-row class="row-item">
       <h3>Ingredientes</h3>
       <ion-item>
+        <ion-select [(ngModel)]="selectedIngredientId" placeholder="Seleccionar ingrediente">
+          <ion-select-option *ngFor="let ingredient of ingredientsCatalog" [value]="ingredient.id">
+            {{ ingredient.name }}
+          </ion-select-option>
+        </ion-select>
+
         <ion-input [(ngModel)]="ingredientQty" placeholder="Cantidad"></ion-input>
         <ion-input [(ngModel)]="ingredientUnit" placeholder="Unidad"></ion-input>
-        <ion-input [(ngModel)]="ingredientName" placeholder="Ingrediente"></ion-input>
         <ion-button fill="clear" class="add-btn" (click)="addIngredient()">
           <ion-icon name="add"></ion-icon>
         </ion-button>
@@ -104,7 +100,7 @@
             </ion-label>
           </ion-col>
           <ion-col>
-            <ion-label class="name">{{ ing.name }}</ion-label>
+            <ion-label class="name">{{ ing.ingredientName }}</ion-label>
           </ion-col>
           <ion-button fill="clear" color="danger" (click)="removeIngredient(i)">
             <ion-icon name="close"></ion-icon>
@@ -116,8 +112,6 @@
     <!-- PASOS -->
     <ion-row class="row-item">
       <h3>Preparación</h3>
-
-      <!-- Input para nuevo paso -->
       <ion-item class="recipe-name-item">
         <ion-input [(ngModel)]="stepInput" placeholder="Nuevo paso…"></ion-input>
         <ion-button fill="solid" class="add-btn" (click)="addStep()">
@@ -125,7 +119,6 @@
         </ion-button>
       </ion-item>
 
-      <!-- Lista de pasos -->
       <ion-list class="recipe-name-item">
         <ion-item lines="none" *ngFor="let step of form.steps; index as i" class="step-item">
           <ion-button class="steps">{{ i + 1 }}</ion-button>
@@ -136,16 +129,11 @@
         </ion-item>
       </ion-list>
     </ion-row>
+
     <!-- BOTÓN GUARDAR -->
     <ion-row class="ion-padding ion-justify-content-center">
-      <ion-button expand="block"
-                  class="save-btn"
-                  [disabled]="!formValid"
-                  (click)="saveLocal()">
-        GUARDAR
-      </ion-button>
+      <ion-button expand="block" class="save-btn" [disabled]="!formValid" (click)="saveLocal()">GUARDAR</ion-button>
     </ion-row>
 
   </ion-grid>
-
 </ion-content>

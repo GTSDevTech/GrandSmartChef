@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
+  IonButton,
   IonCol,
   IonContent,
   IonDatetime, IonDatetimeButton,
@@ -26,7 +27,7 @@ import {RouterModule} from "@angular/router";
   standalone: true,
   imports: [IonContent, CommonModule,
     FormsModule, HeaderComponent, FooterNavComponent, IonCol, IonGrid, IonIcon, IonRow,
-    IonInput, HistoryCardComponent, DataHistoryUserComponent, RouterModule]
+    IonInput, HistoryCardComponent, DataHistoryUserComponent, RouterModule, IonButton, IonItem]
 })
 export class HistoryPage implements OnInit {
 
@@ -38,5 +39,9 @@ export class HistoryPage implements OnInit {
 
   onScroll(event: any) {
     this.scrollFooter.updateScroll(event.detail.scrollTop);
+  }
+
+  createHistory() {
+
   }
 }

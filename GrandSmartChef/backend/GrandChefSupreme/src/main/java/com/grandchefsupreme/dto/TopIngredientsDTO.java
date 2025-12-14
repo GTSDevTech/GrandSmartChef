@@ -7,8 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class TopIngredientsDTO {
 
-    String ingredientName;
-    Long recipeCount;
+    private String ingredientName;
+    private Long recipeCount;
 
 
 }

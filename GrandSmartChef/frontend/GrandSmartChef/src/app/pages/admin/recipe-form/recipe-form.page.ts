@@ -1,144 +1,218 @@
-import {Component, effect, ElementRef, inject, input, Input, OnInit, signal, ViewChild} from '@angular/core';
-import {CommonModule, Location} from '@angular/common';
+import { Component, inject, ElementRef, ViewChild, OnInit, signal } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
   IonCol,
-  IonContent, IonFab, IonFabButton,
+  IonContent,
+  IonFab,
+  IonFabButton,
   IonGrid,
-  IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonRow, IonTextarea,
+  IonIcon,
+  IonImg,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
+  IonTextarea,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/angular/standalone';
-import {ActivatedRoute} from "@angular/router";
-import {ToastController} from "@ionic/angular";
-import {ScrollFooterService} from "../../../services/scroll/scroll-footer/scroll-footer.service";
-import {RecipeDTO} from "../../../models/recipe.model";
-import {Camera, CameraResultType, CameraSource} from "@capacitor/camera";
-import {CreateRecipe} from "../../../services/createRecipe/create-recipe";
+import { ActivatedRoute } from '@angular/router';
+import { ScrollFooterService } from '../../../services/scroll/scroll-footer/scroll-footer.service';
+import { RecipeDTO } from '../../../models/recipe.model';
+import { CreateRecipe } from '../../../services/createRecipe/create-recipe';
+import { Capacitor } from '@capacitor/core';
+import { CameraService } from '../../../services/camera/camera.service';
+import { RecipeCreateDTO } from '../../../models/recipeCreateDTO.model';
+import { IngredientDTO } from '../../../models/ingredient.model';
+import { IngredientService } from '../../../services/ingredient/ingredient.service';
 
 @Component({
   selector: 'app-recipe-form',
   templateUrl: './recipe-form.page.html',
   styleUrls: ['./recipe-form.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, IonButton, IonCol, IonGrid, IonIcon, IonItem, IonLabel, IonList, IonRow, IonTextarea, IonInput, IonFab, IonFabButton, IonImg]
+  imports: [
+    IonContent,
+    CommonModule,
+    FormsModule,
+    IonButton,
+    IonCol,
+    IonGrid,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonRow,
+    IonTextarea,
+    IonInput,
+    IonFab,
+    IonFabButton,
+    IonImg,
+    IonSelect,
+    IonSelectOption,
+  ],
 })
 export class RecipeFormPage implements OnInit {
   private location = inject(Location);
   private route = inject(ActivatedRoute);
   private createRecipeService = inject(CreateRecipe);
-  private toast = inject(ToastController);
+  private ingredientService = inject(IngredientService);
   private scrollFooter = inject(ScrollFooterService);
+  private cameraService = inject(CameraService);
 
   recipe = signal<RecipeDTO | null>(null);
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  selectedFile: File | null = null;
+  // Imagen (solo frontend)
   previewUrl: string | null = null;
-  constructor() {
-  }
 
+  // Ingredientes
+  ingredientsCatalog: IngredientDTO[] = [];
+  selectedIngredientId!: number;
 
+  // FORM
   form = {
     name: '',
     prepTime: '',
     servings: '',
     difficulty: '',
     description: '',
-    imageUrl: '', // para preview
     tags: [] as string[],
-    ingredients: [] as { quantity: string; unit: string; name: string }[],
-    steps: [] as string[]
+    ingredients: [] as {
+      quantity: string;
+      unit: string;
+      ingredientId: number;
+      ingredientName: string;
+    }[],
+    steps: [] as string[],
   };
+
   tagInput = '';
   ingredientQty = '';
   ingredientUnit = '';
-  ingredientName = '';
   stepInput = '';
 
   ngOnInit() {
+    this.ingredientService.getAllIngredients().subscribe((data) => {
+      this.ingredientsCatalog = data;
+    });
+
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : null;
 
     if (id && !isNaN(id)) {
-      // Es edición: cargar datos de la receta
       this.createRecipeService.getActiveRecipeDetails(id).subscribe({
         next: (data) => {
-          if (data) { // <-- comprobación
-            this.recipe.set(data);
-            this.loadFormFromRecipe(data); // llena el formulario
-            if (data?.imageUrl) {
-              this.previewUrl = data.imageUrl;
-            }
-          } else {
-            console.warn('No se encontró la receta con id', id);
-          }
+          this.recipe.set(data);
+          this.loadFormFromRecipe(data);
+          this.previewUrl = data.imageUrl;
         },
-        error: (err) => console.error('Error cargando receta', err)
       });
     }
-    }
-
+  }
 
   loadFormFromRecipe(rc: RecipeDTO) {
-    this.form.name = rc.name || '';
-    this.form.prepTime = rc.prepTime?.toString() || '';
-    this.form.servings = rc.servings?.toString() || '';
-    this.form.difficulty = rc.difficulty || '';
-    this.form.description = rc.description || '';
-
-    this.form.tags = rc.tags?.map(t => t.name) || [];
-
-    this.form.ingredients = rc.ingredients?.map(i => ({
+    this.form.name = rc.name;
+    this.form.prepTime = rc.prepTime.toString();
+    this.form.servings = rc.servings.toString();
+    this.form.difficulty = rc.difficulty;
+    this.form.description = rc.description;
+    this.form.tags = rc.tags.map(t => t.name);
+    this.form.ingredients = rc.ingredients.map(i => ({
       quantity: i.quantity.toString(),
       unit: i.unit,
-      name: i.ingredient.name
-    })) || [];
-
-    this.form.steps = rc.steps?.map(s => s.instruction) || [];
+      ingredientId: i.ingredient.id,
+      ingredientName: i.ingredient.name,
+    }));
+    this.form.steps = rc.steps.map(s => s.instruction);
   }
 
-  onClose() {
-    this.location.back();
+  buildRecipeDTO(): RecipeCreateDTO {
+    return {
+      id: this.recipe()?.id,
+      name: this.form.name,
+      difficulty: this.form.difficulty,
+      servings: Number(this.form.servings),
+      prepTime: Number(this.form.prepTime),
+      description: this.form.description,
+
+      // 🔴 OBLIGATORIO PARA BACKEND
+      imageUrl: this.previewUrl ?? 'https://ejemplo.com/default.jpg',
+
+      tags: this.form.tags.map(name => ({ name })),
+
+      ingredients: this.form.ingredients.map(i => ({
+        quantity: Number(i.quantity),
+        unit: i.unit,
+        ingredient: { id: i.ingredientId },
+      })),
+
+      steps: this.form.steps.map((instruction, index) => ({
+        stepNumber: index + 1,
+        instruction,
+      })),
+    };
   }
 
+  saveLocal() {
+    if (!this.formValid) return;
 
-  onScroll(event?: CustomEvent) {
-    const scrollTop = (event?.detail as any)?.scrollTop;
-    if (scrollTop != null) {
-      this.scrollFooter.updateScroll(scrollTop);
+    const dto = this.buildRecipeDTO();
+    console.log('JSON enviado:', dto);
+
+    if (this.recipe()?.id) {
+      this.createRecipeService.updateRecipe(dto).subscribe();
+    } else {
+      this.createRecipeService.createRecipe(dto).subscribe();
     }
   }
+
+  // ---------- Imagen (solo preview)
   async pickImage() {
-    try {
-      const img = await Camera.getPhoto({
-        quality: 90,
-        resultType: CameraResultType.DataUrl,
-        source: CameraSource.Prompt,
-        allowEditing: true
-      });
-
-      if (img.dataUrl) {
-        const blob = await fetch(img.dataUrl).then(r => r.blob());
-        this.selectedFile = new File([blob], 'recipe_' + Date.now() + '.png', { type: blob.type });
-        this.previewUrl = img.dataUrl;
-      }
-    } catch {
+    if (Capacitor.getPlatform() === 'web') {
       this.fileInput.nativeElement.click();
+    } else {
+      const file = await this.cameraService.pickImage();
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => (this.previewUrl = reader.result as string);
+      reader.readAsDataURL(file);
     }
   }
 
-  onFileSelected(ev: Event) {
-    const input = ev.target as HTMLInputElement;
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
-
-    this.selectedFile = input.files[0];
-
     const reader = new FileReader();
-    reader.onload = () => this.previewUrl = reader.result as string;
-    reader.readAsDataURL(this.selectedFile);
+    reader.onload = () => (this.previewUrl = reader.result as string);
+    reader.readAsDataURL(input.files[0]);
   }
 
-  /* -------- TAGS -------- */
+  addIngredient() {
+    if (!this.selectedIngredientId || !this.ingredientQty) return;
+    const ing = this.ingredientsCatalog.find(i => i.id === this.selectedIngredientId);
+    if (!ing) return;
+
+    this.form.ingredients.push({
+      quantity: this.ingredientQty,
+      unit: this.ingredientUnit,
+      ingredientId: ing.id,
+      ingredientName: ing.name,
+    });
+
+    this.selectedIngredientId = undefined!;
+    this.ingredientQty = '';
+    this.ingredientUnit = '';
+  }
+
+  removeIngredient(i: number) {
+    this.form.ingredients.splice(i, 1);
+  }
+
   addTag() {
     if (!this.tagInput.trim()) return;
     this.form.tags.push(this.tagInput.trim());
@@ -149,26 +223,6 @@ export class RecipeFormPage implements OnInit {
     this.form.tags.splice(i, 1);
   }
 
-  /* -------- INGREDIENTES -------- */
-  addIngredient() {
-    if (!this.ingredientName.trim()) return;
-
-    this.form.ingredients.push({
-      quantity: this.ingredientQty,
-      unit: this.ingredientUnit,
-      name: this.ingredientName
-    });
-
-    this.ingredientQty = '';
-    this.ingredientUnit = '';
-    this.ingredientName = '';
-  }
-
-  removeIngredient(i: number) {
-    this.form.ingredients.splice(i, 1);
-  }
-
-  /* -------- PASOS -------- */
   addStep() {
     if (!this.stepInput.trim()) return;
     this.form.steps.push(this.stepInput.trim());
@@ -179,35 +233,27 @@ export class RecipeFormPage implements OnInit {
     this.form.steps.splice(i, 1);
   }
 
-  /* -------- VALIDACIÓN -------- */
-  get formValid() {
-    return this.form.name.trim() &&
-      this.form.prepTime.trim() &&
-      this.form.servings.trim() &&
-      this.form.difficulty.trim() &&
-      this.form.description.trim() &&
-      this.form.tags.length > 0 &&
-      this.form.ingredients.length > 0 &&
-      this.form.steps.length > 0;
+  onClose() {
+    this.location.back();
   }
 
-  saveLocal() {
-    const payload = { ...this.form, image: this.selectedFile };
-
-    if (this.recipe() && this.recipe()?.id) {
-      // edición
-      console.log('Actualizando receta:', payload);
-      this.createRecipeService.updateRecipe(this.recipe()?.id, payload).subscribe({
-        next: () => console.log('Receta actualizada'),
-        error: (err) => console.error(err)
-      });
-    } else {
-      // creación
-      console.log('Creando nueva receta:', payload);
-      this.createRecipeService.createRecipe(payload).subscribe({
-        next: () => console.log('Receta creada'),
-        error: (err) => console.error(err)
-      });
+  onScroll(event: CustomEvent) {
+    const scrollTop = (event?.detail as any)?.scrollTop;
+    if (scrollTop != null) {
+      this.scrollFooter.updateScroll(scrollTop);
     }
+  }
+
+  get formValid() {
+    return (
+      this.form.name.trim() &&
+      this.form.prepTime &&
+      this.form.servings &&
+      this.form.difficulty &&
+      this.form.description &&
+      this.form.tags.length > 0 &&
+      this.form.ingredients.length > 0 &&
+      this.form.steps.length > 0
+    );
   }
 }

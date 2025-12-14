@@ -22,4 +22,5 @@ public interface RecipeIngredientMapper {
 
     @Mapping(source = "ingredient", target = "ingredient")
     List<RecipeIngredient> toEntity(List<RecipeIngredientDTO> listEntity);
+
 }

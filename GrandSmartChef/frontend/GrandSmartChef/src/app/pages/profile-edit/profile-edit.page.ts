@@ -15,6 +15,7 @@ import {AuthService} from "../../services/auth/auth.service";
 import {ClientService} from "../../services/client/client.service";
 import {CameraService} from "../../services/camera/camera.service";
 import {Capacitor} from "@capacitor/core";
+import {ToastController} from "@ionic/angular";
 
 @Component({
   selector: 'app-profile-edit',
@@ -29,9 +30,11 @@ import {Capacitor} from "@capacitor/core";
 export class ProfileEditPage implements OnInit {
   protected auth = inject(AuthService);
   private fb = inject(FormBuilder);
-  private  clientService = inject(ClientService);
+  private clientService = inject(ClientService);
   private cameraService = inject(CameraService);
+  private toastCtrl = inject(ToastController);
   private initialFormValue: any;
+
   private hasChanges = false;
 
   selectedFile: File | null = null;
@@ -40,25 +43,44 @@ export class ProfileEditPage implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
 
-  unSaveFormChange(): boolean{
-    const currentValue = this.formSignal().value;
 
-    const formChanged = (Object.keys(currentValue) as (keyof typeof currentValue)[])
-      .some(key => currentValue[key] !== this.initialFormValue);
 
-    const photoChanged = this.previewUrl !== this.auth.getCurrentUserPhoto();
+  formSignal = signal(
+    this.fb.group({
+      fullName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      birthdate: [''],
+      country: ['']
+    })
+  );
 
-    return formChanged || photoChanged;
+  ngOnInit() {
+    const user = this.auth.getCurrentUser();
+
+    if (user) {
+      this.loadFormFromUser(user);
+    } else {
+      this.clientService.getCurrentClient().subscribe({
+        next: client => {
+          this.auth.setCurrentUser(client);
+          this.loadFormFromUser(client);
+        },
+        error: () => console.error('No se pudo cargar el usuario')
+      });
+    }
   }
 
+  private loadFormFromUser(user: any) {
+    this.formSignal().patchValue({
+      fullName: user.fullName ?? '',
+      email: user.email ?? '',
+      birthdate: user.birthdate ?? '',
+      country: user.country ?? ''
+    });
 
-  formSignal = signal(this.fb.group({
-    fullName: ['', Validators.required],
-    email: ['', [Validators.email, Validators.required]],
-    birthdate: [''],
-    country: ['']
-  }));
-
+    this.previewUrl = this.auth.getCurrentUserPhoto();
+    this.initialFormValue = structuredClone(this.formSignal().value);
+  }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -76,10 +98,8 @@ export class ProfileEditPage implements OnInit {
 
   async pickImage() {
     if (Capacitor.getPlatform() === 'web') {
-      // fallback web: abrir input file
       this.fileInput.nativeElement.click();
     } else {
-      // móvil: usar cámara o galería
       const file = await this.cameraService.pickImage();
       if (file) {
         this.selectedFile = file;
@@ -90,55 +110,72 @@ export class ProfileEditPage implements OnInit {
     }
   }
 
-  updateProfile(){
+  updateProfile() {
     const form: FormGroup = this.formSignal();
-    if(form.invalid) return;
+    if (form.invalid) return;
 
     const data = form.value;
+    const currentUser = this.auth.getCurrentUser();
+    if (!currentUser) return;
+
+    const isoBirthdate = data.birthdate
+      ? data.birthdate.split('/').reverse().join('-')
+      : currentUser.birthdate
+        ? currentUser.birthdate.split('/').reverse().join('-')
+        : null;
+
+    const profileData = {
+      fullName: data.fullName || currentUser.fullName,
+      email: data.email || currentUser.email,
+      country: data.country || currentUser.country,
+      birthdate: isoBirthdate || currentUser.birthdate
+    };
+
     const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      const safeValue = value !== null && value !== undefined ? String(value) : '';
-      formData.append(key, safeValue);
-    });
-    if(this.selectedFile){
+    formData.append(
+      'profile',
+      new Blob([JSON.stringify(profileData)], { type: 'application/json' })
+    );
+
+    if (this.selectedFile) {
       formData.append('photoProfile', this.selectedFile, this.selectedFile.name);
     }
-    this.auth.registerStep2(formData).subscribe(() =>{
-      this.clientService.getCurrentClient().subscribe(client =>{
-        this.auth.setCurrentUser(client);
-      })
-    })
 
-
+    this.auth.registerStep2(formData).subscribe({
+      next: updatedClient => {
+        this.auth.setCurrentUser(updatedClient);
+        this.initialFormValue = structuredClone(this.formSignal().value);
+        this.showSuccessToast();
+      },
+      error: (err) => {
+        console.log('Error during update:');
+        console.log('Error status:', err.status);
+        console.log('Error statusText:', err.statusText);
+        console.log('Error URL:', err.url);
+        console.log('Error body:', err.error);
+      }
+    });
   }
 
-  ngOnInit() {
-    const user = this.auth.getCurrentUser();
+  unSaveFormChange(): boolean{
+    const currentValue = this.formSignal().value;
 
-    if (user) {
-      this.formSignal().patchValue({
-        fullName: user.fullName ?? '',
-        email: user.email ?? '',
-        birthdate: user.birthdate ?? '',
-        country: user.country ?? ''
-      });
-      this.previewUrl = this.auth.getCurrentUserPhoto();
-      this.initialFormValue = this.formSignal().value;
-    } else {
-      // Cargar desde backend si no está en memoria
-      this.clientService.getCurrentClient().subscribe({
-        next: (client) => {
-          this.auth.setCurrentUser(client);
-          this.formSignal().patchValue({
-            fullName: client.fullName ?? '',
-            email: client.email ?? '',
-            birthdate: client.birthdate ?? '',
-            country: client.country ?? ''
-          });
-          this.previewUrl = this.auth.getCurrentUserPhoto();
-        },
-        error: () => console.error('No se pudo obtener el cliente actual.')
-      });
-    }
+    const formChanged = (Object.keys(currentValue) as (keyof typeof currentValue)[])
+      .some(key => currentValue[key] !== this.initialFormValue);
+
+    const photoChanged = this.previewUrl !== this.auth.getCurrentUserPhoto();
+
+    return formChanged || photoChanged;
+  }
+
+
+
+  async showSuccessToast() {
+    const toast = await this.toastCtrl.create({
+      message: 'Perfil actualizado correctamente',
+      duration: 2000,
+      position: 'bottom',
+    });
+    await toast.present();
   }
 }

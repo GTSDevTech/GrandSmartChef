@@ -3,79 +3,153 @@
     import com.grandchefsupreme.dto.RecipeCardDTO;
     import com.grandchefsupreme.dto.RecipeDTO;
     import com.grandchefsupreme.service.RecipeService;
+    import com.grandchefsupreme.utils.ApiResponseMessage;
+    import jakarta.servlet.http.HttpServletRequest;
     import jakarta.validation.Valid;
     import lombok.RequiredArgsConstructor;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.security.access.AccessDeniedException;
+    import lombok.Value;
+    import org.springframework.http.MediaType;
     import org.springframework.web.bind.annotation.*;
-
-    import java.util.Collections;
     import java.util.List;
-    import java.util.Map;
+
 
     @RestController
     @RequestMapping(value = "/api/recipes")
     @RequiredArgsConstructor
-    public class RecipeController {
+    public class    RecipeController {
 
         private final RecipeService recipeService;
 
     @GetMapping("/card")
-    public ResponseEntity<List<RecipeCardDTO>> listAllCards(){
-            List<RecipeCardDTO> recipes = recipeService.getAllActiveRecipesForCards();
-            return ResponseEntity.ok(recipes);
+    public List<RecipeCardDTO> listAllCards(HttpServletRequest request) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Recetas activas obtenidas correctamente"
+                );
+
+        return recipeService.getAllActiveRecipesForCards();
     }
 
     @GetMapping("/create/all")
-    public ResponseEntity<List<RecipeCardDTO>> listAllRecipes(){
-        List<RecipeCardDTO> recipes = recipeService.getAllRecipes();
-        return ResponseEntity.ok(recipes);
+    public List<RecipeCardDTO> listAllRecipes(HttpServletRequest request) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Listado completo de recetas"
+        );
+
+        return recipeService.getAllRecipes();
     }
 
 
     @GetMapping("/detail")
-    public ResponseEntity<?> detailById(@Valid @RequestParam Long id){
-            RecipeDTO recipe = recipeService.getRecipeForDetails(id);
-            return ResponseEntity.ok(recipe);
+    public RecipeDTO detailById(
+            HttpServletRequest request,
+            @Valid @RequestParam Long id
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Detalle de la receta obtenido correctamente"
+        );
+
+        return recipeService.getRecipeForDetails(id);
     }
 
     @GetMapping("/create/detail")
-    public ResponseEntity<?> detailByIdCreate(@Valid @RequestParam Long id){
-        RecipeDTO recipe = recipeService.getRecipeForDetails(id);
-        return ResponseEntity.ok(recipe);
+    public RecipeDTO detailByIdCreate(
+            HttpServletRequest request,
+            @Valid @RequestParam Long id
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Detalle de la receta (modo edición)"
+        );
+
+        return recipeService.getRecipeForDetails(id);
     }
 
 
-        @PostMapping("/create")
-    public ResponseEntity<RecipeDTO> createRecipe(@Valid @RequestBody RecipeDTO recipeDTO) {
-        RecipeDTO createdRecipe = recipeService.createRecipe(recipeDTO);
-        return ResponseEntity.ok(createdRecipe);
+    @PostMapping(
+            value = "/create",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public RecipeDTO createRecipe(
+            HttpServletRequest request,
+            @RequestBody @Valid RecipeDTO recipeDTO
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Receta creada correctamente"
+        );
+
+        return recipeService.createRecipe(recipeDTO);
     }
 
 
 
     @PutMapping("/update")
-    public ResponseEntity<RecipeDTO> editRecipe(@Valid @RequestBody RecipeDTO recipeDTO) {
-        RecipeDTO updateRecipe = recipeService.updateRecipe(recipeDTO);
-        return ResponseEntity.ok(updateRecipe);
+    public RecipeDTO editRecipe(
+            HttpServletRequest request,
+            @Valid @RequestBody RecipeDTO recipeDTO
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Receta actualizada correctamente"
+        );
+
+        return recipeService.updateRecipe(recipeDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRecipe(@Valid @PathVariable("id") Long id){
+    public void deleteRecipe(
+            HttpServletRequest request,
+            @Valid @PathVariable Long id
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Receta eliminada correctamente"
+        );
+
         recipeService.deleteRecipe(id);
     }
 
     @GetMapping("/user-preferences/{userId}")
-    public ResponseEntity<List<RecipeCardDTO>> findByUserId(@Valid @PathVariable("userId") Long userId) {
-        List<RecipeCardDTO> recipes = recipeService.getByUserPreferences(userId);
-        return ResponseEntity.ok(recipes);
+    public List<RecipeCardDTO> findByUserId(
+            HttpServletRequest request,
+            @Valid @PathVariable Long userId
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Recetas obtenidas según preferencias del usuario"
+        );
+
+        return recipeService.searchRecipes(userId, null);
     }
+
 
     @GetMapping("/ingredients")
-    public ResponseEntity<List<RecipeCardDTO>> findByIngredients(@Valid @RequestParam("ingredientIds") List<Long> ingredientIds) {
-        List<RecipeCardDTO> recipes = recipeService.getByIngredientIds(ingredientIds);
-        return ResponseEntity.ok(recipes);
+    public List<RecipeCardDTO> findByIngredients(
+            HttpServletRequest request,
+            @Valid @RequestParam("ingredientIds") List<Long> ingredientIds
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Recetas filtradas por ingredientes"
+        );
+
+        return recipeService.searchRecipes(null, ingredientIds);
     }
 
+    @GetMapping("/search")
+    public List<RecipeCardDTO> search(
+            HttpServletRequest request,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) List<Long> ingredientIds
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Recetas filtradas correctamente"
+        );
+
+        return recipeService.searchRecipes(userId, ingredientIds);
+    }
 }

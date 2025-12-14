@@ -2,9 +2,10 @@ package com.grandchefsupreme.controller;
 
 import com.grandchefsupreme.dto.ShoppingListDTO;
 import com.grandchefsupreme.service.ShoppingListService;
+import com.grandchefsupreme.utils.ApiResponseMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,33 +18,64 @@ public class ShoppingListController {
     private final ShoppingListService shoppingListService;
 
     @PostMapping("/create")
-    public ResponseEntity<ShoppingListDTO> createShoppingList(@Valid @RequestParam Long userId, @RequestParam Long recipeId) {
-        ShoppingListDTO shoppingList = shoppingListService.addRecipeToShoppingList(userId, recipeId);
-        return ResponseEntity.ok(shoppingList);
+    public ShoppingListDTO createShoppingList(
+            HttpServletRequest request,
+            @Valid @RequestParam Long userId,
+            @RequestParam Long recipeId
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Receta añadida a la lista de la compra"
+        );
+
+        return shoppingListService.addRecipeToShoppingList(userId, recipeId);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ShoppingListDTO>> getUserLists(@Valid @PathVariable Long userId) {
-        List<ShoppingListDTO> lists = shoppingListService.getAllListsByUser(userId);
-        return ResponseEntity.ok(lists);
+    public List<ShoppingListDTO> getUserLists(
+            HttpServletRequest request,
+            @Valid @PathVariable Long userId
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Listas de la compra obtenidas correctamente"
+        );
+
+        return shoppingListService.getAllListsByUser(userId);
     }
 
     @PatchMapping("/{listId}/recipe/{recipeId}/ingredient/{ingredientId}/bought")
-    public ResponseEntity<Void> markIngredientBought(@Valid
-            @PathVariable Long listId,
+    public void markIngredientBought(
+            HttpServletRequest request,
+            @Valid @PathVariable Long listId,
             @PathVariable Long recipeId,
             @PathVariable Long ingredientId,
-            @RequestParam boolean bought) {
+            @RequestParam boolean bought
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                bought  ? "Ingrediente marcado como comprado"
+                        : "Ingrediente marcado como no comprado"
+        );
 
-        shoppingListService.markIngredientBought(listId, recipeId, ingredientId, bought);
-        return ResponseEntity.noContent().build();
+        shoppingListService.markIngredientBought(
+                listId,
+                recipeId,
+                ingredientId,
+                bought
+        );
     }
 
     @DeleteMapping("/delete/boughtIngredients/{userId}")
-    public ResponseEntity<Void> removeIngredientFromList(@Valid
-            @PathVariable Long userId) {
-        shoppingListService.removeBoughtIngredientsAndCleanList(userId);
-        return ResponseEntity.noContent().build();
-    }
+    public void removeIngredientFromList(
+            HttpServletRequest request,
+            @Valid @PathVariable Long userId
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Ingredientes comprados eliminados correctamente"
+        );
 
+        shoppingListService.removeBoughtIngredientsAndCleanList(userId);
+    }
 }
