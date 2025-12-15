@@ -1,7 +1,0 @@
-{
-  "name": "GrandSmartChef",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular-standalone"
-}
