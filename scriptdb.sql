@@ -142,7 +142,7 @@ CREATE TABLE shopping_list (
 CREATE TABLE shopping_list_ingredient (
 id BIGSERIAL PRIMARY KEY,
 id_shopping_list BIGINT NOT NULL REFERENCES shopping_list(id) ON DELETE CASCADE,
-id_recipe BIGINT NOT NULL UNIQUE REFERENCES recipe(id) ON DELETE CASCADE,
+id_recipe BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
 id_ingredient BIGINT NOT NULL REFERENCES ingredient(id) ON DELETE CASCADE,
 quantity NUMERIC (38,2) NOT NULL,
 unit VARCHAR(50), -- ENUM: 1=grams, 2=ml...)

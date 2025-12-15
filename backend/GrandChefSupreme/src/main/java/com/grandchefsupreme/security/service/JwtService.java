@@ -1,5 +1,7 @@
 package com.grandchefsupreme.security.service;
 
+import com.grandchefsupreme.exceptions.TokenExpiredException;
+import com.grandchefsupreme.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.*;
@@ -42,12 +44,19 @@ public class JwtService implements IJwtService{
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException ex) {
+            throw new TokenExpiredException("El token ha expirado");
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new UnauthorizedException("Token inválido, no autorizado");
+        }
     }
+
 
     @Override
     public String generateToken(UserDetails userDetails){
