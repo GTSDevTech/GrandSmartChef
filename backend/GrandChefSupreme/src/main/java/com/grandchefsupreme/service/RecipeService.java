@@ -296,10 +296,6 @@ public class RecipeService {
                         ingredientIds
                 );
 
-        if (recipes.isEmpty()) {
-            return recipeCardMapper.toDTO(recipes);
-        }
-
         return recipeCardMapper.toDTO(recipes);
     }
 

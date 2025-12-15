@@ -34,7 +34,7 @@ public class FavoriteCollectionController {
     @GetMapping("/{collectionId}")
     public FavoriteCollectionDTO getFavoriteCollectionById(
             HttpServletRequest request,
-            @PathVariable Long collectionId
+            @Valid @PathVariable Long collectionId
     ) {
         request.setAttribute(
                 ApiResponseMessage.MESSAGE_ATTR,

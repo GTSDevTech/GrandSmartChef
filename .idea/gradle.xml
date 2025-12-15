@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/frontend/GrandSmartChef/android" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/android" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/android/app" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/android/capacitor-cordova-android-plugins" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/node_modules/@capacitor/android/capacitor" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/node_modules/@capacitor/app/android" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/node_modules/@capacitor/camera/android" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/node_modules/@capacitor/haptics/android" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/node_modules/@capacitor/keyboard/android" />
+            <option value="$PROJECT_DIR$/frontend/GrandSmartChef/node_modules/@capacitor/status-bar/android" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

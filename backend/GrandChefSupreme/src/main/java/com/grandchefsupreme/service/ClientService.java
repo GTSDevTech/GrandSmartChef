@@ -4,6 +4,7 @@ import com.grandchefsupreme.dto.ClientDTO;
 import com.grandchefsupreme.dto.ClientLoginDTO;
 import com.grandchefsupreme.dto.RegisterStep1DTO;
 import com.grandchefsupreme.dto.RegisterStep2DTO;
+import com.grandchefsupreme.exceptions.AlreadyUserExist;
 import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.exceptions.NotFoundException;
 import com.grandchefsupreme.mapper.ClientMapper;
@@ -74,11 +75,22 @@ public class ClientService {
 
 
     }
+
+    public void getClientByEmail(String email) {
+
+        if (clientRepository.existsByEmail(email)) {
+            throw new AlreadyUserExist("El cliente ya existe");
+        }
+    }
+
+
     public ClientLoginDTO getClient(User user) {
         Client client = clientRepository.findById(user.getId())
                 .orElseThrow(() -> new NotFoundException("Client not found"));
         return clientMapper.toLoginDTO(client);
     }
+
+
     public ClientDTO getClientProfile(User user) {
         Client client = clientRepository.findById(user.getId())
                 .orElseThrow(() -> new NotFoundException("Client not found"));

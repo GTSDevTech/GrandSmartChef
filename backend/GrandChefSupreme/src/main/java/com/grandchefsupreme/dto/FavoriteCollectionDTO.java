@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class FavoriteCollectionDTO {
 
-    @NotBlank(message = "Título de la colección obligatoria")
+    @NotBlank(message = "Título de la colección obligatorio")
     private String title;
 
     @NotBlank(message = "Se debe seleccionar un color")
@@ -18,6 +18,7 @@ public class FavoriteCollectionDTO {
 
     @NotNull(message = "Usuario no logueado")
     private Long clientId;
+
     private List<RecipeCardDTO> recipes;
 
 }

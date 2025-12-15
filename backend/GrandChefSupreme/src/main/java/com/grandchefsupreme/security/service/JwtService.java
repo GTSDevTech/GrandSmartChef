@@ -1,5 +1,7 @@
 package com.grandchefsupreme.security.service;
 
+import com.grandchefsupreme.exceptions.TokenExpiredException;
+import com.grandchefsupreme.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.*;
@@ -27,6 +29,9 @@ public class JwtService implements IJwtService{
 
     @Override
     public String extractUsername(String token){
+        if (token == null || token.isBlank()) {
+            throw new UnauthorizedException("Token vacío");
+        }
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -42,11 +47,17 @@ public class JwtService implements IJwtService{
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException ex) {
+            throw new TokenExpiredException("El token ha expirado");
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new UnauthorizedException("Token inválido");
+        }
     }
 
     @Override
