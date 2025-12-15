@@ -1,0 +1,74 @@
+
+<ion-content [fullscreen]="true">
+  <app-back-header></app-back-header>
+  <ion-row class="ion-padding-horizontal edit-container">
+    <ion-icon size="large" name="create" class="icon-profile"></ion-icon>
+    <ion-label>
+      Editar Perfil
+    </ion-label>
+  </ion-row>
+  <ion-row class="center-container-row ion-padding ion-margin-vertical">
+
+    <div class="image-container">
+      <ion-img
+        class="user-image-profile"
+        [src]="previewUrl || this.auth.getCurrentUserPhoto()"
+        alt="User image">
+      </ion-img>
+      <ion-fab class="fab-bottom-right" horizontal="end">
+        <ion-fab-button class="camera-button" (click)="pickImage()">
+          <ion-icon name="camera" class="camera-icon"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <input type="file" #fileInput (change)="onFileSelected($event)" hidden accept="image/*">
+    </div>
+  </ion-row>
+  <ion-row class="row-register-form">
+    <form
+      class="ion-padding"
+      [formGroup]="formSignal()"
+      (ngSubmit)="updateProfile()">
+      <ion-item class="custom-input" color="light">
+        <ion-icon name="person" slot="start"></ion-icon>
+        <ion-input
+          formControlName="fullName"
+          type="text"
+          placeholder="Nombre Completo"
+          class="form-input-register">
+        </ion-input>
+      </ion-item >
+      <ion-item class="custom-input" color="light">
+        <ion-icon name="mail" slot="start"></ion-icon>
+        <ion-input
+          formControlName="email"
+          type="text"
+          placeholder="Correo electrónico"
+          class="form-input-register">
+        </ion-input>
+      </ion-item>
+      <ion-item class="custom-input" color="light">
+        <ion-icon name="calendar-number-outline" slot="start"></ion-icon>
+        <ion-input
+          formControlName="birthdate"
+          type="text"
+          placeholder="Fecha Nacimiento"
+          class="form-input-register">
+        </ion-input>
+      </ion-item>
+      <ion-item class="custom-input" color="light">
+        <ion-icon name="location-outline" slot="start"></ion-icon>
+        <ion-input
+          formControlName="country"
+          type="text"
+          placeholder="País"
+          class="form-input-register">
+        </ion-input>
+      </ion-item>
+      <ion-row class="center-container-row">
+        <ion-button type="submit" expand="block" [disabled]="formSignal().invalid" class="update-client" >ACTUALIZAR</ion-button>
+      </ion-row>
+    </form>
+
+  </ion-row>
+
+</ion-content>

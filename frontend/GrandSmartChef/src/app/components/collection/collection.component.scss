@@ -1,0 +1,99 @@
+
+.favorite-card {
+  border-radius: 40px;
+  margin: 1.3rem;
+}
+
+ion-icon.options{
+  position: absolute;
+  color: whitesmoke;
+  font-size: 45px;
+  font-weight: bold;
+}
+
+.subtitle-collection{
+  display: flex;
+  justify-content: end;
+}
+
+ion-item.name-collection{
+  width: 100%;
+  display: flex;
+  ion-note{
+    align-self: center;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+  }
+  ion-label{
+    color: #FFFFFF;
+    align-self: center;
+    margin: 0;
+    --font-size: 0.9rem;
+    font-weight: bold;
+  }
+}
+
+.favorite-recipe-list{
+  display: flex;
+  text-align: start;
+  margin-bottom: 30px;
+}
+
+
+.card-fab {
+  position: absolute;
+  right: 1rem;
+  z-index: 1000;
+
+}
+
+.icon-fab-button{
+  margin-top: 4rem;
+}
+
+.icon-fab-button-horizontal{
+  margin-right: 4rem;
+
+}
+
+ion-fab-button.option-button-card {
+  --color: var(--primary-gray-color);
+  background: transparent;
+  --background: transparent;
+  justify-self: center;
+
+}
+
+ion-button.delete-collection-button {
+  color: white;
+  --border-radius: 100%;
+  --background: red;
+  width: 45px;
+  height: 45px;
+  justify-self: center;
+  z-index: 5000;
+
+  ion-icon{
+    position: absolute;
+  }
+
+}
+
+
+ion-button.add-collection-button {
+  color: white;
+  --border-radius: 100%;
+  --background: var(--secondary-green-color);
+  width: 45px;
+  height: 45px;
+  justify-self: center;
+  z-index: 5000;
+
+  ion-icon {
+    position: absolute;
+  }
+}
+.counter-recipe{
+  color: white;
+  margin-right: 0.7rem;
+}

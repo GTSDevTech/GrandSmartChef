@@ -1,0 +1,87 @@
+
+
+<ion-content>
+  <app-shared-header
+    [label]="'Configuración'"
+    [icon]="'settings-outline'"
+    [bgColor]="'#ABA8AF'"
+  ></app-shared-header>
+  <ion-row class="ion-padding-vertical"></ion-row>
+  <ion-label class="categ-setting">Preferencias</ion-label>
+  <ion-row class="options-setting">
+    <ion-card class="card-setting">
+      <ion-card-content class="content-card-setting ">
+        <ion-list>
+          <ion-item lines="none" class="item-setting">
+            <ion-col size="auto">
+              <ion-icon class="icon-setting" size="large" name="notifications-outline"></ion-icon>
+            </ion-col>
+            <ion-col class="ion-text-start">
+              <h3>Notificaciones</h3>
+              <ion-label>Activar notificaciones</ion-label>
+            </ion-col>
+              <ion-toggle class="custom-toggle" slot="end"></ion-toggle>
+          </ion-item>
+          <ion-item lines="none" class="item-setting">
+            <ion-col size="auto">
+              <ion-icon class="icon-setting" size="large" name="moon-outline"></ion-icon>
+            </ion-col>
+            <ion-col class="ion-text-start">
+              <h3>Modo Oscuro</h3>
+              <ion-label>Cambiar tema a oscuro</ion-label>
+            </ion-col>
+            <ion-toggle class="custom-toggle" slot="end"></ion-toggle>
+          </ion-item>
+          <ion-item [button]="true" lines="none" class="item-setting">
+            <ion-col size="auto">
+              <ion-icon class="icon-setting" size="large" name="globe-outline"></ion-icon>
+            </ion-col>
+            <ion-col class="ion-text-start">
+              <h3>Idioma</h3>
+              <ion-label>Español</ion-label>
+            </ion-col>
+          </ion-item>
+          <ion-item [button]="true" lines="none" class="item-setting2">
+            <ion-col size="auto">
+              <ion-icon class="icon-setting" size="large" name="color-palette-outline"></ion-icon>
+            </ion-col>
+            <ion-col class="ion-text-start">
+              <h3>Tema</h3>
+              <ion-label>Personalizar apariencia</ion-label>
+            </ion-col>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ion-row>
+  <ion-label class="categ-setting ">Seguridad</ion-label>
+  <ion-row class="options-setting">
+    <ion-card class="card-setting">
+      <ion-card-content class="content-card-setting ">
+        <ion-list>
+          <ion-item [button]="true" lines="none" class="item-setting">
+            <ion-col size="auto">
+              <ion-icon class="icon-setting" size="large" name="shield-outline"></ion-icon>
+            </ion-col>
+            <ion-col class="ion-text-start">
+              <h3>Privacidad</h3>
+              <ion-label>Configurar privacidad de datos</ion-label>
+            </ion-col>
+
+          </ion-item>
+          <ion-item lines="none" class="item-setting2">
+            <ion-col size="auto">
+              <ion-icon class="icon-setting" size="large" name="scan-outline"></ion-icon>
+            </ion-col>
+            <ion-col class="ion-text-start">
+              <h3>Face o Touch ID</h3>
+              <ion-label>Usar huella o Face ID</ion-label>
+            </ion-col>
+            <ion-toggle class="custom-toggle" slot="end"></ion-toggle>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ion-row>
+  <ion-button class="setting-button">Eliminar Cuenta</ion-button>
+</ion-content>

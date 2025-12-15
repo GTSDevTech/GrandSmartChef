@@ -1,0 +1,70 @@
+
+services:
+  frontend:
+    build:
+      context: ./frontend/GrandSmartChef
+      dockerfile: Dockerfile
+    container_name: ionic-angular-frontend
+    ports:
+      - "4200:80"
+    networks:
+      - app-net
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend/GrandChefSupreme
+      dockerfile: Dockerfile
+    container_name: springboot-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/grandsmartchefdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    depends_on:
+      - db
+    networks:
+      - app-net
+    volumes:
+      - ./uploads/profile:/data/uploads/profile
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: grandsmartchefdb
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-net
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: gtejadosanchez@safareyes.es
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - app-net
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin_backups:/var/lib/pgadmin/Storage/Backup
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  app-net:
+    driver: bridge

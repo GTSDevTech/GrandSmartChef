@@ -1,0 +1,18 @@
+<ion-grid>
+  <ion-row>
+    <ion-col class="col-item-ingr">
+      <ion-label class="category-label">
+        {{ingredient().name}}
+      </ion-label>
+      <ion-item
+        button lines="none"
+        detail="false"
+        class="item-ingr ion-padding">
+        <ion-img [src]="ingredient().urlPhoto" [alt]="ingredient().name">
+          <ion-icon class="check-icon" name="checkmark-circle-outline"></ion-icon>
+        </ion-img>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+

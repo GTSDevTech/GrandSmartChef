@@ -1,0 +1,25 @@
+.image-container {
+  position: relative;
+  display: inline-block;
+  padding:1.5rem;
+}
+
+.user-image-profile {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.fab-bottom-right {
+  position: absolute;
+  bottom: 2rem;
+  right: 1.5rem;
+  transform: translate(20%, 20%);
+}
+
+
+ion-icon.icon-profile{
+  color: var(--primary-green-color);
+
+}

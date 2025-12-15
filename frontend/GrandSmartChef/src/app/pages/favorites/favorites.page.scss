@@ -1,0 +1,21 @@
+
+.folder-icon{
+  color: white;
+}
+
+.subtitle-collection{
+  display: flex;
+  justify-content: end;
+}
+
+ion-item.name-collection{
+  width: 100%;
+  display: flex;
+  ion-label{
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+
+

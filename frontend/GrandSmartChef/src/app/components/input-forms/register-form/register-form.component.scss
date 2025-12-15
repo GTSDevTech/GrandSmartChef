@@ -1,0 +1,32 @@
+.row-register-form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5rem;
+}
+
+.custom-input {
+  --background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  --min-height: 56px;
+  border: 1px solid #ccc;
+  margin-bottom: 2.2rem;
+  width: 80vw;
+
+
+  ion-label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+    margin-left: 8px;
+    font-size: medium;
+  }
+
+}
+
+ion-icon{
+  color: var(--primary-gray-color);
+}
+
+

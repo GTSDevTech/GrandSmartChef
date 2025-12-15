@@ -1,0 +1,15 @@
+<ion-row class="progress-row">
+
+    <ion-label>
+      {{boughtItems()}} de {{totalItems()}} completados
+    </ion-label>
+
+</ion-row>
+<ion-row class="progress-container">
+  <ion-col size="9">
+    <ion-progress-bar [value]="progress() / 100" type="success" class="progress-bar shadow-box"></ion-progress-bar>
+  </ion-col>
+  <ion-col size="auto" class="ion-text-end">
+    {{progress()}} %
+  </ion-col>
+</ion-row>
