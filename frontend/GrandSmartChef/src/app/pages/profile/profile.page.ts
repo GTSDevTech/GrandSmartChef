@@ -18,6 +18,7 @@ import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-fo
 import {FilterProfileComponent} from "../../components/filters/filter-profile/filter-profile.component";
 import {ImgProfileComponent} from "../../components/img-profile/img-profile.component";
 import {AuthService} from "../../services/auth/auth.service";
+import {ClientService} from "../../services/client/client.service";
 
 @Component({
   selector: 'app-profile',
@@ -36,6 +37,7 @@ import {AuthService} from "../../services/auth/auth.service";
 export class ProfilePage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
   private authService = inject(AuthService);
+  private clientService = inject(ClientService);
   private location = inject(Location);
   user = this.authService.currentUser;
 
@@ -48,6 +50,10 @@ export class ProfilePage implements OnInit {
   ngOnInit() {
     this.authService.ensureCurrentUserLoaded();
 
+  }
+
+  onPreferencesChange(prefs: { id: number; name: string }[]) {
+    this.clientService.updatePreferences(prefs).subscribe();
   }
 
 

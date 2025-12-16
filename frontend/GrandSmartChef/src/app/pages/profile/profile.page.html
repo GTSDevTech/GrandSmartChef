@@ -40,7 +40,10 @@
       </ion-label>
       </ion-col>
     </ion-row>
-    <app-filter-profile></app-filter-profile>
+    <app-filter-profile
+      [initialPreferences]="user()?.preferences ?? []"
+      (preferencesChange)="onPreferencesChange($event)">
+    </app-filter-profile>
   </ion-grid>
 
 </ion-content>

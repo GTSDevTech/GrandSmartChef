@@ -29,4 +29,23 @@ export class ClientService {
 
   }
 
+  updatePreferences(prefs: { id: number; name: string }[]) {
+    const token = this.auth.getToken();
+    if (!token) {
+      console.error('No hay token disponible');
+      return throwError(() => new Error('No authentication token'));
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.patch<ClientDTO>(
+      `${this.apiUrl}/preferences`,
+      { preferences: prefs },
+      { headers }
+    );
+  }
+
+
 }

@@ -19,6 +19,7 @@ import {CollectionService} from "../../../services/collection/collection.service
     selector: 'app-collection-modal',
     templateUrl: './collection-modal.component.html',
     styleUrls: ['./collection-modal.component.scss'],
+    standalone: true,
   imports: [
     IonButton,
     IonButtons,

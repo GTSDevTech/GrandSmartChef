@@ -18,9 +18,9 @@ export class ChooseColorComponent  implements OnInit {
   colorSelected = output<string>();
   selectedColor: string = '';
   colorPalette = [
-    ['#FF0000', '#EF7C14', '#FFBB00', '#FFF600', '#2B523C'],
-    ['#6C8C79', '#7FC1FE', '#0082FD', '#8800FF', '#D400FF'],
-    ['#3F37C9', '#4361EE', '#FF68C3', '#989298', '#000000']
+    ['#C62828', '#C66A1A', '#C99A1A', '#C9C41A', '#2F4A3B'],
+    ['#5F7A6A', '#6FA8D6', '#1F6FB8', '#6A2FB8', '#9A2FB8'],
+    ['#3B3799', '#3E55B8', '#C75A9E', '#8E8A8E', '#000000']
   ];
   constructor() { }
 

@@ -9,10 +9,9 @@ import {
   IonIcon, IonRow
 } from "@ionic/angular/standalone";
 import {RouterLink} from "@angular/router";
-import {RecipeService} from "../../../services/recipe/recipe.service";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {CollectionService} from "../../../services/collection/collection.service";
-import {star} from "ionicons/icons";
+import {environment} from "../../../../environments/environment.prod";
 
 @Component({
   selector: 'app-home-card',
@@ -35,7 +34,7 @@ import {star} from "ionicons/icons";
 })
 export class HomeCardComponent  implements OnInit {
 
-
+  private readonly backendUrl = environment.imageBaseUrl;
   private collectionService = inject(CollectionService);
   recipe = input.required<RecipeCardDTO>();
 
@@ -76,5 +75,12 @@ export class HomeCardComponent  implements OnInit {
 
     }
     return stars;
+  }
+
+  getRecipeImage(imageUrl?: string | null): string {
+    if (!imageUrl) {
+      return '/assets/images/recipes/default_profile_image.png';
+    }
+    return `${this.backendUrl}${imageUrl}`;
   }
 }

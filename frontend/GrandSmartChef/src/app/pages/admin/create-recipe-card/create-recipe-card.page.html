@@ -1,5 +1,8 @@
 <ion-card>
-  <img class="img-card" [src]= getRecipeImage() alt="imagen receta">
+  <img
+    class="img-card"
+    [src]="getRecipeImage(recipe().imageUrl)"
+    alt="imagen receta">
 
   <ion-card-header>
     <ion-grid>

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -34,9 +34,19 @@ export class HomePage implements OnInit {
 
   user = this.auth.getCurrentUser();
   recipes = signal<RecipeCardDTO[]>([]);
-  constructor() {
-  }
+  searchTerm = signal<string>('');
 
+  filteredRecipes = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+
+    if (!term) {
+      return this.recipes();
+    }
+
+    return this.recipes().filter(recipe =>
+      recipe.name.toLowerCase().includes(term)
+    );
+  });
   ngOnInit() {
 
     this.loadRecipes();
@@ -74,5 +84,9 @@ export class HomePage implements OnInit {
     if (scrollTop != null) {
       this.scrollFooter.updateScroll(scrollTop);
     }
+  }
+
+  onSearch(value: string) {
+    this.searchTerm.set(value);
   }
 }

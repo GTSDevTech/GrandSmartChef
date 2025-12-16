@@ -19,20 +19,17 @@ import {environment} from "../../../../environments/environment.prod";
   templateUrl: './create-recipe-card.page.html',
   styleUrls: ['./create-recipe-card.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonGrid, IonIcon, IonRow, RouterLink, IonImg]
+  imports: [CommonModule, FormsModule, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonGrid, IonIcon, IonRow]
 })
-export class CreateRecipeCardPage implements OnInit {
+export class CreateRecipeCardPage {
 
   private readonly backendUrl = environment.imageBaseUrl;
   private routes = inject(Router);
   recipe = input.required<RecipeCardDTO>();
 
   delete = output<number>();
-  previewUrl: string | null = null;
 
 
-  ngOnInit() {
-  }
   goToRecipeForm(id: number) {
     this.routes.navigate(['/recipe-form', id]);
   }
@@ -42,11 +39,9 @@ export class CreateRecipeCardPage implements OnInit {
   }
 
   getRecipeImage(imageUrl?: string | null): string {
-    console.log(imageUrl);
     if (!imageUrl) {
-      console.log(`${this.backendUrl}${imageUrl}`);
-      return '/assets/images/users/default_profile_image.png';
+      return '/assets/images/recipes/default_profile_image.png';
     }
-    return `${this.backendUrl}${this.recipe().imageUrl}`;
+    return `${this.backendUrl}${imageUrl}`;
   }
 }

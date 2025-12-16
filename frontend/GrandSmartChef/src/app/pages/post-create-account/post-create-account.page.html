@@ -57,7 +57,8 @@
       </ion-row>
     </form>
 
-    <app-filter-profile ></app-filter-profile>
-
+    <app-filter-profile
+      (preferencesChange)="onPreferencesChange($event)">
+    </app-filter-profile>
   </ion-grid>
 </ion-content>

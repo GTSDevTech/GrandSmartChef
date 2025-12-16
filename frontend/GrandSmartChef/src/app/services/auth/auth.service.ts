@@ -68,19 +68,20 @@ export class AuthService {
   }
 
 
-  /**
-   * Devuelve identidad mínima (id + username)
-   */
   getAuthUser() {
     return this.http.get<ClientLoginDTO>(
       `${this.clientApiUrl}/me`
     );
   }
 
-  /**
-   * Carga el perfil completo SOLO si no está en memoria
-   * (clave para Profile, ProfileEdit, foto, etc.)
-   */
+  updatePreferences(prefs: { id: number; name: string }[]) {
+    return this.http.patch<ClientDTO>(
+      `${this.clientApiUrl}/profile/preferences`,
+      prefs
+    );
+  }
+
+
   ensureCurrentUserLoaded() {
     if (this.currentUser()) return;
 

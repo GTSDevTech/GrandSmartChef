@@ -1,34 +1,21 @@
 <ion-row class="center-container-row filter-profile">
-<ion-text class="justify-left preferences">
-  <h3><b>Preferencias alimentarias</b></h3>
-</ion-text>
-<ion-item class="toggle-options shadow-box">
-  <ion-label>
-    <h3><b>Vegetariana</b></h3>
-    <p>Evitar recetas con carne o pescado</p>
-  </ion-label>
-  <ion-toggle slot="end"></ion-toggle>
-</ion-item>
-<ion-item class="toggle-options shadow-box">
-  <ion-label>
-    <h3><b>Sin Gluten</b></h3>
-    <p>Evitar productos con gluten</p>
-  </ion-label>
-  <ion-toggle slot="end"></ion-toggle>
-</ion-item>
-<ion-item class="toggle-options shadow-box">
-  <ion-label>
-    <h3><b>Rápidas</b></h3>
-    <p>Recetas rápidas < 30 min</p>
-  </ion-label>
-  <ion-toggle slot="end"></ion-toggle>
-</ion-item>
-<ion-item class="toggle-options shadow-box">
-  <ion-label>
-    <h3><b>Económicas</b></h3>
-    <p>Recetas baratas con coste < 10€</p>
-  </ion-label>
-  <ion-toggle slot="end"></ion-toggle>
-</ion-item>
+  <ion-text class="justify-left preferences">
+    <h3><b>Preferencias alimentarias</b></h3>
+  </ion-text>
 
+  @for (opt of options; track opt.id) {
+    <ion-item class="toggle-options shadow-box">
+      <ion-label>
+        <h3><b>{{ opt.title }}</b></h3>
+        <p>{{ opt.description }}</p>
+      </ion-label>
+
+      <ion-toggle
+        class="custom-toggle"
+        slot="end"
+        [checked]="isSelected(opt.id)"
+        (ionChange)="onToggle(opt.id, $event.detail.checked)">
+      </ion-toggle>
+    </ion-item>
+  }
 </ion-row>

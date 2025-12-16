@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, output} from '@angular/core';
 import {IonSearchbar} from "@ionic/angular/standalone";
 
 @Component({
@@ -10,10 +10,13 @@ import {IonSearchbar} from "@ionic/angular/standalone";
     IonSearchbar
   ]
 })
-export class SearcherComponent  implements OnInit {
+export class SearcherComponent  {
 
-  constructor() { }
 
-  ngOnInit() {}
+  searchChange = output<string>();
 
+  onSearch(event: Event) {
+    const value = (event.target as HTMLIonSearchbarElement).value || '';
+    this.searchChange.emit(value);
+  }
 }

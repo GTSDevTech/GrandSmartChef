@@ -1,23 +1,26 @@
 package com.grandchefsupreme.service;
 
-import com.grandchefsupreme.dto.ClientDTO;
-import com.grandchefsupreme.dto.ClientLoginDTO;
-import com.grandchefsupreme.dto.RegisterStep1DTO;
-import com.grandchefsupreme.dto.RegisterStep2DTO;
+import com.grandchefsupreme.dto.*;
 import com.grandchefsupreme.exceptions.AlreadyUserExist;
 import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.exceptions.NotFoundException;
 import com.grandchefsupreme.mapper.ClientMapper;
 import com.grandchefsupreme.model.Client;
+import com.grandchefsupreme.model.Tag;
 import com.grandchefsupreme.model.User;
 import com.grandchefsupreme.repository.ClientRepository;
+import com.grandchefsupreme.repository.TagRepository;
 import com.grandchefsupreme.utils.FileStorageUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class ClientService {
 
 
     private final ClientRepository clientRepository;
+    private final TagRepository tagRepository;
     private final ClientMapper clientMapper;
     private final PasswordEncoder passwordEncoder;
     private final FileStorageUtil fileStorageUtil;
@@ -41,9 +45,31 @@ public class ClientService {
 
     }
 
-    public Client updateProfile(RegisterStep2DTO registerStep2DTO, Long userId, MultipartFile photoFile) throws IOException {
+    @Transactional
+    public Client updatePreferences(Long userId, List<PreferenceDTO> prefs) {
+
         Client client = clientRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Client not found"));
+
+        // Limpia siempre (permite desactivar todas)
+        client.getPreferences().clear();
+
+        if (prefs != null && !prefs.isEmpty()) {
+            Set<Tag> managedTags = prefs.stream()
+                    .map(p -> tagRepository.findById(p.getId())
+                            .orElseThrow(() ->
+                                    new NotFoundException("Tag not found: " + p.getId())))
+                    .collect(Collectors.toSet());
+
+            client.getPreferences().addAll(managedTags);
+        }
+
+        return clientRepository.save(client);
+    }
+
+    public Client updateProfile(RegisterStep2DTO registerStep2DTO, Long userId, MultipartFile photoFile) throws IOException {
+        Client client = clientRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
 
         Client clientMapped = clientMapper.toEntity(registerStep2DTO);
 
@@ -51,8 +77,21 @@ public class ClientService {
         client.setBirthdate(clientMapped.getBirthdate());
         client.setCountry(clientMapped.getCountry());
 
-        if (clientMapped.getPreferences() != null && !clientMapped.getPreferences().isEmpty()) {
-            client.setPreferences(clientMapped.getPreferences());
+        if (clientMapped.getPreferences() != null) {
+
+            client.getPreferences().clear();
+
+            if (!clientMapped.getPreferences().isEmpty()) {
+                Set<Tag> managedTags = clientMapped.getPreferences().stream()
+                        .map(tag ->
+                                tagRepository.findById(tag.getId())
+                                        .orElseThrow(() ->
+                                                new NotFoundException("Tag not found: " + tag.getId()))
+                        )
+                        .collect(Collectors.toSet());
+
+                client.getPreferences().addAll(managedTags);
+            }
         }
 
         if (registerStep2DTO.getEmail() != null && !registerStep2DTO.getEmail().isBlank()) {
@@ -86,14 +125,14 @@ public class ClientService {
 
     public ClientLoginDTO getClient(User user) {
         Client client = clientRepository.findById(user.getId())
-                .orElseThrow(() -> new NotFoundException("Client not found"));
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
         return clientMapper.toLoginDTO(client);
     }
 
 
     public ClientDTO getClientProfile(User user) {
         Client client = clientRepository.findById(user.getId())
-                .orElseThrow(() -> new NotFoundException("Client not found"));
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
         return clientMapper.toDTO(client);
     }
 

@@ -2,7 +2,7 @@
 <ion-content (ionScroll)="onScroll($event)" [scrollEvents]="true" [fullscreen]="true">
   <ion-row class="ion-align-items-center">
     <ion-col size="9" class="search-bar ion-justify-content-center">
-      <app-searcher></app-searcher>
+      <app-searcher (searchChange)="onSearch($event)"></app-searcher>
     </ion-col>
     <ion-col size="3">
       <ion-button (click)="openModal()" class="filter-home" expand="block">
@@ -16,7 +16,7 @@
         Busca por Ingredientes
     </ion-button>
   </ion-row>
-  @for (recipe of recipes(); track recipe.id){
+  @for (recipe of filteredRecipes(); track recipe.id){
     <app-home-card [recipe]="recipe"></app-home-card>
   }@empty {
     <ion-col>

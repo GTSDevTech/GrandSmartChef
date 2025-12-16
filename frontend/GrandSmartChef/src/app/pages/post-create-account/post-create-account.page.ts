@@ -47,7 +47,8 @@ export class PostCreateAccountPage implements OnInit {
   formSignal = signal(this.fb.group({
     fullName: ['', Validators.required],
     birthdate: [''],
-    country: ['']
+    country: [''],
+    preferences: this.fb.control<{ id: number; name: string }[]>([])
   }));
 
 
@@ -63,6 +64,11 @@ export class PostCreateAccountPage implements OnInit {
     }
 
   }
+
+  onPreferencesChange(prefs: { id: number; name: string }[]) {
+    this.formSignal().get('preferences')?.setValue(prefs);
+  }
+
 
 
   onFileSelected(event: Event) {
@@ -81,10 +87,10 @@ export class PostCreateAccountPage implements OnInit {
 
   async pickImage() {
     if (Capacitor.getPlatform() === 'web') {
-      // fallback web: abrir input file
+
       this.fileInput.nativeElement.click();
     } else {
-      // móvil: usar cámara o galería
+
       const file = await this.cameraService.pickImage();
       if (file) {
         this.selectedFile = file;
@@ -99,9 +105,6 @@ export class PostCreateAccountPage implements OnInit {
   CompleteRegister() {
     const form: FormGroup = this.formSignal();
 
-    form.get('preferences')?.setValue([
-      {id: 1, name: 'Vegetariano'},
-    ]);
 
     if (form.invalid) return;
 
