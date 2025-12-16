@@ -15,37 +15,52 @@ export class CreateRecipe {
   private apiUrl = `${environment.apiUrl}/recipes`;
   private authService = inject(AuthService);
 
-  // Método para obtener el token
   private getAuthHeaders() {
     const token = this.authService.getToken();
     if (!token) {
       throw new Error('No authentication token found');
     }
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     });
   }
 
   getAllRecipes(): Observable<RecipeCardDTO[]> {
-    const headers = this.getAuthHeaders(); // Añadir el header con el token
+    const headers = this.getAuthHeaders();
     return this.http.get<RecipeCardDTO[]>(`${this.apiUrl}/create/all`, { headers });
   }
 
-  // Obtener detalle de receta
   getActiveRecipeDetails(id: number): Observable<RecipeDTO> {
     const params = new HttpParams().set('id', id.toString());
-    const headers = this.getAuthHeaders(); // Añadir el header con el token
+    const headers = this.getAuthHeaders();
     return this.http.get<RecipeDTO>(`${this.apiUrl}/create/detail`, { headers, params });
   }
 
-  createRecipe(recipe: RecipeCreateDTO): Observable<RecipeDTO> {
+  createRecipe(formData: FormData): Observable<RecipeDTO> {
     const headers = this.getAuthHeaders();
-    return this.http.post<RecipeDTO>(`${this.apiUrl}/create`, recipe, { headers });
+    return this.http.post<RecipeDTO>(
+      `${this.apiUrl}/create`,
+      formData,
+      { headers }
+    );
   }
 
-  updateRecipe(recipe: RecipeCreateDTO): Observable<RecipeDTO> {
+  updateRecipe(formData: FormData): Observable<RecipeDTO> {
     const headers = this.getAuthHeaders();
-    console.log('Datos enviados al servidor:', recipe);
-    return this.http.put<RecipeDTO>(`${this.apiUrl}/update`, recipe, { headers });
+    return this.http.put<RecipeDTO>(
+      `${this.apiUrl}/update`,
+      formData,
+      { headers }
+    );
   }
+  deleteRecipe(id: number): Observable<void> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`,
+      { headers }
+    );
+  }
+
+
+
 }

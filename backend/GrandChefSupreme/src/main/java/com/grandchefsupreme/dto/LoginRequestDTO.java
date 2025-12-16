@@ -9,6 +9,6 @@ public class LoginRequestDTO {
     @NotBlank(message = "Username obligatorio")
     private String username;
 
-    @NotBlank(message = "Password obligatoria")
+    @NotBlank(message = "Password obligatorio")
     private String password;
 }

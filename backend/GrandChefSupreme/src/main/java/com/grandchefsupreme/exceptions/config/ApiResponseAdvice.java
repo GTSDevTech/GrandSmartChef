@@ -45,12 +45,9 @@ public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
             return body;
         }
 
-        if (body == null) {
-            return ApiResponseDTO.builder()
-                    .success(true)
-                    .message("OK")
-                    .data(null)
-                    .build();
+
+        if (body instanceof ApiResponseDTO<?>) {
+            return body;
         }
 
         HttpServletRequest servletRequest =

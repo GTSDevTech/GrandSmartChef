@@ -64,6 +64,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponseDTO<Object>> general(Exception ex) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ApiResponseDTO<Object>> tokenExpired(
+            TokenExpiredException ex
+    ) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(AlreadyUserExist.class)
+    public ResponseEntity<ApiResponseDTO<Object>> alreadyUser(AlreadyUserExist ex) {
+        return build(HttpStatus.CONFLICT, "El usuario ya existe");
     }
 }

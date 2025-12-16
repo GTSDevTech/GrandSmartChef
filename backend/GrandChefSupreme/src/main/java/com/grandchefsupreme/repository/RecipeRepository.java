@@ -38,7 +38,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     select DISTINCT r.*  from recipe r
     left join recipe_ingredient ri on r.id = ri.id_recipe
     left join ingredient i on ri.id_ingredient = i.id
-    where ri.id_ingredient in (:ingredientIds)
+    where ri.id_ingredient = (:ingredientIds)
     """, nativeQuery = true)
     List<Recipe> findByIngredientIds(@Param("ingredientIds") List<Long> ingredientIds);
 

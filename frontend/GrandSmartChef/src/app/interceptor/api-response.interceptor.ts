@@ -8,26 +8,29 @@ export const apiResponseInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     map(event => {
 
-      // 🔹 Solo nos interesan respuestas HTTP reales
       if (!(event instanceof HttpResponse)) {
         return event;
       }
 
       const body = event.body;
 
-      // 🔹 Si no es un objeto, no tocar
-      if (!body || typeof body !== 'object') {
-        return event;
-      }
+      // Solo si es ApiResponseDTO REAL
+      if (
+        body &&
+        typeof body === 'object' &&
+        'success' in body &&
+        'data' in body
+      ) {
+        // ⚠️ Si data es null, NO tocar
+        if (body.data === null || body.data === undefined) {
+          return event;
+        }
 
-      // 🔹 Si tiene data, desempaquetamos
-      if ('data' in body) {
         return event.clone({
           body: body.data
         });
       }
 
-      // 🔹 Si NO tiene data, lo dejamos tal cual
       return event;
     })
   );

@@ -3,6 +3,7 @@ package com.grandchefsupreme.security.service;
 import com.grandchefsupreme.dto.RegisterStep1DTO;
 import com.grandchefsupreme.dto.LoginRequestDTO;
 import com.grandchefsupreme.exceptions.UnauthorizedException;
+import com.grandchefsupreme.mapper.ClientMapper;
 import com.grandchefsupreme.model.Client;
 import com.grandchefsupreme.model.User;
 import com.grandchefsupreme.security.auth.AuthenticationResponseDTO;
@@ -22,12 +23,13 @@ public class AuthenticationService {
     private final ClientService clientService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final ClientMapper clientMapper;
 
 
-    //Register
     public AuthenticationResponseDTO register(RegisterStep1DTO clientDTO) {
-        Client savedClient = clientService.createClient(clientDTO);
-        String token = jwtService.generateToken(savedClient);
+        clientService.getClientByEmail(clientDTO.getEmail());
+        Client newClient = clientService.createClient(clientDTO);
+        String token = jwtService.generateToken(newClient);
         return AuthenticationResponseDTO.builder()
                 .token(token)
                 .message("Registro correcto")

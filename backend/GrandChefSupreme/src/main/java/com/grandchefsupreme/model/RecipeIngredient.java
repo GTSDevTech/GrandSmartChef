@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Table(name = "recipe_ingredient")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@ToString(exclude = {"recipe", "ingredient"})
+@ToString(exclude = {"recipe", "quantity", "unit"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class RecipeIngredient {
 
@@ -25,6 +25,7 @@ public class RecipeIngredient {
     private Recipe recipe;
 
     @ManyToOne
+    @EqualsAndHashCode.Include
     @JoinColumn(name = "id_ingredient")
     private Ingredient ingredient;
 

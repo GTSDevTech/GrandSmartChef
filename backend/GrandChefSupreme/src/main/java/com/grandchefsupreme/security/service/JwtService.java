@@ -29,6 +29,9 @@ public class JwtService implements IJwtService{
 
     @Override
     public String extractUsername(String token){
+        if (token == null || token.isBlank()) {
+            throw new UnauthorizedException("Token vacío");
+        }
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -53,10 +56,9 @@ public class JwtService implements IJwtService{
         } catch (ExpiredJwtException ex) {
             throw new TokenExpiredException("El token ha expirado");
         } catch (JwtException | IllegalArgumentException ex) {
-            throw new UnauthorizedException("Token inválido, no autorizado");
+            throw new UnauthorizedException("Token inválido");
         }
     }
-
 
     @Override
     public String generateToken(UserDetails userDetails){

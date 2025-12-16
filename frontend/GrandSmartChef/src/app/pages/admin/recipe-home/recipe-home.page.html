@@ -1,18 +1,39 @@
 <app-header></app-header>
 <div class="fixed-add-container">
-  <ion-row class="ion-align-items-center">
-    <ion-col class="center-container-column ion-margin-vertical">
-      <ion-button (click)="goToRecipeForm()" class="ingredient-button select" expand="block">
-        <ion-icon></ion-icon>Añadir Receta
+  <ion-row>
+    <ion-col>
+      <ion-searchbar
+        placeholder="Buscar recetas..."
+        [debounce]="300"
+        inputmode="search"
+        show-clear-button="focus"
+        (ionInput)="onSearch($event)">
+      </ion-searchbar>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="ion-align-items-center ion-padding-bottom">
+    <ion-col class="center-container-column">
+      <ion-button
+        (click)="goToRecipeForm()"
+        class="ingredient-button select"
+        expand="block">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Añadir Receta
       </ion-button>
     </ion-col>
   </ion-row>
 </div>
+
+
 <ion-content (ionScroll)="onScroll($event)" [scrollEvents]="true" [fullscreen]="true">
 
-  @for (recipe of recipesEdtiable(); track recipe.id){
-    <app-create-recipe-card [recipe]="recipe"></app-create-recipe-card>
-  }@empty{
+  @for (recipe of filteredRecipes(); track recipe.id) {
+    <app-create-recipe-card
+      [recipe]="recipe"
+      (delete)="confirmDeleteRecipe($event)">
+    </app-create-recipe-card>
+  } @empty {
     <ion-col>
       <p class="ion-text-center">No hay recetas disponibles</p>
     </ion-col>

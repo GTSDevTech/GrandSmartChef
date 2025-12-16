@@ -1,6 +1,10 @@
 package com.grandchefsupreme.security.filter;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.grandchefsupreme.dto.ApiResponseDTO;
+import com.grandchefsupreme.exceptions.TokenExpiredException;
+import com.grandchefsupreme.exceptions.UnauthorizedException;
 import com.grandchefsupreme.security.service.JwtService;
 import com.grandchefsupreme.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -25,17 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserService userService;
 
-//    @Override
-//    protected boolean shouldNotFilter(HttpServletRequest request) {
-//        System.out.println(
-//                "JWT FILTER → " + request.getMethod() + " " + request.getServletPath()
-//        );
-//        String path = request.getServletPath();
-//
-//        return path.startsWith("/api/recipes/create");
-//
-//    }
-
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -56,6 +49,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String token = authHeader.substring(7);
+
+            if (token.isBlank()) {
+                sendUnauthorized(response, "Token vacío");
+                return;
+            }
             final String username = jwtService.extractUsername(token);
 
             if (username != null &&
@@ -86,8 +84,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-        } catch (Exception ex) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        } catch (UnauthorizedException ex) {
+            sendUnauthorized(response, ex.getMessage());
         }
+    }
+
+    private void sendUnauthorized(
+            HttpServletResponse response,
+            String message
+    ) throws IOException {
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        ApiResponseDTO<Object> apiResponse =
+                ApiResponseDTO.builder()
+                        .success(false)
+                        .message(message)
+                        .data(null)
+                        .build();
+
+        response.getWriter().write(
+                new ObjectMapper().writeValueAsString(apiResponse)
+        );
     }
 }

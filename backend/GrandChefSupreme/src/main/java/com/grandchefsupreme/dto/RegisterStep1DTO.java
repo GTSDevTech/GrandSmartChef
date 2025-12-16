@@ -12,7 +12,7 @@ public class RegisterStep1DTO {
 
     @NotBlank(message = "Username obligatorio")
     private String username;
-    @NotBlank(message = "Password obligatoria")
+    @NotBlank(message = "Password obligatorio")
     private String password;
 
     @Email(message = "Email incorrecto")
