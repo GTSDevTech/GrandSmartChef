@@ -14,14 +14,13 @@ ion-card {
   }
 }
 
-/* Imagen */
-.img-card {
+.img-card{
   object-fit: cover;
-  max-height: 20vh;
+  max-height:20vh;
   width: 100%;
 }
 
-/* Rating */
+
 .star-card {
   font-size: 35px;
 }
@@ -66,18 +65,17 @@ ion-card-subtitle {
   color: var(--primary-gray-color);
 }
 
-/* ACTION BUTTONS */
 .actions-row {
   gap: 12px;
 }
 
-/* Botón EDITAR (verde secondary) */
 .edit-btn {
   --background: var(--secondary-green-color);
   --background-hover: var(--secondary-green-color-hover);
   --color: white;
   border-radius: 15px;
   font-weight: bold;
+  --max-width: 8rem;
 }
 
 /* Botón ELIMINAR (orange secondary) */
@@ -87,4 +85,5 @@ ion-card-subtitle {
   --color: white;
   border-radius: 15px;
   font-weight: bold;
+  max-width: 8rem;
 }

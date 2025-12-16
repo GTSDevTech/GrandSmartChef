@@ -29,6 +29,8 @@ import { RecipeCreateDTO } from '../../../models/recipeCreateDTO.model';
 import { IngredientDTO } from '../../../models/ingredient.model';
 import { IngredientService } from '../../../services/ingredient/ingredient.service';
 import {TagService} from "../../../services/tag/tag.service";
+import {ToastController} from "@ionic/angular";
+import {environment} from "../../../../environments/environment.prod";
 
 @Component({
   selector: 'app-recipe-form',
@@ -64,25 +66,24 @@ export class RecipeFormPage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
   private cameraService = inject(CameraService);
   private tagService = inject(TagService);
+  private toastCtrl = inject(ToastController);
 
+  private readonly backendUrl = environment.imageBaseUrl;
   recipe = signal<RecipeDTO | null>(null);
-
+  selectedFile: File | null = null;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  // Imagen (solo frontend)
   previewUrl: string | null = null;
 
-  // Ingredientes
+
   ingredientsCatalog: IngredientDTO[] = [];
   selectedIngredientId!: number;
+
 
   tagsCatalog: { id: number; name: string }[] = [];
   selectedTagId!: number;
 
 
-
-
-  // FORM
   form = {
     name: '',
     prepTime: '',
@@ -99,15 +100,15 @@ export class RecipeFormPage implements OnInit {
     steps: [] as string[],
   };
 
-  tagInput = '';
   ingredientQty = '';
   ingredientUnit = '';
   stepInput = '';
 
   ngOnInit() {
-    this.ingredientService.getAllIngredients().subscribe((data) => {
+    this.ingredientService.getAllIngredients().subscribe(data => {
       this.ingredientsCatalog = data;
     });
+
     this.tagService.getAllTags().subscribe(tags => {
       this.tagsCatalog = tags;
     });
@@ -117,13 +118,14 @@ export class RecipeFormPage implements OnInit {
 
     if (id && !isNaN(id)) {
       this.createRecipeService.getActiveRecipeDetails(id).subscribe({
-        next: (data) => {
+        next: data => {
           this.recipe.set(data);
           this.loadFormFromRecipe(data);
           this.previewUrl = data.imageUrl;
-        },
+        }
       });
     }
+
   }
 
   loadFormFromRecipe(rc: RecipeDTO) {
@@ -132,16 +134,19 @@ export class RecipeFormPage implements OnInit {
     this.form.servings = rc.servings.toString();
     this.form.difficulty = rc.difficulty;
     this.form.description = rc.description;
+
     this.form.tags = rc.tags.map(t => ({
       id: t.id,
       name: t.name
     }));
+
     this.form.ingredients = rc.ingredients.map(i => ({
       quantity: i.quantity.toString(),
       unit: i.unit,
       ingredientId: i.ingredient.id,
       ingredientName: i.ingredient.name,
     }));
+
     this.form.steps = rc.steps.map(s => s.instruction);
   }
 
@@ -153,9 +158,7 @@ export class RecipeFormPage implements OnInit {
       servings: Number(this.form.servings),
       prepTime: Number(this.form.prepTime),
       description: this.form.description,
-
-
-      imageUrl: this.previewUrl ?? 'https://ejemplo.com/default.jpg',
+      imageUrl: this.previewUrl ?? '',
 
       tags: this.form.tags.map(t => ({
         id: t.id,
@@ -175,26 +178,68 @@ export class RecipeFormPage implements OnInit {
     };
   }
 
+  buildFormData(): FormData {
+    const formData = new FormData();
+    const recipeDto = this.buildRecipeDTO();
+
+    formData.append(
+      'recipe',
+      new Blob([JSON.stringify(recipeDto)], { type: 'application/json' })
+    );
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile, this.selectedFile.name);
+    }
+
+    return formData;
+  }
+
   saveLocal() {
     if (!this.formValid) return;
 
-    const dto = this.buildRecipeDTO();
-    console.log('JSON enviado:', dto);
+    const formData = this.buildFormData();
+    const isUpdate = !!this.recipe()?.id;
 
-    if (this.recipe()?.id) {
-      this.createRecipeService.updateRecipe(dto).subscribe();
-    } else {
-      this.createRecipeService.createRecipe(dto).subscribe();
-    }
+    const request$ = isUpdate
+      ? this.createRecipeService.updateRecipe(formData)
+      : this.createRecipeService.createRecipe(formData);
+
+    request$.subscribe({
+      next: () => {
+        this.showToast(
+          isUpdate
+            ? 'Receta actualizada correctamente'
+            : 'Receta creada correctamente',
+          'success'
+        );
+
+        // Opcional: volver atrás tras guardar
+        setTimeout(() => this.location.back(), 500);
+      },
+      error: (err) => {
+        console.error(err);
+
+        this.showToast(
+          isUpdate
+            ? 'Error al actualizar la receta'
+            : 'Error al crear la receta',
+          'danger'
+        );
+      }
+    });
   }
 
-  // ---------- Imagen (solo preview)
+
+
   async pickImage() {
     if (Capacitor.getPlatform() === 'web') {
       this.fileInput.nativeElement.click();
     } else {
       const file = await this.cameraService.pickImage();
       if (!file) return;
+
+      this.selectedFile = file; // ✅ CLAVE
+
       const reader = new FileReader();
       reader.onload = () => (this.previewUrl = reader.result as string);
       reader.readAsDataURL(file);
@@ -204,13 +249,17 @@ export class RecipeFormPage implements OnInit {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
+
+    this.selectedFile = input.files[0];
+
     const reader = new FileReader();
     reader.onload = () => (this.previewUrl = reader.result as string);
-    reader.readAsDataURL(input.files[0]);
+    reader.readAsDataURL(this.selectedFile);
   }
 
   addIngredient() {
     if (!this.selectedIngredientId || !this.ingredientQty) return;
+
     const ing = this.ingredientsCatalog.find(i => i.id === this.selectedIngredientId);
     if (!ing) return;
 
@@ -236,7 +285,6 @@ export class RecipeFormPage implements OnInit {
     const tag = this.tagsCatalog.find(t => t.id === this.selectedTagId);
     if (!tag) return;
 
-    // Evitar duplicados
     if (this.form.tags.some(t => t.id === tag.id)) return;
 
     this.form.tags.push({
@@ -284,4 +332,26 @@ export class RecipeFormPage implements OnInit {
       this.form.steps.length > 0
     );
   }
+
+  async showToast(
+    message: string,
+    color: 'success' | 'danger' | 'warning' = 'success'
+  ) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2500,
+      position: 'bottom',
+      color,
+    });
+    await toast.present();
+  }
+  getRecipeImage(imageUrl?: string | null): string {
+    console.log(`${this.backendUrl}${imageUrl}`);
+    if (!imageUrl) {
+      console.log(`${this.backendUrl}${imageUrl}`);
+      return '/assets/images/users/default_profile_image.png';
+    }
+    return `${this.backendUrl}${imageUrl}`;
+  }
+
 }

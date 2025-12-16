@@ -16,7 +16,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
@@ -98,7 +100,7 @@ public class RecipeService {
 
 
     @Transactional
-    public RecipeDTO createRecipe(RecipeDTO recipeDTO) {
+    public RecipeDTO createRecipe(RecipeDTO recipeDTO, MultipartFile photoFile) throws IOException {
         Recipe recipe = recipeDetailMapper.toEntity(recipeDTO);
         recipe.setIsActive(true);
 
@@ -137,121 +139,106 @@ public class RecipeService {
             recipe.setTags(resolvedTags);
         }
 
+        if (photoFile != null && !photoFile.isEmpty()) {
+            String photoPath = fileStorageUtil.saveProfilePhoto(photoFile);
+            recipe.setImageUrl(photoPath);
+        } else if (recipe.getImageUrl() == null || recipe.getImageUrl().isEmpty()) {
+            String DEFAULT_PHOTO = "uploads/profile/default_profile_image.png";
+            recipe.setImageUrl(DEFAULT_PHOTO);
+        }
+
         Recipe savedRecipe = recipeRepository.saveAndFlush(recipe);
         return recipeDetailMapper.toDto(savedRecipe);
     }
 
-//            Recipe newRecipe = new Recipe();
-//            newRecipe.setIsActive(true);
-//            newRecipe.setName(recipeDTO.getName());
-//            newRecipe.setDifficulty(Difficulty.valueOf(recipeDTO.getDifficulty()));
-//            newRecipe.setServings(recipeDTO.getServings());
-//            newRecipe.setPrepTime(recipeDTO.getPrepTime());
-//            newRecipe.setDescription(recipeDTO.getDescription());
-//            newRecipe.setImageUrl(recipeDTO.getImageUrl());
-//            if (recipeDTO.getIngredients() != null && !recipeDTO.getIngredients().isEmpty()) {
-//                for (RecipeIngredientDTO ri : recipeDTO.getIngredients()) {
-//                    Ingredient ingredient = ingredientRepository.findById(ri.getIngredientId())
-//                            .orElseThrow(() -> new EntityNotFoundException("Ingrediente no encontrado"));
-//                    RecipeIngredient recipeIngredient = new RecipeIngredient();
-//                    recipeIngredient.setRecipe(newRecipe);
-//                    recipeIngredient.setIngredient(ingredient); // Usamos el ingrediente ya existente
-//                    recipeIngredient.setQuantity(ri.getQuantity()); // Asignamos la cantidad
-//                    recipeIngredient.setUnit(ri.getUnit());
-//
-//                    newRecipe.getRecipeIngredients().add(recipeIngredient);
-//                }
-//
-//            }
-//
-//            if (recipeDTO.getSteps() != null && !recipeDTO.getSteps().isEmpty()) {
-//                for (RecipeStepDTO stepDTO : recipeDTO.getSteps()) {
-//                    RecipeStep step = new RecipeStep();
-//                    step.setRecipe(newRecipe);
-//                    step.setStepNumber(stepDTO.getStepNumber());
-//                    step.setInstruction(stepDTO.getInstruction());
-//                    newRecipe.getRecipeSteps().add(step);
-//
-//                }
-//            }
-//
-//            if (recipeDTO.getTags() != null && !recipeDTO.getTags().isEmpty()) {
-//                Set<Tag> tags = new HashSet<>();
-//                for (TagDTO tagDTO : recipeDTO.getTags()) {
-//                    Tag tag = tagRepository.findByName(tagDTO.getName())
-//                            .orElseGet(() -> {
-//                                Tag newTag = new Tag();
-//                                newTag.setName(tagDTO.getName());
-//                                return tagRepository.save(newTag);
-//                            });
-//                    tags.add(tag);
-//                }
-//                newRecipe.setTags(tags);
-//            }
-//
-//                Recipe savedRecipe = recipeRepository.saveAndFlush(newRecipe);
-//
-//
-//                return recipeDetailMapper.toDto(savedRecipe);
-
-
-
     @Transactional
-    public RecipeDTO updateRecipe(RecipeDTO recipeDTO) {
-        // Buscar la receta existente por su ID
+    public RecipeDTO updateRecipe(RecipeDTO recipeDTO, MultipartFile photoFile) throws IOException {
+
         Recipe existingRecipe = recipeRepository.findById(recipeDTO.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Recipe not found with id " + recipeDTO.getId()));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Recipe not found with id " + recipeDTO.getId()));
 
-        // Actualizar los campos de la receta existente con los datos del DTO
-        recipeDetailMapper.updateRecipeFromDto(recipeDTO, existingRecipe);
 
-        // Actualizar ingredientes
-        if (existingRecipe.getRecipeIngredients() != null) {
-            for (RecipeIngredient ri : existingRecipe.getRecipeIngredients()) {
-                Long ingredientId = ri.getIngredient().getId();
-                Ingredient ingredient = ingredientRepository.findById(ingredientId)
-                        .orElseThrow(() -> new EntityNotFoundException("Ingredient not found with id " + ingredientId));
+        existingRecipe.setName(recipeDTO.getName());
+        existingRecipe.setDifficulty(Difficulty.valueOf(recipeDTO.getDifficulty()));
+        existingRecipe.setServings(recipeDTO.getServings());
+        existingRecipe.setPrepTime(recipeDTO.getPrepTime());
+        existingRecipe.setDescription(recipeDTO.getDescription());
+
+
+        existingRecipe.getRecipeIngredients().clear();
+
+        if (recipeDTO.getIngredients() != null) {
+            for (RecipeIngredientDTO riDto : recipeDTO.getIngredients()) {
+
+                Ingredient ingredient = ingredientRepository.findById(
+                        riDto.getIngredient().getId()
+                ).orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Ingredient not found with id " + riDto.getIngredient().getId()
+                        ));
+
+                RecipeIngredient ri = new RecipeIngredient();
+                ri.setQuantity(riDto.getQuantity());
+                ri.setUnit(riDto.getUnit());
                 ri.setIngredient(ingredient);
                 ri.setRecipe(existingRecipe);
+
+                existingRecipe.getRecipeIngredients().add(ri);
             }
         }
 
-        // Actualizar pasos de la receta
-        if (recipeDTO.getSteps() != null && !recipeDTO.getSteps().isEmpty()) {
-            for (RecipeStep step : existingRecipe.getRecipeSteps()) {
+        existingRecipe.getRecipeSteps().clear();
+
+        if (recipeDTO.getSteps() != null) {
+            for (RecipeStepDTO stepDto : recipeDTO.getSteps()) {
+
+                RecipeStep step = new RecipeStep();
+                step.setStepNumber(stepDto.getStepNumber());
+                step.setInstruction(stepDto.getInstruction());
                 step.setRecipe(existingRecipe);
+
+                existingRecipe.getRecipeSteps().add(step);
             }
         }
 
-        if (recipeDTO.getTags() != null && !recipeDTO.getTags().isEmpty()) {
+        if (recipeDTO.getTags() != null) {
             Set<Tag> resolvedTags = new HashSet<>();
 
             for (TagDTO tagDTO : recipeDTO.getTags()) {
-                // Buscar la etiqueta por nombre
-                Tag resolvedTag = tagRepository.findByNameIgnoreCase(tagDTO.getName())
+
+                Tag tag = (tagDTO.getId() != null)
+                        ? tagRepository.findById(tagDTO.getId())
+                        .orElseThrow(() ->
+                                new EntityNotFoundException(
+                                        "Tag not found with id " + tagDTO.getId()
+                                ))
+                        : tagRepository.findByNameIgnoreCase(tagDTO.getName())
                         .orElseGet(() -> {
-                            // Si no existe, crear una nueva etiqueta
                             Tag newTag = new Tag();
                             newTag.setName(tagDTO.getName());
                             return tagRepository.save(newTag);
                         });
 
-                resolvedTags.add(resolvedTag);
+                resolvedTags.add(tag);
             }
 
-            // Actualizar las etiquetas de la receta
             existingRecipe.setTags(resolvedTags);
         }
 
-
-        if (recipeDTO.getImageUrl() != null && !recipeDTO.getImageUrl().isBlank()) {
-            existingRecipe.setImageUrl(recipeDTO.getImageUrl());  // Actualiza la URL de la imagen
+        if (photoFile != null && !photoFile.isEmpty()) {
+            String photoPath = fileStorageUtil.saveProfilePhoto(photoFile);
+            existingRecipe.setImageUrl(photoPath);
+        } else if (existingRecipe.getImageUrl() == null || existingRecipe.getImageUrl().isEmpty()) {
+            String DEFAULT_PHOTO = "uploads/profile/default_profile_image.png";
+            existingRecipe.setImageUrl(DEFAULT_PHOTO);
         }
 
-        // Guardar y devolver la receta actualizada
         Recipe updatedRecipe = recipeRepository.saveAndFlush(existingRecipe);
+
         return recipeDetailMapper.toDto(updatedRecipe);
     }
+
 
 
 

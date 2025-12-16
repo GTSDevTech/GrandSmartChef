@@ -1,5 +1,4 @@
 import {Component, inject, Input, OnInit, output, signal} from '@angular/core';
-import {RecipeDTO} from "../../../models/recipe.model";
 import {RecipeService} from "../../../services/recipe/recipe.service";
 import {ModalService} from "../../../services/modal/modal.service";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
@@ -22,17 +21,13 @@ import {forkJoin} from "rxjs";
   templateUrl: './add-recipe-to-collection-sheet.component.html',
   styleUrls: ['./add-recipe-to-collection-sheet.component.scss'],
   imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
+    IonModal,
     IonContent,
     IonList,
-    IonCheckbox,
     IonItem,
     IonButton,
     IonLabel,
     IonModal,
-    IonButtons,
     IonSearchbar,
     IonAvatar,
     IonImg,
@@ -67,7 +62,10 @@ export class AddRecipeToCollectionSheetComponent  implements OnInit {
 
   loadRecipes() {
     this.recipeService.getAllActiveRecipes().subscribe({
-      next: (res) => this.recipes.set(res),
+      next: (res) => {
+        console.log(res);
+        this.recipes.set(res)
+      },
       error: (err) => console.error('Error loading recipes', err)
     });
   }
@@ -119,10 +117,6 @@ export class AddRecipeToCollectionSheetComponent  implements OnInit {
     this.modalService.close('add-recipe-to-collection');
   }
 
-
-  onModalDismiss() {
-    this.modalService.close('add-recipe-to-collection');
-  }
 }
 
 

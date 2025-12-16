@@ -23,6 +23,7 @@ public interface RecipeDetailMapper {
 
     @Mapping(source = "ingredients", target = "recipeIngredients")
     @Mapping(source = "steps", target = "recipeSteps")
+    @Mapping(target = "imageUrl", ignore = true)
     Recipe toEntity(RecipeDTO recipeDTO);
 
 
@@ -33,6 +34,7 @@ public interface RecipeDetailMapper {
 
     @Mapping(source = "ingredients", target = "recipeIngredients")
     @Mapping(source = "steps", target = "recipeSteps")
+    @Mapping(target = "imageUrl", ignore = true)
     List<Recipe> toEntity(List<RecipeDTO> recipeDTOs);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

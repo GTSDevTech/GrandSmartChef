@@ -36,7 +36,6 @@ import {Router} from "@angular/router";
     IonList,
     IonItem,
     IonLabel,
-    IonNote,
     IonCardSubtitle,
     IonThumbnail,
     IonImg,
@@ -59,7 +58,9 @@ export class CollectionComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('COLLECTION INPUT:', this.collection());
+  }
 
   async confirmDelete(){
     const alert = await this.alertController.create({
@@ -89,7 +90,8 @@ export class CollectionComponent  implements OnInit {
     if(!id) return;
 
     this.collectionService.deleteCollection(id).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log('DELETE RESPONSE:', res);
         this.deleted.emit(id);
       },
       error: (err: any) => {
@@ -100,6 +102,7 @@ export class CollectionComponent  implements OnInit {
 
 
   addRecipe() {
+    console.log('ADD RECIPE CLICK', this.collection().id);
     const id = this.collection().id;
     if (!id) return;
     this.modalService.open('add-recipe-to-collection',  id );

@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 public class FavoriteCollectionDTO {
 
+    private Long id;
+
     @NotBlank(message = "Título de la colección obligatorio")
     private String title;
 

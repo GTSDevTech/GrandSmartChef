@@ -26,7 +26,6 @@ public class AuthenticationService {
     private final ClientMapper clientMapper;
 
 
-    //Register
     public AuthenticationResponseDTO register(RegisterStep1DTO clientDTO) {
         clientService.getClientByEmail(clientDTO.getEmail());
         Client newClient = clientService.createClient(clientDTO);

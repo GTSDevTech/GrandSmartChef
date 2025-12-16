@@ -34,7 +34,6 @@ public class RecipeDTO {
     @NotBlank(message = "La descripción es obligatoria")
     private String description;
 
-    @NotBlank(message = "La imagen es obligatoria")
     private String imageUrl;
 
     @NotEmpty(message = "Debe tener al menos una etiqueta")

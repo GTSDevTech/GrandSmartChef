@@ -1,9 +1,10 @@
 <ion-card>
-  <img class="img-card" [src]="recipe().imageUrl" [alt]="recipe().name" />
+  <img class="img-card" [src]= getRecipeImage() alt="imagen receta">
 
   <ion-card-header>
     <ion-grid>
       <ion-row class="title-row">
+
         <ion-card-title>{{recipe().name}}</ion-card-title>
 
         <ion-col size="8" class="ion-no-padding">
@@ -57,7 +58,7 @@
           Editar
         </ion-button>
 
-        <ion-button class="delete-btn">
+        <ion-button class="delete-btn" color="danger" (click)="onDelete()">
           <ion-icon slot="start" name="trash-outline"></ion-icon>
           Eliminar
         </ion-button>
