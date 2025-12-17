@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, input, OnInit, output, signal} from '@angular/core';
 import {
   IonButton, IonCol,
   IonIcon,
@@ -9,13 +9,14 @@ import {
   IonToggle
 } from "@ionic/angular/standalone";
 import {ModalService} from "../../../services/modal/modal.service";
+import {PreferenceDTO} from "../../../models/preference.model";
+import {USER_OPTIONS} from "../../../models/Enums/userOptions";
 
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
   imports: [
-    IonButton,
     IonModal,
     IonIcon,
     IonRow,
@@ -27,11 +28,29 @@ import {ModalService} from "../../../services/modal/modal.service";
 })
 export class FilterComponent  implements OnInit {
   private modalService = inject(ModalService);
-
   isOpen = this.modalService.isOpen('recipe-filter');
-  constructor() { }
+  initialPreferences = input<PreferenceDTO[] | null>(null);
+  readonly options = USER_OPTIONS;
 
-  ngOnInit() {}
+  private selectedIds = signal<Set<number>>(new Set());
+  preferencesChange = output<PreferenceDTO[]>();
+
+  constructor() {
+    effect(() => {
+      const prefs = this.initialPreferences();
+      if (!prefs) {
+        return;
+      }
+
+      this.selectedIds.set(new Set(prefs.map(p => p.id)));
+    });
+  }
+
+
+
+  ngOnInit() {
+
+  }
 
   onModalDismiss() {
     this.modalService.close('recipe-filter');
@@ -40,5 +59,31 @@ export class FilterComponent  implements OnInit {
   onClose(){
     this.modalService.close('recipe-filter');
   }
+
+  isSelected(id: number): boolean {
+    return this.selectedIds().has(id);
+  }
+
+  onToggle(id: number, checked: boolean): void {
+    const next = new Set(this.selectedIds());
+
+    if (checked) {
+      next.add(id);
+    } else {
+      next.delete(id);
+    }
+
+    this.selectedIds.set(next);
+
+    const prefs: PreferenceDTO[] = this.options
+      .filter(o => next.has(o.id))
+      .map(o => ({
+        id: o.id,
+        name: o.name,
+      }));
+
+    this.preferencesChange.emit(prefs);
+  }
+
 
 }

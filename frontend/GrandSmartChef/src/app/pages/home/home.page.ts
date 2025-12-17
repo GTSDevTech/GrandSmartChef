@@ -17,6 +17,7 @@ import {CollectionService} from "../../services/collection/collection.service";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {IonButton, IonCol, IonContent, IonIcon, IonRow} from "@ionic/angular/standalone";
 import {ClientService} from "../../services/client/client.service";
+import {FilterProfileComponent} from "../../components/filters/filter-profile/filter-profile.component";
 
 @Component({
   selector: 'app-home',
@@ -24,7 +25,7 @@ import {ClientService} from "../../services/client/client.service";
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, HeaderComponent, FooterNavComponent, RouterModule, HomeCardComponent,
-    SearcherComponent, FilterComponent, IonContent, IonRow, IonCol, IonButton, IonIcon]
+    SearcherComponent, FilterComponent, IonContent, IonRow, IonCol, IonButton, IonIcon, FilterProfileComponent]
 })
 export class HomePage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
@@ -34,13 +35,14 @@ export class HomePage implements OnInit {
   private collectionService = inject(CollectionService);
   private clientService = inject(ClientService);
 
-  user = this.auth.getCurrentUser();
+  user = this.auth.currentUser();
+
   recipes = signal<RecipeCardDTO[]>([]);
   constructor() {
   }
 
   ngOnInit() {
-
+    this.auth.ensureCurrentUserLoaded();
     this.loadRecipes();
     this.loadUserCollections();
   }

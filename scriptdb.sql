@@ -165,7 +165,9 @@ CREATE TABLE recipe_rating (
    id_recipe BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
    stars INTEGER NOT NULL CHECK (stars BETWEEN 1 AND 5),
    rating_date TIMESTAMP DEFAULT NOW(),
-   review TEXT
+   review TEXT,
+   CONSTRAINT uq_recipe_user_rating
+        UNIQUE (id_recipe, id_user)
 );
 
 

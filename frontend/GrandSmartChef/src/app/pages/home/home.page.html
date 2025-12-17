@@ -23,7 +23,9 @@
       <p class="ion-text-center">No hay recetas disponibles</p>
     </ion-col>
   }
-  <app-filter>
+  <app-filter
+    [initialPreferences]="user?.preferences ?? []"
+    (preferencesChange)="onPreferencesChange($event)">
   </app-filter>
 </ion-content>
 <app-footer-nav></app-footer-nav>

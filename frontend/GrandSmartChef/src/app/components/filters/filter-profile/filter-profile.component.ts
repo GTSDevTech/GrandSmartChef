@@ -1,4 +1,4 @@
-import {Component, effect, input, OnInit, output, signal} from '@angular/core';
+import {Component, effect, inject, input, OnInit, output, signal} from '@angular/core';
 import {
   IonButton, IonCol,
   IonContent,
@@ -11,15 +11,10 @@ import {
   IonText,
   IonToggle
 } from "@ionic/angular/standalone";
+import {PreferenceDTO} from "../../../models/preference.model";
+import {USER_OPTIONS} from "../../../models/Enums/userOptions";
 
-type PreferenceDTO = { id: number; name: string };
 
-type PreferenceOption = {
-  id: number;
-  name: string;
-  title: string;
-  description: string;
-};
 
 @Component({
   selector: 'app-filter-profile',
@@ -30,16 +25,11 @@ type PreferenceOption = {
 })
 export class FilterProfileComponent implements OnInit {
 
+  readonly options = USER_OPTIONS;
   initialPreferences = input<PreferenceDTO[] | null>(null);
   private selectedIds = signal<Set<number>>(new Set());
   preferencesChange = output<PreferenceDTO[]>();
 
-  readonly options = [
-    { id: 1,  name: 'Vegetariano', title: 'Vegetariano', description: 'Evitar recetas con carne o pescado' },
-    { id: 12, name: 'Sin Gluten',  title: 'Sin Gluten',  description: 'Evitar productos con gluten' },
-    { id: 13, name: 'Rápida',      title: 'Rápidas',     description: 'Recetas rápidas < 30 min' },
-    { id: 14, name: 'Económica',   title: 'Económicas',  description: 'Recetas baratas con coste < 10€' },
-  ];
 
 
   modalOpen = false;

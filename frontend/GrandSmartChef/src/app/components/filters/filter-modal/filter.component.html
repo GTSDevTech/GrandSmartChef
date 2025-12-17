@@ -1,8 +1,8 @@
 <ion-modal
   [isOpen]="isOpen()"
-  (didDismiss)="onModalDismiss()"
-  [backdropDismiss]="true"
-  class="bottom-modal">
+  [initialBreakpoint]="1"
+  [breakpoints]="[0.45, 1]"
+  (didDismiss)="onModalDismiss()">
   <ng-template class="ion-padding">
     <ion-row class="filter-container">
       <ion-col size="8" class="justify-left">
@@ -13,34 +13,19 @@
       </ion-col>
     </ion-row>
     <ion-row class="center-container-column ion-padding filter-row">
-      <ion-item class="toggle-options shadow-box">
-        <ion-label>
-          <h3><b>Vegetariana</b></h3>
-          <p>Evitar recetas con carne o pescado</p>
-        </ion-label>
-        <ion-toggle slot="end"></ion-toggle>
-      </ion-item>
-      <ion-item class="toggle-options shadow-box">
-        <ion-label>
-          <h3><b>Sin Gluten</b></h3>
-          <p>Evitar productos con gluten</p>
-        </ion-label>
-        <ion-toggle slot="end"></ion-toggle>
-      </ion-item>
-      <ion-item class="toggle-options shadow-box">
-        <ion-label>
-          <h3><b>Rápidas</b></h3>
-          <p>Recetas rápidas < 30 min</p>
-        </ion-label>
-        <ion-toggle slot="end"></ion-toggle>
-      </ion-item>
-      <ion-item class="toggle-options shadow-box">
-        <ion-label>
-          <h3><b>Económicas</b></h3>
-          <p>Recetas baratas con coste < 10€</p>
-        </ion-label>
-        <ion-toggle slot="end"></ion-toggle>
-      </ion-item>
+      @for(opt of options; track opt.id){
+        <ion-item class="toggle-options shadow-box">
+          <ion-label>
+            <h3><b>{{opt.title}}</b></h3>
+            <p>{{ opt.description }}</p>
+          </ion-label>
+          <ion-toggle
+            class="custom-toggle"
+            [checked]="isSelected(opt.id)"
+            (ionChange)="onToggle(opt.id, $event.detail.checked)"
+            slot="end"></ion-toggle>
+        </ion-item>
+      }
     </ion-row>
   </ng-template>
 </ion-modal>
