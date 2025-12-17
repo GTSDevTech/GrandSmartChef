@@ -33,6 +33,13 @@
   }
 }
 
+.preferences{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
 .label-data-profile{
   padding: 1rem;
   h1{
@@ -43,4 +50,9 @@
     color: var(--primary-gray-color);
     font-weight: bold;
   }
+}
+.preferences-title{
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary-green-color);
 }

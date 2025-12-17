@@ -39,3 +39,130 @@ ion-icon{
   right: 3rem;
   transform: translate(20%, 20%);
 }
+
+.date-placeholder {
+  color: var(--ion-color-medium);
+  font-size: 1rem;
+}
+
+.date-placeholder.has-value {
+  color: var(--ion-color-dark);
+}
+
+
+.date-modal {
+  --width: auto;
+  --height: auto;
+  --border-radius: 20px;
+  --box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.date-modal-wrapper {
+  background: white;
+  padding: 20px 16px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+.date-modal ion-datetime {
+  --background: transparent;
+  border-radius: 16px;
+}
+
+.date-confirm-btn {
+  --background: var(--primary-green-color);
+  --background-hover: var(--secondary-green-color);
+  --color: #fff;
+  font-weight: bold;
+  border-radius: 14px;
+}
+ion-datetime::part(calendar-day-active) {
+  background: var(--secondary-green-color);
+  color: #fff;
+}
+
+
+ion-datetime::part(calendar-day-active):hover {
+  background: var(--secondary-green-color);
+}
+
+
+ion-datetime::part(month-year-button) {
+  color: var(--secondary-green-color);
+}
+
+
+ion-datetime::part(button) {
+  color: var(--secondary-green-color);
+}
+
+ion-datetime::part(calendar-day-active) {
+  background: var(--secondary-green-color);
+  color: #fff;
+}
+
+ion-datetime::part(calendar-day-active):hover {
+  background: var(--secondary-green-color-hover);
+}
+
+
+ion-datetime::part(calendar-day-today) {
+  border: 1px solid var(--secondary-green-color);
+  color: var(--secondary-green-color);
+}
+
+
+ion-datetime::part(calendar-day-today):hover {
+  background: var(--secondary-green-color-hover);
+  color: #fff;
+}
+
+
+ion-datetime::part(month-year-button) {
+  color: var(--secondary-green-color);
+  font-weight: 600;
+}
+
+
+ion-datetime::part(nav-button) {
+  color: var(--secondary-green-color);
+}
+
+
+ion-datetime::part(nav-button):hover {
+  color: var(--secondary-green-color-hover);
+}
+
+ion-datetime::part(calendar-day):focus-visible {
+  outline: 2px solid var(--secondary-green-color);
+}
+
+
+ion-datetime {
+  --ion-color-primary: var(--secondary-green-color);
+}
+
+ion-datetime::part(calendar-day-active) {
+  background: var(--secondary-green-color);
+}
+
+
+ion-datetime::part(calendar-day-active)::part(calendar-day-inner) {
+  background: var(--secondary-green-color);
+  font-weight: 600;
+}
+
+ion-datetime::part(calendar-day-active):hover {
+  background: var(--secondary-green-color-hover);
+}
+
+ion-datetime::part(calendar-day-active):hover::part(calendar-day-inner) {
+  color: #fff;
+}
+
+
+
+

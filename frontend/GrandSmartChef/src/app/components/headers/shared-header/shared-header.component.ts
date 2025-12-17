@@ -26,7 +26,7 @@ export class SharedHeaderComponent  implements OnInit {
   ngOnInit() {
   }
 
-  onClose() {
+  goToBack() {
     this.closeMenu.emit();
     this.location.back();
   }

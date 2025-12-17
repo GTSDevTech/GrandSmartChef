@@ -75,9 +75,27 @@ export class AuthService {
   }
 
   updatePreferences(prefs: { id: number; name: string }[]) {
-    return this.http.patch<ClientDTO>(
-      `${this.clientApiUrl}/profile/preferences`,
-      prefs
+    const token = this.getToken();
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const formData = new FormData();
+    formData.append(
+      'profile',
+      new Blob([JSON.stringify({ preferences: prefs })], {
+        type: 'application/json'
+      })
+    );
+
+    return this.http.put<ClientDTO>(
+      `${this.authApiUrl}/register-step2`,
+      formData,
+      { headers }
     );
   }
 

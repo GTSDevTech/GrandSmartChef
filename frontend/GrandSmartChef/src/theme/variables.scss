@@ -12,7 +12,6 @@
 --black-color: #000000;
 }
 
-//CONTAINER CENTERED
 .center-container-row {
   display: flex;
   flex-direction: column;
@@ -47,10 +46,10 @@
 }
 
 
-//Ingredientes
+//Ingredients
 .tags-row {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow-x: auto;
 
 }
@@ -137,6 +136,11 @@ ion-input.form-input-register {
 
 }
 
+.item-preferences{
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
 
 
 //FOOTER NAV
@@ -445,8 +449,11 @@ ion-button.edit-profile{
   font-weight: bold;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   color:  var(--primary-green-color);
-  width: 35vw;
+  width: 40vw;
   height: 3vh;
+  min-width: 35vw;
+  min-height: 5vh;
+
 }
 
 ion-button.buy-button{

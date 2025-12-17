@@ -1,7 +1,10 @@
 <ion-content (ionScroll)="onScroll($event)" [scrollEvents]="true" [fullscreen]="true"
              class="recipe-detail-content" xmlns="http://www.w3.org/1999/html">
   <div class="image-header">
-    <ion-img [src]="recipe()?.imageUrl" [alt]="recipe()?.name"></ion-img>
+    <img
+    class="recipe-image-preview"
+    [src]="getRecipeImage(recipe()?.imageUrl)"
+    alt="Imagen de la receta">
     <ion-row class="header-buttons">
       <ion-col size="6" class="col-back-button">
         <ion-button fill="clear" class="circle-button" (click)="onClose()">

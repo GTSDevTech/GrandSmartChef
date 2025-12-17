@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -16,6 +16,7 @@ import {AuthService} from "../../services/auth/auth.service";
 import {CollectionService} from "../../services/collection/collection.service";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {IonButton, IonCol, IonContent, IonIcon, IonRow} from "@ionic/angular/standalone";
+import {ClientService} from "../../services/client/client.service";
 
 @Component({
   selector: 'app-home',
@@ -31,22 +32,13 @@ export class HomePage implements OnInit {
   private modalService = inject(ModalService);
   private auth = inject(AuthService);
   private collectionService = inject(CollectionService);
+  private clientService = inject(ClientService);
 
   user = this.auth.getCurrentUser();
   recipes = signal<RecipeCardDTO[]>([]);
-  searchTerm = signal<string>('');
+  constructor() {
+  }
 
-  filteredRecipes = computed(() => {
-    const term = this.searchTerm().toLowerCase().trim();
-
-    if (!term) {
-      return this.recipes();
-    }
-
-    return this.recipes().filter(recipe =>
-      recipe.name.toLowerCase().includes(term)
-    );
-  });
   ngOnInit() {
 
     this.loadRecipes();
@@ -86,7 +78,8 @@ export class HomePage implements OnInit {
     }
   }
 
-  onSearch(value: string) {
-    this.searchTerm.set(value);
+  onPreferencesChange(prefs: { id: number; name: string }[]) {
+    this.clientService.updatePreferences(prefs).subscribe();
   }
+
 }

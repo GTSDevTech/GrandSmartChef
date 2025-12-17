@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {RouterModule} from "@angular/router";
+import {Router, RouterModule} from "@angular/router";
 import {CommonModule, Location} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -39,6 +39,7 @@ export class ProfilePage implements OnInit {
   private authService = inject(AuthService);
   private clientService = inject(ClientService);
   private location = inject(Location);
+  private router = inject(Router);
   user = this.authService.currentUser;
 
 
@@ -59,5 +60,9 @@ export class ProfilePage implements OnInit {
 
   onClose() {
     this.location.back();
+  }
+
+  goToProfileEdit() {
+    this.router.navigate(['/profile']);
   }
 }

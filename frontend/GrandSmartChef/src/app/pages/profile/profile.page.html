@@ -15,7 +15,7 @@
         <h1>{{ this.user()?.fullName }}</h1>
         <p>{{this.user()?.email}}</p>
       </ion-label>
-      <ion-button routerLink="/profile-edit" fill="outline" class="edit-profile">
+      <ion-button (click)="goToProfileEdit()" fill="outline" class="edit-profile">
         <ion-icon size="large" slot="start" name="create" class="icon-profile"></ion-icon>
         Editar Perfil
       </ion-button>
@@ -39,11 +39,20 @@
         <p>Colecciones</p>
       </ion-label>
       </ion-col>
+      <ion-row class="justify-left ion-flex ion-padding-top ion-align-items-end">
+        <h4 class="preferences-title">Preferencias Alimentarias</h4></ion-row>
+      <ion-col class="preferences">
+        @if (user()) {
+          <app-filter-profile
+            [initialPreferences]="user()!.preferences ?? []"
+            (preferencesChange)="onPreferencesChange($event)">
+          </app-filter-profile>
+        }
+      </ion-col>
     </ion-row>
-    <app-filter-profile
-      [initialPreferences]="user()?.preferences ?? []"
-      (preferencesChange)="onPreferencesChange($event)">
-    </app-filter-profile>
+
+
+
   </ion-grid>
 
 </ion-content>
