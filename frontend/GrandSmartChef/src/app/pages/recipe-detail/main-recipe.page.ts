@@ -313,6 +313,16 @@ export class MainRecipePage implements OnInit {
     }
     return `${this.backendUrl}${imageUrl}`;
   }
+
+  onRatingSubmitted() {
+    const id = this.recipe()?.id;
+    if (!id) return;
+
+    this.recipeService.getActiveRecipeDetails(id).subscribe({
+      next: data => this.recipe.set(data),
+      error: err => console.error('Error recargando receta', err)
+    });
+  }
 }
 
 

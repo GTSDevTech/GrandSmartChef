@@ -2,7 +2,7 @@
   display: block;
 }
 
-/* -------- TÍTULOS -------- */
+/* -------- TITLES -------- */
 h3 {
   font-weight: 600;
   font-size: 1rem;
@@ -10,7 +10,7 @@ h3 {
   margin: 0 0 0.6rem 0;
 }
 
-/* -------- IMAGEN -------- */
+
 .image-container {
   position: relative;
   width: 100%;
@@ -41,6 +41,7 @@ h3 {
 
 .row-item {
   width: 100%;
+  text-align: center;
   margin-top: 1.2rem;
   padding: 0.9rem 1rem 1.1rem;
   background: white;
@@ -52,7 +53,7 @@ h3 {
   align-items: flex-start;
 }
 
-/* -------- INPUT GENERAL -------- */
+/* -------- GENERAL INPUT  -------- */
 ion-item {
   --background: transparent;
   border-radius: 0.75rem;
@@ -65,17 +66,18 @@ ion-textarea {
   font-size: 0.95rem;
 }
 
-/* -------- NOMBRE -------- */
+/* -------- NAME -------- */
 .recipe-name-item {
   width: 100%;
+
 }
 
 .recipe-name-item ion-input {
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
-/* -------- DATOS PRINCIPALES -------- */
+/* -------- MAIN DATA -------- */
 .main-data-row {
   margin-top: 1.2rem;
   padding: 0.9rem;
@@ -91,8 +93,8 @@ ion-textarea {
 .detail-item {
   flex: 1;
   background: #f8f9fa;
-  border-radius: 0.8rem;
-  padding: 0.6rem;
+  border-radius: 12px;
+  padding: 0.1rem;
   text-align: center;
 }
 
@@ -124,16 +126,21 @@ ion-textarea {
   font-size: 0.7rem;
 }
 
-/* -------- INGREDIENTES -------- */
+/* -------- INGREDIENTS -------- */
 .ingredient-list {
   width: 100%;
   margin-top: 0.6rem;
 }
 
+.ingredient-line{
+  display: flex;
+  width: 100%;
+}
+
 .ingredient-item {
   width: 100%;
   background: #f8f9fa;
-  border-radius: 0.8rem;
+  border-radius: 12px;
   padding: 0.6rem;
   margin-bottom: 0.5rem;
   display: flex;
@@ -146,26 +153,29 @@ ion-textarea {
 }
 
 .name {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.9rem;
 }
 
-/* ---- Fake ion-select (Ingrediente) ---- */
+/* ---- Fake ion-select (Ingredient) ---- */
 .fake-ion-select {
   flex: 1;
-  height: 44px;
-  padding: 0 12px;
+  height: 2.5rem;
+  width: 100%;
   border-radius: 12px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.10);
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  padding: 0.2rem;
 }
 
 .fake-select-text {
+
   font-size: 0.95rem;
   color: var(--ion-color-medium);
+  padding: 0.1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -175,14 +185,38 @@ ion-textarea {
   font-size: 18px;
   color: var(--ion-color-medium);
 }
+.select-unit {
+  flex: 1;
+  width: 100%;
+  height: 2.5rem;
+  --padding-start: 12px;
+  --padding-end: 12px;
 
-/* Inputs cantidad / unidad */
-.input-ingr {
-  width: 80px;
-  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
 }
 
-/* -------- PASOS -------- */
+.half-action-sheet {
+  height: 50vh;
+  max-height: 50vh;
+}
+
+
+
+.input-ingr {
+  flex: 1;
+  width: 100%;
+  height: 2.5rem;
+  justify-content: center;
+  text-align: left;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+
+}
+
+/* -------- STEPS -------- */
 .step-item {
   width: 100%;
   background: #f8f9fa;
@@ -203,7 +237,7 @@ ion-textarea {
   flex-shrink: 0;
 }
 
-/* -------- BOTÓN GUARDAR -------- */
+/* -------- SAVE -------- */
 .save-btn {
   width: 85%;
   margin: 1.4rem auto 0;
@@ -214,7 +248,7 @@ ion-textarea {
   font-weight: 600;
 }
 
-/* -------- BOTÓN VOLVER -------- */
+/* -------- GO BACK -------- */
 .circle-button {
   --background: rgba(0, 0, 0, 0.45);
   --color: white;

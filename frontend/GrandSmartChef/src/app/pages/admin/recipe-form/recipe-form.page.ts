@@ -1,4 +1,4 @@
-import { Component, inject, ElementRef, ViewChild, OnInit, signal } from '@angular/core';
+import {Component, inject, ElementRef, ViewChild, OnInit, signal, NgIterable, effect} from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -9,15 +9,13 @@ import {
   IonFabButton,
   IonGrid,
   IonIcon,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonRow,
   IonTextarea,
-  IonSelect,
-  IonSelectOption, IonModal, IonSearchbar,
+  IonModal, IonSearchbar, IonSelect, IonSelectOption,
 } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { ScrollFooterService } from '../../../services/scroll/scroll-footer/scroll-footer.service';
@@ -31,6 +29,15 @@ import { IngredientService } from '../../../services/ingredient/ingredient.servi
 import {TagService} from "../../../services/tag/tag.service";
 import {ToastController} from "@ionic/angular";
 import {environment} from "../../../../environments/environment.prod";
+import {UnitDTO} from "../../../models/unit.model";
+import {UnitService} from "../../../services/unit/unit.service";
+import {
+  IngredientModalComponent
+} from "../../../components/modals/create-recipe-modal/ingredient-modal/ingredient-modal.component";
+import {ModalService} from "../../../services/modal/modal.service";
+import {TagModalComponent} from "../../../components/modals/create-recipe-modal/tag-modal/tag-modal.component";
+import {TagDTO} from "../../../models/tag.model";
+import {UnitsModalComponent} from "../../../components/modals/create-recipe-modal/units-modal/units-modal.component";
 
 @Component({
   selector: 'app-recipe-form',
@@ -53,14 +60,16 @@ import {environment} from "../../../../environments/environment.prod";
     IonInput,
     IonFab,
     IonFabButton,
-    IonModal,
-    IonSearchbar,
+    IngredientModalComponent,
+    TagModalComponent,
+    UnitsModalComponent,
   ],
 })
   export class RecipeFormPage implements OnInit {
 
 
     private location = inject(Location);
+    private modalService = inject(ModalService);
     private route = inject(ActivatedRoute);
     private createRecipeService = inject(CreateRecipe);
     private ingredientService = inject(IngredientService);
@@ -68,7 +77,7 @@ import {environment} from "../../../../environments/environment.prod";
     private cameraService = inject(CameraService);
     private scrollFooter = inject(ScrollFooterService);
     private toastCtrl = inject(ToastController);
-
+    private unitService = inject(UnitService);
     private readonly backendUrl = environment.imageBaseUrl;
 
 
@@ -76,12 +85,22 @@ import {environment} from "../../../../environments/environment.prod";
     previewUrl: string | null = null;
     selectedFile: File | null = null;
 
-    @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild(IngredientModalComponent)
+  ingredientModal!: IngredientModalComponent;
+
+  @ViewChild(TagModalComponent)
+  tagModal!: TagModalComponent;
+
+  @ViewChild(UnitsModalComponent)
+  unitModal!: UnitsModalComponent;
 
 
+  @ViewChild('fileInput')
+  fileInput!: ElementRef<HTMLInputElement>;
+
+    units: UnitDTO[] = [];
     ingredientsCatalog: IngredientDTO[] = [];
-    tagsCatalog: { id: number; name: string }[] = [];
-
+    tagsCatalog: TagDTO[] = [];
 
     form = {
       name: '',
@@ -110,14 +129,42 @@ import {environment} from "../../../../environments/environment.prod";
     selectedTagId!: number;
     selectedTagName: string | null = null;
 
-    ingredientModalOpen = false;
-    tagModalOpen = false;
-
     filteredIngredients: IngredientDTO[] = [];
     filteredTags: { id: number; name: string }[] = [];
 
 
+
+    constructor(){
+      effect(() => {
+        const unitCode = this.modalService.getData('unit-modal')();
+        if (unitCode) {
+          this.ingredientUnit = unitCode;
+          this.modalService.clearData('unit-modal');
+        }
+      });
+
+
+      effect(() => {
+        const data = this.modalService.getData('ingredient-modal')();
+        if (data) {
+          this.selectedIngredientId = data.id;
+          this.selectedIngredientName = data.name;
+          this.modalService.clearData('ingredient-modal');
+        }
+      });
+      effect(() => {
+        const data = this.modalService.getData('tag-modal')();
+        if (data) {
+          this.selectedTagId = data.id;
+          this.selectedTagName = data.name;
+          this.modalService.clearData('tag-modal');
+        }
+      });
+    }
+
+
     ngOnInit() {
+
       this.ingredientService.getAllIngredients().subscribe(data => {
         this.ingredientsCatalog = data;
         this.filteredIngredients = data;
@@ -126,6 +173,10 @@ import {environment} from "../../../../environments/environment.prod";
       this.tagService.getAllTags().subscribe(tags => {
         this.tagsCatalog = tags;
         this.filteredTags = tags;
+      });
+
+      this.unitService.getUnits().subscribe(units => {
+        this.units = units;
       });
 
       const idParam = this.route.snapshot.paramMap.get('id');
@@ -167,44 +218,24 @@ import {environment} from "../../../../environments/environment.prod";
 
 
     openIngredientModal() {
-      this.filteredIngredients = this.ingredientsCatalog;
-      this.ingredientModalOpen = true;
+      const selectedIngrIds = this.form.ingredients.map(ing => ing.ingredientId!);
+      this.ingredientModal.open({
+          ingredients: this.ingredientsCatalog,
+          disabledIds: selectedIngrIds
+      });
     }
 
-    filterIngredients(event: Event) {
-      const value = (event.target as HTMLIonSearchbarElement).value?.toLowerCase() || '';
-      this.filteredIngredients = this.ingredientsCatalog.filter(i =>
-        i.name.toLowerCase().includes(value)
-      );
-    }
-
-    selectIngredient(ingredient: IngredientDTO) {
-      this.selectedIngredientId = ingredient.id;
-      this.selectedIngredientName = ingredient.name;
-      this.ingredientModalOpen = false;
-    }
 
     openTagModal() {
-      this.filteredTags = this.tagsCatalog;
-      this.tagModalOpen = true;
+      const selectedIds = this.form.tags.map(t => t.id!);
+      this.tagModal.open({
+        tags: this.tagsCatalog,
+        disabledIds: selectedIds
+      });
     }
 
-    filterTags(event: Event) {
-      const value = (event.target as HTMLIonSearchbarElement).value?.toLowerCase() || '';
-      this.filteredTags = this.tagsCatalog.filter(t =>
-        t.name.toLowerCase().includes(value)
-      );
-    }
-
-    selectTag(tag?: { id: number; name: string }) {
-      if (!tag) {
-        console.warn('[selectTag] tag undefined');
-        return;
-      }
-
-      this.selectedTagId = tag.id;
-      this.selectedTagName = tag.name;
-      this.tagModalOpen = false;
+    openUnitModal() {
+      this.unitModal.open(this.units);
     }
 
     addIngredient() {
@@ -387,4 +418,30 @@ import {environment} from "../../../../environments/environment.prod";
       return `${this.backendUrl}${imageUrl}`;
     }
 
+  formatUnitLabel(unit: string): string {
+    const formatted = unit
+      .toLowerCase()
+      .replace(/_/g, ' ');
+
+    if(formatted.length > 1) {
+      return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    }
+      return formatted;
   }
+
+  getSelectedUnitLabel(): string {
+    if (!this.ingredientUnit) {
+      return 'Unidad';
+    }
+
+    const unit = this.units.find(u => u.code === this.ingredientUnit);
+
+    return unit
+      ? this.formatUnitLabel(unit.code)
+      : this.ingredientUnit;
+  }
+
+}
+
+
+

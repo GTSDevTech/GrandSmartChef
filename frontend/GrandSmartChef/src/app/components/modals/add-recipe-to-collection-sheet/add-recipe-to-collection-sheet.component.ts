@@ -5,14 +5,12 @@ import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {CollectionService} from "../../../services/collection/collection.service";
 import {
   IonAvatar,
-  IonButton, IonButtons,
-  IonCheckbox, IonCol,
+  IonButton,
+  IonCol,
   IonContent,
-  IonHeader, IonIcon, IonImg,
+  IonIcon, IonImg,
   IonItem, IonLabel,
   IonList, IonModal, IonRow, IonSearchbar,
-  IonTitle,
-  IonToolbar
 } from "@ionic/angular/standalone";
 import {forkJoin} from "rxjs";
 
@@ -55,7 +53,6 @@ export class AddRecipeToCollectionSheetComponent implements OnInit {
     const id = this.collectionId();
     if (!id) return [];
 
-    // Asumiendo que tu service tiene collections() como signal (como usas en HomeCard)
     const col = this.collectionService.collections().find(c => c.id === id);
     return (col?.recipes ?? []).map(r => r.id);
   });

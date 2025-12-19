@@ -1,0 +1,46 @@
+<ion-modal
+  [isOpen]="isOpen()"
+  [initialBreakpoint]="0.5"
+  [breakpoints]="[0.5, 1]"
+  [handle]="true"
+  (didDismiss)="close()"
+  class="tag-sheet">
+
+  <ng-template>
+
+    <ion-header>
+      <ion-toolbar class="sheet-toolbar">
+        <ion-label>Selección Tags</ion-label>
+      </ion-toolbar>
+      <ion-searchbar
+        placeholder="Buscar ingrediente…"
+        (ionInput)="onSearch($event)">
+      </ion-searchbar>
+    </ion-header>
+
+    <ion-content>
+
+      <ion-list>
+        @for (tag of filteredTags(); track tag.id) {
+          <ion-item
+            class="card-tag "
+            [class.disabled]="isDisabled(tag)"
+            [button]="!isDisabled(tag)"
+            (click)="!isDisabled(tag) && select(tag)">
+            <ion-label>{{ tag.name }}</ion-label>
+          </ion-item>
+        }
+
+        @if (filteredTags().length === 0) {
+          <ion-item lines="none">
+            <ion-label class="ion-text-center ion-text-muted">
+              No se encontraron tags
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+
+    </ion-content>
+
+  </ng-template>
+</ion-modal>

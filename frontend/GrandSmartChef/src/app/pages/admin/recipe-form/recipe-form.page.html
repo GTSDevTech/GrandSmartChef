@@ -1,5 +1,5 @@
 <ion-content (ionScroll)="onScroll($event)" [fullscreen]="true">
-  <!-- IMAGEN -->
+
   <div class="image-container" style="position: relative;">
 
     <img
@@ -29,7 +29,7 @@
   </div>
 
   <ion-grid>
-    <!-- NOMBRE -->
+
     <ion-row class="row-item">
       <h3>Título</h3>
       <ion-item lines="full" class="recipe-name-item">
@@ -37,36 +37,35 @@
       </ion-item>
     </ion-row>
 
-    <!-- DATOS PRINCIPALES -->
     <ion-row class="ion-padding-horizontal center-container-column main-data-row">
       <ion-col size="3" class="detail-item">
+        <h3>Minutos</h3>
         <ion-icon name="timer-outline" size="large"></ion-icon>
         <ion-input [(ngModel)]="form.prepTime" placeholder="minutos"></ion-input>
       </ion-col>
 
       <ion-col size="3" class="detail-item">
+        <h3>Raciones</h3>
         <ion-icon name="people-outline" size="large"></ion-icon>
         <ion-input [(ngModel)]="form.servings" placeholder="personas"></ion-input>
       </ion-col>
 
       <ion-col size="3" class="detail-item">
+        <h3>Dificultad</h3>
         <ion-icon name="speedometer-outline" size="large"></ion-icon>
         <ion-input [(ngModel)]="form.difficulty" placeholder="dificultad"></ion-input>
       </ion-col>
     </ion-row>
 
-    <!-- TAGS -->
-
       <ion-row class="row-item">
         <h3>Tags</h3>
 
-        <!-- SELECTOR TAG (AHORA ABRE MODAL) -->
         <ion-item class="item-tag" (click)="openTagModal()">
           <ion-label>
             {{ selectedTagName || 'Seleccionar tag' }}
           </ion-label>
 
-          <ion-button fill="clear" class="add-btn" (click)="addTag(); $event.stopPropagation()">
+          <ion-button fill="clear" class="add-btn" (click)="addTag()">
             <ion-icon name="add"></ion-icon>
           </ion-button>
         </ion-item>
@@ -79,7 +78,7 @@
                 shape="round"
                 class="button-tags"
                 type="button"
-                (click)="removeTag(i); $event.stopPropagation()">
+                (click)="removeTag(i)">
 
                 {{ tg.name }}
 
@@ -94,7 +93,6 @@
         </ion-row>
       </ion-row>
 
-    <!-- DESCRIPCIÓN -->
     <ion-row class="row-item">
       <h3>Descripción</h3>
       <ion-item class="recipe-name-item" lines="none">
@@ -106,39 +104,42 @@
       </ion-item>
     </ion-row>
 
-
-    <!-- INGREDIENTES -->
     <ion-row class="row-item">
       <h3>Ingredientes</h3>
 
       <ion-item class="ingredient-line">
 
-        <!-- FAKE SELECT -->
+        <ion-input
+          class="input-ingr "
+          [(ngModel)]="ingredientQty"
+          placeholder="Cantidad">
+        </ion-input>
+
         <div
           class="fake-ion-select"
-          (click)="openIngredientModal()">
-
-      <span class="fake-select-text">
-        {{ selectedIngredientName || 'Ingrediente' }}
-      </span>
+          (click)="openUnitModal()">
+          <span class="fake-select-text">
+            {{getSelectedUnitLabel()}}
+          </span>
 
           <ion-icon
             name="chevron-down-outline"
             class="fake-select-icon">
           </ion-icon>
         </div>
+        <div
+          class="fake-ion-select"
+          (click)="openIngredientModal()">
 
-        <ion-input
-          class="input-ingr"
-          [(ngModel)]="ingredientQty"
-          placeholder="Cantidad">
-        </ion-input>
+          <span class="fake-select-text">
+            {{ selectedIngredientName || 'Ingrediente' }}
+          </span>
 
-        <ion-input
-          class="input-ingr"
-          [(ngModel)]="ingredientUnit"
-          placeholder="Unidad">
-        </ion-input>
+          <ion-icon
+            name="chevron-down-outline"
+            class="fake-select-icon">
+          </ion-icon>
+        </div>
 
         <ion-button
           fill="clear"
@@ -203,62 +204,10 @@
       </ion-button>
     </ion-row>
   </ion-grid>
+  <app-ingredient-modal></app-ingredient-modal>
+  <app-tag-modal></app-tag-modal>
+  <app-units-modal></app-units-modal>
 
-  <!-- ===== MODAL TAGS ===== -->
-  <ion-modal
-    [isOpen]="tagModalOpen"
-    [initialBreakpoint]="0.25"
-    [breakpoints]="[0, 0.25, 0.5, 0.75]"
-    (didDismiss)="tagModalOpen = false">
 
-    <ng-template>
-      <ion-content class="ion-padding tag-modal">
-        <ion-searchbar
-          placeholder="Buscar tag..."
-          (click)="$event.stopPropagation()"
-          (ionInput)="filterTags($event)">
-        </ion-searchbar>
-
-        <ion-list>
-          @for (tag of filteredTags; track tag.id) {
-            <ion-item button (click)="selectTag(tag)">
-              <ion-label class="ion-text-center">
-                {{ tag.name }}
-              </ion-label>
-            </ion-item>
-          }
-        </ion-list>
-      </ion-content>
-    </ng-template>
-
-  </ion-modal>
-
-  <ion-modal
-    [isOpen]="ingredientModalOpen"
-    [initialBreakpoint]="0.25"
-    [breakpoints]="[0, 0.25, 0.5, 0.75]"
-    (didDismiss)="ingredientModalOpen = false">
-
-    <ng-template>
-      <ion-content class="ion-padding ingredient-modal">
-        <ion-searchbar
-          placeholder="Buscar ingrediente..."
-          (click)="$event.stopPropagation()"
-          (ionInput)="filterIngredients($event)">
-        </ion-searchbar>
-
-        <ion-list>
-          @for (ingredient of filteredIngredients; track ingredient.id) {
-            <ion-item button (click)="selectIngredient(ingredient)">
-              <ion-label class="ion-text-center">
-                {{ ingredient.name }}
-              </ion-label>
-            </ion-item>
-          }
-        </ion-list>
-      </ion-content>
-    </ng-template>
-
-  </ion-modal>
 
 </ion-content>

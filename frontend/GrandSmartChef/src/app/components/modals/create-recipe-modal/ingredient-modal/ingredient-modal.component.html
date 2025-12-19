@@ -1,0 +1,48 @@
+<ion-modal
+  [isOpen]="isOpen()"
+  [initialBreakpoint]="1"
+  [breakpoints]="[0.5, 1]"
+  [handle]="true"
+  (didDismiss)="close()"
+  class="tag-sheet">
+
+  <ng-template>
+
+    <ion-header>
+      <ion-toolbar class="sheet-toolbar">
+        <ion-label>Selección Ingredientes</ion-label>
+      </ion-toolbar>
+      <ion-searchbar
+        placeholder="Buscar ingrediente…"
+        (ionInput)="onSearch($event)">
+      </ion-searchbar>
+    </ion-header>
+
+    <ion-content class="ion-padding ingredient-modal">
+
+      <ion-list>
+        @for (ingr of filteredIngredients(); track ingr.id) {
+          <ion-item
+            class="card-tag "
+            [class.disabled]="isDisabled(ingr)"
+            [button]="!isDisabled(ingr)"
+            (click)="!isDisabled(ingr) && select(ingr)">
+            <ion-label class="ion-text-center">
+              {{ ingr.name }}
+            </ion-label>
+          </ion-item>
+        }
+
+        @if (filteredIngredients().length === 0) {
+          <ion-item lines="none">
+            <ion-label class="ion-text-center ion-text-muted">
+              No se encontraron Ingredientes disponibles
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+
+    </ion-content>
+  </ng-template>
+
+</ion-modal>

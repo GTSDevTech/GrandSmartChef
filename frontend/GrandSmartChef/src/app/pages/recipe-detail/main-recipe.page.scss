@@ -26,6 +26,13 @@ h3{
   }
 }
 
+.item-step{
+  align-items: center;
+  ion-col{
+    flex-wrap: wrap;
+  }
+}
+
 
 .header-buttons {
   position: absolute;
@@ -84,8 +91,10 @@ h3{
 
 .name {
   text-align: left;
-  flex: 1;
   margin-left: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  word-break: break-word;
 }
 ion-button.buy-button ion-icon {
   margin-right: 0.2rem;

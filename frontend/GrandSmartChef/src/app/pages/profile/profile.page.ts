@@ -63,6 +63,6 @@ export class ProfilePage implements OnInit {
   }
 
   goToProfileEdit() {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/profile-edit']);
   }
 }
