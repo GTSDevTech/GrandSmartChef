@@ -1,7 +1,10 @@
 <ion-content (ionScroll)="onScroll($event)" [scrollEvents]="true" [fullscreen]="true"
              class="recipe-detail-content" xmlns="http://www.w3.org/1999/html">
   <div class="image-header">
-    <ion-img [src]="recipe()?.imageUrl" [alt]="recipe()?.name"></ion-img>
+    <ion-img
+    class="recipe-image-preview"
+    [src]="getRecipeImage(recipe()?.imageUrl)"
+    alt="Imagen de la receta"></ion-img>
     <ion-row class="header-buttons">
       <ion-col size="6" class="col-back-button">
         <ion-button fill="clear" class="circle-button" (click)="onClose()">
@@ -99,9 +102,11 @@
   <ion-row>
     <ion-list class="ingredient-list">
       @for(step of recipe()?.steps; track $index){
-        <ion-item lines="none">
-          <ion-button class="steps">{{step.stepNumber}}</ion-button>
-          <ion-col size="auto" class="name">{{step.instruction}}</ion-col>
+        <ion-item lines="none" class="item-step">
+          <ion-col size="2">
+            <ion-button class="steps">{{step.stepNumber}}</ion-button>
+          </ion-col>
+          <ion-col class="name">{{step.instruction}}</ion-col>
         </ion-item>
       }
     </ion-list>
@@ -130,7 +135,11 @@
   <ion-row class="ion-justify-content-center ion-padding">
     <ion-button class="score" (click)="openModalRate()"><ion-icon name="star"></ion-icon>¡Puntúa esta receta!</ion-button>
   </ion-row>
-  <app-modal-rate></app-modal-rate>
+  <app-modal-rate
+    [recipeId]="recipe()?.id"
+    (ratechange)="onRatingSubmitted()">
+  </app-modal-rate>
+
   <app-collection-modal></app-collection-modal>
 </ion-content>
 <app-footer-nav></app-footer-nav>

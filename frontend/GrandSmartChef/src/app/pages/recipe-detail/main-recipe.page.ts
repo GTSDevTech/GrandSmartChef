@@ -21,6 +21,7 @@ import {ActionSheetController, ToastController} from "@ionic/angular";
 import {FooterNavComponent} from "../../components/footer-nav/footer-nav.component";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {ShoppingListService} from "../../services/shoppingList/shopping-list.service";
+import {environment} from "../../../environments/environment.prod";
 
 
 @Component({
@@ -42,6 +43,8 @@ export class MainRecipePage implements OnInit {
   private actionSheetCtrl = inject(ActionSheetController);
   private toast = inject(ToastController);
   private scrollFooter = inject(ScrollFooterService);
+
+  private readonly backendUrl = environment.imageBaseUrl;
 
   recipe = signal<RecipeDTO | null>(null);
   collections = this.collectionService.collections;
@@ -304,6 +307,22 @@ export class MainRecipePage implements OnInit {
   }
 
 
+  getRecipeImage(imageUrl?: string | null): string {
+    if (!imageUrl) {
+      return '/assets/images/recipes/default_profile_image.png';
+    }
+    return `${this.backendUrl}${imageUrl}`;
+  }
+
+  onRatingSubmitted() {
+    const id = this.recipe()?.id;
+    if (!id) return;
+
+    this.recipeService.getActiveRecipeDetails(id).subscribe({
+      next: data => this.recipe.set(data),
+      error: err => console.error('Error recargando receta', err)
+    });
+  }
 }
 
 

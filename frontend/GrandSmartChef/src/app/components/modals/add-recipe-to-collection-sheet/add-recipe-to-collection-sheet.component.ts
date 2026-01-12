@@ -1,18 +1,16 @@
-import {Component, inject, Input, OnInit, output, signal} from '@angular/core';
+import {Component, computed, effect, inject, Input, OnInit, output, signal} from '@angular/core';
 import {RecipeService} from "../../../services/recipe/recipe.service";
 import {ModalService} from "../../../services/modal/modal.service";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {CollectionService} from "../../../services/collection/collection.service";
 import {
   IonAvatar,
-  IonButton, IonButtons,
-  IonCheckbox, IonCol,
+  IonButton,
+  IonCol,
   IonContent,
-  IonHeader, IonImg,
+  IonIcon, IonImg,
   IonItem, IonLabel,
   IonList, IonModal, IonRow, IonSearchbar,
-  IonTitle,
-  IonToolbar
 } from "@ionic/angular/standalone";
 import {forkJoin} from "rxjs";
 
@@ -32,52 +30,68 @@ import {forkJoin} from "rxjs";
     IonAvatar,
     IonImg,
     IonRow,
-    IonCol
+    IonCol,
+    IonIcon
   ]
 })
-export class AddRecipeToCollectionSheetComponent  implements OnInit {
+export class AddRecipeToCollectionSheetComponent implements OnInit {
 
   private recipeService = inject(RecipeService);
   private collectionService = inject(CollectionService);
   private modalService = inject(ModalService);
+
   isOpen = this.modalService.isOpen('add-recipe-to-collection');
   collectionId = this.modalService.getData('add-recipe-to-collection');
+
   recipes = signal<RecipeCardDTO[]>([]);
   selectedRecipes = signal<number[]>([]);
   searchRecipe = signal<string>('');
   recipesToAdd = output<number>();
 
+
+  private alreadyInCollectionIds = computed<number[]>(() => {
+    const id = this.collectionId();
+    if (!id) return [];
+
+    const col = this.collectionService.collections().find(c => c.id === id);
+    return (col?.recipes ?? []).map(r => r.id);
+  });
+
   constructor() {
+
+    effect(() => {
+      const open = this.isOpen();
+      const id = this.collectionId();
+
+      if (open && id) {
+        this.searchRecipe.set('');
+        this.selectedRecipes.set([]);
+      }
+    });
   }
-
-
 
   ngOnInit() {
     this.loadRecipes();
   }
 
-
-
-
-
   loadRecipes() {
     this.recipeService.getAllActiveRecipes().subscribe({
-      next: (res) => {
-        console.log(res);
-        this.recipes.set(res)
-      },
+      next: (res) => this.recipes.set(res ?? []),
       error: (err) => console.error('Error loading recipes', err)
     });
   }
 
+  isAlreadyInCollection(recipeId: number): boolean {
+    return this.alreadyInCollectionIds().includes(recipeId);
+  }
+
   toggleSelection(recipeId: number) {
+    if (this.isAlreadyInCollection(recipeId)) return;
+
     const selected = [...this.selectedRecipes()];
     const index = selected.indexOf(recipeId);
-    if (index >= 0) {
-      selected.splice(index, 1);
-    } else {
-      selected.push(recipeId);
-    }
+    if (index >= 0) selected.splice(index, 1);
+    else selected.push(recipeId);
     this.selectedRecipes.set(selected);
   }
 
@@ -90,18 +104,19 @@ export class AddRecipeToCollectionSheetComponent  implements OnInit {
       this.modalService.close('add-recipe-to-collection');
       return;
     }
+
     const calls = ids.map(id => this.collectionService.addRecipeToCollection(collectionId, id));
     forkJoin(calls).subscribe({
       next: () => {
-        this.recipesToAdd.emit(collectionId)
+        this.recipesToAdd.emit(collectionId);
         this.modalService.close('add-recipe-to-collection', collectionId);
+
         this.selectedRecipes.set([]);
+        this.searchRecipe.set('');
       },
-      error: (err) => {
-        console.error('Error adding recipes to collection:', err);
-      }
+      error: (err) => console.error('Error adding recipes to collection:', err)
     });
-    }
+  }
 
   updateSearch(event: Event) {
     const input = event.target as HTMLIonSearchbarElement;
@@ -109,15 +124,14 @@ export class AddRecipeToCollectionSheetComponent  implements OnInit {
   }
 
   filteredRecipes() {
-    const term = this.searchRecipe().toLowerCase();
+    const term = this.searchRecipe().trim().toLowerCase();
+    if (!term) return this.recipes();
     return this.recipes().filter(r => r.name.toLowerCase().includes(term));
   }
 
   close() {
     this.modalService.close('add-recipe-to-collection');
+    this.searchRecipe.set('');
+    this.selectedRecipes.set([]);
   }
-
 }
-
-
-

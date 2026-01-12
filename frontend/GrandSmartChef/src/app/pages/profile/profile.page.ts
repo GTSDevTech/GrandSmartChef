@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {RouterModule} from "@angular/router";
+import {Router, RouterModule} from "@angular/router";
 import {CommonModule, Location} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -18,6 +18,7 @@ import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-fo
 import {FilterProfileComponent} from "../../components/filters/filter-profile/filter-profile.component";
 import {ImgProfileComponent} from "../../components/img-profile/img-profile.component";
 import {AuthService} from "../../services/auth/auth.service";
+import {ClientService} from "../../services/client/client.service";
 
 @Component({
   selector: 'app-profile',
@@ -36,7 +37,9 @@ import {AuthService} from "../../services/auth/auth.service";
 export class ProfilePage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
   private authService = inject(AuthService);
+  private clientService = inject(ClientService);
   private location = inject(Location);
+  private router = inject(Router);
   user = this.authService.currentUser;
 
 
@@ -50,8 +53,16 @@ export class ProfilePage implements OnInit {
 
   }
 
+  onPreferencesChange(prefs: { id: number; name: string }[]) {
+    this.clientService.updatePreferences(prefs).subscribe();
+  }
+
 
   onClose() {
     this.location.back();
+  }
+
+  goToProfileEdit() {
+    this.router.navigate(['/profile-edit']);
   }
 }

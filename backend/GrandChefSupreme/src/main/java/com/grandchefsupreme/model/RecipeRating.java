@@ -6,7 +6,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "recipe_rating")
+@Table(
+        name = "recipe_rating",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"id_recipe", "id_user"}
+        )
+)
 @Getter
 @Setter
 @ToString(exclude = {"recipe", "client"})

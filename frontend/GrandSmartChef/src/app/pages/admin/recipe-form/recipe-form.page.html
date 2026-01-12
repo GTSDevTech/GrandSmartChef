@@ -1,20 +1,19 @@
 <ion-content (ionScroll)="onScroll($event)" [fullscreen]="true">
-  <!-- IMAGEN -->
-  <div class="image-container" style="position: relative;">
-    <ion-img
-      [src]="previewUrl || recipe()?.imageUrl || 'assets/images/default_recipe_image.png'"
-      class="recipe-image-preview"
-      alt="Imagen de la receta">
-    </ion-img>
 
-    <!-- Botón volver atrás -->
+  <div class="image-container" style="position: relative;">
+
+    <img
+      class="recipe-image-preview"
+      [src]="previewUrl || getRecipeImage(recipe()?.imageUrl)"
+      alt="Imagen de la receta">
+
     <ion-fab vertical="top" horizontal="start" slot="fixed" class="fab-top-left">
       <ion-button fill="clear" class="circle-button" (click)="onClose()">
         <ion-icon size="large" name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-fab>
 
-    <!-- Botón cámara -->
+
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-bottom-right">
       <ion-fab-button (click)="pickImage()" class="camera-button">
         <ion-icon name="camera"></ion-icon>
@@ -30,7 +29,7 @@
   </div>
 
   <ion-grid>
-    <!-- NOMBRE -->
+
     <ion-row class="row-item">
       <h3>Título</h3>
       <ion-item lines="full" class="recipe-name-item">
@@ -38,60 +37,62 @@
       </ion-item>
     </ion-row>
 
-    <!-- DATOS PRINCIPALES -->
     <ion-row class="ion-padding-horizontal center-container-column main-data-row">
       <ion-col size="3" class="detail-item">
+        <h3>Minutos</h3>
         <ion-icon name="timer-outline" size="large"></ion-icon>
         <ion-input [(ngModel)]="form.prepTime" placeholder="minutos"></ion-input>
       </ion-col>
 
       <ion-col size="3" class="detail-item">
+        <h3>Raciones</h3>
         <ion-icon name="people-outline" size="large"></ion-icon>
         <ion-input [(ngModel)]="form.servings" placeholder="personas"></ion-input>
       </ion-col>
 
       <ion-col size="3" class="detail-item">
+        <h3>Dificultad</h3>
         <ion-icon name="speedometer-outline" size="large"></ion-icon>
         <ion-input [(ngModel)]="form.difficulty" placeholder="dificultad"></ion-input>
       </ion-col>
     </ion-row>
 
-    <!-- TAGS -->
-    <ion-row class="row-item">
-      <h3>Tags</h3>
+      <ion-row class="row-item">
+        <h3>Tags</h3>
 
-      <ion-item>
-        <ion-select [(ngModel)]="selectedTagId" placeholder="Tag">
-          @for (tag of tagsCatalog; track tag.id) {
-            <ion-select-option [value]="tag.id">
-              {{ tag.name }}
-            </ion-select-option>
+        <ion-item class="item-tag" (click)="openTagModal()">
+          <ion-label>
+            {{ selectedTagName || 'Seleccionar tag' }}
+          </ion-label>
+
+          <ion-button fill="clear" class="add-btn" (click)="addTag()">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <ion-row class="tags-row">
+          @for (tg of form.tags; track tg.id; let i = $index) {
+            <ion-col size="auto">
+              <ion-button
+                size="small"
+                shape="round"
+                class="button-tags"
+                type="button"
+                (click)="removeTag(i)">
+
+                {{ tg.name }}
+
+                <ion-icon
+                  name="close"
+                  style="margin-left:4px">
+                </ion-icon>
+
+              </ion-button>
+            </ion-col>
           }
-        </ion-select>
-
-        <ion-button fill="clear" class="add-btn" (click)="addTag()">
-          <ion-icon name="add"></ion-icon>
-        </ion-button>
-      </ion-item>
-
-      <ion-row class="tags-row">
-        @for (tg of form.tags; track tg.id; let i = $index) {
-          <ion-col size="auto">
-            <ion-button size="small" shape="round" class="button-tags">
-              {{ tg.name }}
-              <ion-icon
-                name="close"
-                (click)="removeTag(i)"
-                style="margin-left:4px">
-              </ion-icon>
-            </ion-button>
-          </ion-col>
-        }
+        </ion-row>
       </ion-row>
-    </ion-row>
 
-
-    <!-- DESCRIPCIÓN -->
     <ion-row class="row-item">
       <h3>Descripción</h3>
       <ion-item class="recipe-name-item" lines="none">
@@ -103,24 +104,52 @@
       </ion-item>
     </ion-row>
 
-    <!-- INGREDIENTES -->
     <ion-row class="row-item">
       <h3>Ingredientes</h3>
-      <ion-item>
-        <ion-select [(ngModel)]="selectedIngredientId" placeholder="Ingrediente">
-          @for (ingredient of ingredientsCatalog; track ingredient.id) {
-            <ion-select-option [value]="ingredient.id">
-              {{ ingredient.name }}
-            </ion-select-option>
-          }
-        </ion-select>
 
-        <ion-input [(ngModel)]="ingredientQty" placeholder="Cantidad"></ion-input>
-        <ion-input [(ngModel)]="ingredientUnit" placeholder="Unidad"></ion-input>
-        <ion-button fill="clear" class="add-btn" (click)="addIngredient()">
+      <ion-item class="ingredient-line">
+
+        <ion-input
+          class="input-ingr "
+          [(ngModel)]="ingredientQty"
+          placeholder="Cantidad">
+        </ion-input>
+
+        <div
+          class="fake-ion-select"
+          (click)="openUnitModal()">
+          <span class="fake-select-text">
+            {{getSelectedUnitLabel()}}
+          </span>
+
+          <ion-icon
+            name="chevron-down-outline"
+            class="fake-select-icon">
+          </ion-icon>
+        </div>
+        <div
+          class="fake-ion-select"
+          (click)="openIngredientModal()">
+
+          <span class="fake-select-text">
+            {{ selectedIngredientName || 'Ingrediente' }}
+          </span>
+
+          <ion-icon
+            name="chevron-down-outline"
+            class="fake-select-icon">
+          </ion-icon>
+        </div>
+
+        <ion-button
+          fill="clear"
+          class="add-btn"
+          (click)="addIngredient()">
           <ion-icon name="add"></ion-icon>
         </ion-button>
+
       </ion-item>
+
 
       <ion-list class="ingredient-list">
         @for (ing of form.ingredients; track ing.ingredientId; let i = $index) {
@@ -175,4 +204,10 @@
       </ion-button>
     </ion-row>
   </ion-grid>
+  <app-ingredient-modal></app-ingredient-modal>
+  <app-tag-modal></app-tag-modal>
+  <app-units-modal></app-units-modal>
+
+
+
 </ion-content>

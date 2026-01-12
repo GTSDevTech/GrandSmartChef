@@ -19,7 +19,7 @@ public class RegisterStep2DTO {
     )
     private String birthdate;
 
-    @NotBlank(message = "País obligatorio")
+
     private String country;
 
     @Email(message = "Email inválido")

@@ -10,8 +10,8 @@ import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
   IonButton,
-  IonContent, IonFab, IonFabButton,
-  IonGrid, IonIcon, IonImg, IonInput, IonItem, IonLabel,
+  IonContent, IonDatetime, IonFab, IonFabButton,
+  IonGrid, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonModal,
   IonRow,
 } from '@ionic/angular/standalone';
 import {AuthService} from "../../services/auth/auth.service";
@@ -29,7 +29,7 @@ import { FilterProfileComponent } from "src/app/components/filters/filter-profil
   styleUrls: ['./post-create-account.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, IonRow,
-    IonGrid, ReactiveFormsModule, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, FilterProfileComponent]
+    IonGrid, ReactiveFormsModule, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, FilterProfileComponent, IonModal, IonDatetime]
 })
 export class PostCreateAccountPage implements OnInit {
 
@@ -42,16 +42,29 @@ export class PostCreateAccountPage implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
+  dateModalOpen = false;
+  birthdateDisplay: string | null = null
+  today = new Date().toISOString().split('T')[0];
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   formSignal = signal(this.fb.group({
     fullName: ['', Validators.required],
     birthdate: [''],
-    country: ['']
+    country: [''],
+    preferences: this.fb.control<{ id: number; name: string }[]>([])
   }));
 
 
-  constructor() {
+  onDateSelected(event: CustomEvent) {
+    const iso = event.detail.value as string;
+    if (!iso) return;
+
+    const date = new Date(iso);
+    this.birthdateDisplay = date.toLocaleDateString('es-ES');
+
+    const backendDate = date.toISOString().split('T')[0];
+    this.formSignal().get('birthdate')?.setValue(backendDate);
   }
 
   ngOnInit() {
@@ -63,6 +76,11 @@ export class PostCreateAccountPage implements OnInit {
     }
 
   }
+
+  onPreferencesChange(prefs: { id: number; name: string }[]) {
+    this.formSignal().get('preferences')?.setValue(prefs);
+  }
+
 
 
   onFileSelected(event: Event) {
@@ -81,10 +99,10 @@ export class PostCreateAccountPage implements OnInit {
 
   async pickImage() {
     if (Capacitor.getPlatform() === 'web') {
-      // fallback web: abrir input file
+
       this.fileInput.nativeElement.click();
     } else {
-      // móvil: usar cámara o galería
+
       const file = await this.cameraService.pickImage();
       if (file) {
         this.selectedFile = file;
@@ -99,9 +117,6 @@ export class PostCreateAccountPage implements OnInit {
   CompleteRegister() {
     const form: FormGroup = this.formSignal();
 
-    form.get('preferences')?.setValue([
-      {id: 1, name: 'Vegetariano'},
-    ]);
 
     if (form.invalid) return;
 
@@ -136,5 +151,11 @@ export class PostCreateAccountPage implements OnInit {
       });
     });
   }
+
+  openDateModal() {
+    this.dateModalOpen = true;
+  }
+
+
 
 }

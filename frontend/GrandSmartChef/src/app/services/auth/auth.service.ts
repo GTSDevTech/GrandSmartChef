@@ -68,19 +68,38 @@ export class AuthService {
   }
 
 
-  /**
-   * Devuelve identidad mínima (id + username)
-   */
   getAuthUser() {
     return this.http.get<ClientLoginDTO>(
       `${this.clientApiUrl}/me`
     );
   }
 
-  /**
-   * Carga el perfil completo SOLO si no está en memoria
-   * (clave para Profile, ProfileEdit, foto, etc.)
-   */
+  updatePreferences(prefs: { id: number; name: string }[]) {
+    const token = this.getToken();
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const formData = new FormData();
+    formData.append(
+      'profile',
+      new Blob([JSON.stringify({ preferences: prefs })], {
+        type: 'application/json'
+      })
+    );
+
+    return this.http.put<ClientDTO>(
+      `${this.authApiUrl}/register-step2`,
+      formData,
+      { headers }
+    );
+  }
+
+
   ensureCurrentUserLoaded() {
     if (this.currentUser()) return;
 

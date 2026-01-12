@@ -69,6 +69,12 @@ ion-card-subtitle {
   gap: 12px;
 }
 
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .edit-btn {
   --background: var(--secondary-green-color);
   --background-hover: var(--secondary-green-color-hover);

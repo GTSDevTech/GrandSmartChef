@@ -34,15 +34,20 @@
           class="form-input-register">
         </ion-input>
       </ion-item >
-      <ion-item class="custom-input" color="light">
+      <ion-item
+        class="custom-input date-input"
+        color="light"
+        (click)="openDateModal()">
         <ion-icon name="calendar-number-outline" slot="start"></ion-icon>
-        <ion-input
-          formControlName = "birthdate"
-          type="text"
-          placeholder="Fecha nacimiento (Opcional)"
-          class="form-input-register">
-        </ion-input>
+        <ion-label
+          class="date-placeholder"
+          [class.has-value]="!!birthdateDisplay">
+
+          {{ birthdateDisplay || 'Fecha nacimiento (Opcional)' }}
+        </ion-label>
+
       </ion-item>
+
       <ion-item class="custom-input" color="light">
         <ion-icon name="location-outline" slot="start"></ion-icon>
         <ion-input
@@ -52,12 +57,38 @@
           class="form-input-register">
         </ion-input>
       </ion-item>
-      <ion-row class="center-container-row">
+      <app-filter-profile
+        (preferencesChange)="onPreferencesChange($event)">
+      </app-filter-profile>
+      <ion-row class="center-container-row ion-padding-vertical">
         <ion-button type="submit" expand="block" [disabled]="formSignal().invalid" class="form-buttons final-register-client">FINALIZAR</ion-button>
       </ion-row>
     </form>
-
-    <app-filter-profile ></app-filter-profile>
-
   </ion-grid>
+  <ion-modal
+    [isOpen]="dateModalOpen"
+    cssClass="date-modal"
+    [backdropDismiss]="true"
+    (didDismiss)="dateModalOpen = false">
+    <ng-template>
+      <div class="date-modal-wrapper">
+
+        <ion-datetime
+          presentation="date"
+          locale="es-ES"
+          [max]="today"
+          (ionChange)="onDateSelected($event)">
+        </ion-datetime>
+
+        <ion-button
+          expand="block"
+          class="date-confirm-btn"
+          (click)="dateModalOpen = false">
+
+          Aceptar
+        </ion-button>
+
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

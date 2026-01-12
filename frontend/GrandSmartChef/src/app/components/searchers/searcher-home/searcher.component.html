@@ -1,2 +1,5 @@
-  <ion-searchbar class="custom"  placeholder="Find your recipe..."></ion-searchbar>
-
+<ion-searchbar
+  class="custom"
+  placeholder="Encuentra tu receta..."
+  (ionInput)="onSearch($event)">
+</ion-searchbar>

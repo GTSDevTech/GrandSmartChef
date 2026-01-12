@@ -1,5 +1,9 @@
 <ion-card [routerLink]="['/main-recipe', recipe().id]">
-  <img class="img-card" [src]="recipe().imageUrl" [alt]="recipe().name" />
+  <img
+    class="img-card"
+    [src]="getRecipeImage(recipe().imageUrl)"
+    alt="imagen receta">
+
   <ion-card-header>
     <ion-grid>
       <ion-row class="title-row">

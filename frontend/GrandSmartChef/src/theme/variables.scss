@@ -12,7 +12,6 @@
 --black-color: #000000;
 }
 
-//CONTAINER CENTERED
 .center-container-row {
   display: flex;
   flex-direction: column;
@@ -47,10 +46,10 @@
 }
 
 
-//Ingredientes
+//Ingredients
 .tags-row {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow-x: auto;
 
 }
@@ -137,6 +136,11 @@ ion-input.form-input-register {
 
 }
 
+.item-preferences{
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
 
 
 //FOOTER NAV
@@ -445,8 +449,11 @@ ion-button.edit-profile{
   font-weight: bold;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   color:  var(--primary-green-color);
-  width: 35vw;
+  width: 40vw;
   height: 3vh;
+  min-width: 35vw;
+  min-height: 5vh;
+
 }
 
 ion-button.buy-button{
@@ -566,10 +573,18 @@ ion-toggle.custom-toggle {
   --handle-background: #666;
   --track-background: #b3b3b3;
   --track-background-checked: var(--primary-green-color);
+  --width: 80px;
+  --height: 72px;
   --handle-width: 26px;
-  --handle-height: 26px;
-  width: 60px;
-  height: 32px;
+  --handle-height: 56px;
+  --min-handle-width: 26px;
+  --min-handle-height: 56px;
+  min-width: 60px;
+  min-height: 72px;
+  width: 80px;
+  height: 72px;
+
+
   position: relative;
   &::part(track) {
     border: 1px solid var(--primary-gray-color);
@@ -583,7 +598,7 @@ ion-toggle.custom-toggle::after {
   content: "✖";
   position: absolute;
   left: 0.6rem;
-  top: 55%;
+  top: 2.2rem;
   transform: translateY(-50%);
   font-size: 14px;
   color: white;
@@ -598,7 +613,7 @@ ion-toggle.custom-toggle[aria-checked="true"]::after {
   content: "✔";
   color:var(--primary-green-color);
   left: auto;
-  right: 1rem;
+  right: 2.2rem;
 }
 
 

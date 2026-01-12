@@ -1,16 +1,29 @@
+ion-item {
+  cursor: pointer;
+}
 
+/* Estado seleccionado */
 ion-item.selected {
-  --background: var(--ion-color-primary);
+  --background: var(--secondary-green-color);
   --color: #fff;
-  border-radius: 8px;
   transition: background-color 0.2s ease;
 }
 
-ion-item.selected h2,
-ion-item.selected p {
-  color: #fff;
+/* IMPORTANTE: para que el radio funcione bien */
+ion-item.selected::part(native) {
+  border-radius: 8px;
 }
 
-ion-item {
-  cursor: pointer;
+/* Texto en blanco */
+ion-item.selected h2,
+ion-item.selected p,
+ion-item.selected ion-icon {
+  color: #fff;
+}
+.add-recipe-btn {
+  --background: var(--primary-green-color);
+  --color: #fff;
+  height: 40px;
+  border-radius: 12px;
+  font-weight: 600;
 }

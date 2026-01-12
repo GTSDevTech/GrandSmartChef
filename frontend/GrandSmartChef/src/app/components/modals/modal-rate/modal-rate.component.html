@@ -41,7 +41,11 @@
         </ion-row>
       }
       <ion-row class="center-container-row">
-        <ion-button type="submit" expand="block" class="qualify-button">Puntuar</ion-button>
+        <ion-button expand="block"
+                    class="qualify-button"
+                    (click)="submitRating()">
+          Puntuar
+        </ion-button>
       </ion-row>
     </ion-content>
   </ng-template>

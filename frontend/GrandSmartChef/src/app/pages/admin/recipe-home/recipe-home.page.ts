@@ -16,7 +16,8 @@ import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {CreateRecipe} from "../../../services/createRecipe/create-recipe";
 import {CreateRecipeCardPage} from "../create-recipe-card/create-recipe-card.page";
 import {AlertController, ToastController} from "@ionic/angular";
-import {environment} from "../../../../environments/environment";
+
+
 
 @Component({
   selector: 'app-recipe-home',
@@ -38,6 +39,10 @@ export class RecipeHomePage implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadRecipes();
+
+  }
+  ionViewWillEnter(): void {
     this.loadRecipes();
   }
 
