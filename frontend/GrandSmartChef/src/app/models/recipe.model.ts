@@ -10,7 +10,7 @@ export interface RecipeDTO{
   difficulty:string;
   servings:number;
   prepTime: number;
-  averageRating?: number;
+  averageRating: number;
   description: string;
   imageUrl:string;
   tags: TagDTO[];

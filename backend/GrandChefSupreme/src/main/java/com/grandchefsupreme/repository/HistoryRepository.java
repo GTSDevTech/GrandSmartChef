@@ -1,6 +1,7 @@
 package com.grandchefsupreme.repository;
 
 import com.grandchefsupreme.model.History;
+import jakarta.validation.Valid;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +29,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             @Param("endDate") LocalDate endDate,
             @Param("clientId") Long clientId
     );
+
+    Long countByClient_Id(@Valid Long clientId);
 }

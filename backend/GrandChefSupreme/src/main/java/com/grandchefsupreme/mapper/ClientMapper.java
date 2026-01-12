@@ -39,14 +39,14 @@ public interface ClientMapper {
 
 
     @Named("dateToString")
-    default String dateToString(LocalDate date) {
+    static String dateToString(LocalDate date) {
         return date != null
                 ? date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                 : null;
     }
 
     @Named("stringToDate")
-    default LocalDate stringToDate(String date) {
+    static LocalDate stringToDate(String date) {
         return (date != null && !date.isBlank())
                 ? LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 : null;

@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {AuthService} from "../auth/auth.service";
 import {environment} from "../../../environments/environment";
@@ -9,37 +9,90 @@ import {RecipeDTO} from "../../models/recipe.model";
 @Injectable({
   providedIn: 'root'
 })
-
-
 export class RecipeService {
 
   private http = inject(HttpClient);
-  private auth  = inject(AuthService);
   private apiUrl = `${environment.apiUrl}/recipes`;
 
-  getAllActiveRecipes(){
-    const token = this.auth.getToken();
-    if (!token) {
-      return throwError(() => new Error('No authentication token'));
-    }
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const url = `${this.apiUrl}/card`;
-    return this.http.get<RecipeCardDTO[]>(url, {headers});
+  private filterUserId: number | null = null;
+  private filterIngredientIds: number[] = [];
+
+  private _recipes = signal<RecipeCardDTO[]>([]);
+  recipes = this._recipes.asReadonly();
+
+
+  loadActiveRecipes() {
+    this.http.get<RecipeCardDTO[]>(`${this.apiUrl}/card`)
+      .subscribe({
+        next: recipes => this._recipes.set(recipes ?? []),
+        error: () => this._recipes.set([])
+      });
   }
 
-  getActiveRecipeDetails(id:number){
-    const token = this.auth.getToken();
-    if (!token) {
-      return throwError(() => new Error('No authentication token'));
-    }
-    const params = new HttpParams().set('id', id.toString());
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const url = `${this.apiUrl}/detail`;
-    return this.http.get<RecipeDTO>(url, {headers, params});
+  getActiveRecipeDetails(id: number) {
+    return this.http.get<RecipeDTO>(
+      `${this.apiUrl}/detail`,
+      { params: new HttpParams().set('id', id.toString()) }
+    );
   }
 
+  updateRecipeRating(recipeId: number, rating: number) {
+    this._recipes.update(recipes =>
+      recipes.map(r =>
+        r.id === recipeId
+          ? {
+            ...r,
+            averageRating: rating
+          }
+          : r
+      )
+    );
+  }
+
+  filterByUserPreferences(userId: number | null) {
+    this.filterUserId = userId;
+    this.search();
+  }
+
+
+  filterByIngredients(ids: number[]) {
+    this.filterIngredientIds = ids;
+    this.search();
+  }
+
+  clearFilters() {
+    this.filterUserId = null;
+    this.filterIngredientIds = [];
+    this.loadActiveRecipes();
+  }
+
+  private search() {
+    const hasUser = !!this.filterUserId;
+    const hasIngredients = this.filterIngredientIds.length > 0;
+
+    if (!hasUser && !hasIngredients) {
+      this.loadActiveRecipes();
+      return;
+    }
+
+    let params = new HttpParams();
+
+    if (hasUser) {
+      params = params.set('userId', this.filterUserId!);
+    }
+
+    if (hasIngredients) {
+      this.filterIngredientIds.forEach(id => {
+        params = params.append('ingredientIds', id);
+      });
+    }
+
+    this.http.get<RecipeCardDTO[]>(
+      `${this.apiUrl}/search`,
+      { params }
+    ).subscribe({
+      next: r => this._recipes.set(r ?? []),
+      error: () => this._recipes.set([])
+    });
+  }
 }

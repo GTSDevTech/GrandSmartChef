@@ -25,7 +25,7 @@ public class RecipeRating {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_recipe", nullable = false)
     private Recipe recipe;
 

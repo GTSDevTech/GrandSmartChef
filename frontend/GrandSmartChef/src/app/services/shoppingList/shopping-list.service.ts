@@ -15,49 +15,50 @@ export class ShoppingListService {
   private apiUrl = `${environment.apiUrl}/shopping-list`;
 
 
-  shoppingLists = signal<ShoppingListDTO[]>([]);
+  private _shoppingLists = signal<ShoppingListDTO[]>([]);
+  shoppingLists = this._shoppingLists.asReadonly();
 
+  private loaded = false;
 
-  getAllShoppingListByUserId(idUser: number): Observable<ShoppingListDTO[]> {
-    const token = this.auth.getToken();
-    if (!token) {
-      this.shoppingLists.set([]);
-      return throwError(() => new Error('No authentication token'));
-    }
+  getAllShoppingListByUserId(userId: number){
+    if (this.loaded) return;
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
+    this.http.get<ShoppingListDTO[]>(
+      `${this.apiUrl}/user/${userId}`
+    ).subscribe({
+      next: lists => {
+        this._shoppingLists.set(lists ?? []);
+        this.loaded = true;
+      },
+      error: () => {
+        this._shoppingLists.set([]);
+        this.loaded = true;
+      }
     });
-
-    const url = `${this.apiUrl}/user/${idUser}`;
-
-    return this.http.get<ShoppingListDTO[]>(url, { headers }).pipe(
-      tap(data => {
-        this.shoppingLists.set(data ?? []);
-      }),
-      catchError(err => {
-        this.shoppingLists.set([]);
-        return throwError(() => err);
-      })
-    );
   }
 
 
-  addRecipeToShoppingList(
-    userId: number,
-    recipeId: number
-  ): Observable<ShoppingListDTO> {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
+  addRecipeToShoppingList(userId: number,recipeId: number){
+    const params = new HttpParams()
+      .set('userId', userId)
+      .set('recipeId', recipeId);
     return this.http.post<ShoppingListDTO>(
-      `${this.apiUrl}/create?userId=${userId}&recipeId=${recipeId}`,
-      {},
-      { headers }
+      `${this.apiUrl}/create`,
+      null,
+      { params }
+    ).pipe(
+      tap(newList => {
+        const current = this._shoppingLists();
+        const index = current.findIndex(l => l.id === newList.id);
+
+        if (index >= 0) {
+          current[index] = newList;
+        } else {
+          current.push(newList);
+        }
+
+        this._shoppingLists.set([...current]);
+      })
     );
   }
 
@@ -66,20 +67,28 @@ export class ShoppingListService {
     recipeId: number,
     ingredientId: number,
     bought: boolean
-  ): Observable<void> {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    const url = `${this.apiUrl}/${listId}/recipe/${recipeId}/ingredient/${ingredientId}/bought`;
-
+  ) {
     return this.http.patch<void>(
-      url,
+      `${this.apiUrl}/${listId}/recipe/${recipeId}/ingredient/${ingredientId}/bought`,
       null,
-      { headers, params: new HttpParams().set('bought', bought) }
+      { params: { bought } }
+    ).pipe(
+      tap(() => {
+        this._shoppingLists.update(lists =>
+          lists.map(list =>
+            list.id !== listId
+              ? list
+              : {
+                ...list,
+                items: list.items.map(item =>
+                  item.ingredientId === ingredientId
+                    ? { ...item, bought }
+                    : item
+                )
+              }
+          )
+        );
+      })
     );
   }
 
@@ -100,39 +109,26 @@ export class ShoppingListService {
     return this.http.delete<void>(url, { headers });
   }
 
-  deleteAllBoughtIngredientsByUser(userId: number): Observable<void> {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    const url = `${this.apiUrl}/delete/boughtIngredients/${userId}`;
-
-    return this.http.delete<void>(url, { headers });
-  }
-
-  addRecipeToCart(
-    userId: number,
-    recipeId: number
-  ): Observable<ShoppingListDTO> {
-    return this.addRecipeToShoppingList(userId, recipeId).pipe(
-      tap(newList => {
-        if (!newList) return;
-
-        const current = this.shoppingLists();
-        const index = current.findIndex(l => l.id === newList.id);
-
-        if (index >= 0) {
-          current[index] = newList;
-        } else {
-          current.push(newList);
-        }
-
-        // 👇 fuerza nueva referencia
-        this.shoppingLists.set([...current]);
+  deleteAllBoughtIngredientsByUser(userId: number) {
+    return this.http.delete<void>(
+      `${this.apiUrl}/delete/boughtIngredients/${userId}`
+    ).pipe(
+      tap(() => {
+        this._shoppingLists.update(lists =>
+          lists
+            .map(list => ({
+              ...list,
+              items: list.items.filter(i => !i.bought)
+            }))
+            .filter(list => list.items.length > 0)
+        );
       })
     );
+  }
+
+
+  addRecipeToCart(userId: number, recipeId: number) {
+    return this.addRecipeToShoppingList(userId, recipeId);
   }
 }

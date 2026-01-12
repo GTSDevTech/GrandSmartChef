@@ -23,35 +23,26 @@ import {ClientService} from "../../services/client/client.service";
     IonRow,
     ]
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
 
   private auth = inject(AuthService);
   private router = inject(Router);
-  private clientService = inject(ClientService);
 
-  onLogin(formData: { username: string; password: string; redirectToCreate: boolean }) {
-    this.auth.login(formData.username, formData.password).subscribe({
-      next: (res) => {
-        this.auth.setToken(res.token);  // Guarda el token
-        this.clientService.getCurrentClient().subscribe(client => {
-          this.auth.setCurrentUser(client);  // Guarda el usuario autenticado
-
-          // Si el usuario quiere ir al home de creación de recetas, redirige allí
-          if (formData.redirectToCreate) {
-            this.router.navigate([`/recipe-home`]);  // Redirige a la página de crear recetas
-          } else {
-            this.router.navigate([`/home`]);  // Redirige al home normal
-          }
-        });
+  onLogin(formData: {
+    username: string;
+    password: string;
+    redirectToCreate: boolean;
+  }) {
+    this.auth.login(
+      formData.username,
+      formData.password
+    ).subscribe({
+      next: () => {
+        this.router.navigate([
+          formData.redirectToCreate ? '/recipe-home' : '/home'
+        ]);
       },
-      error: () => alert("Invalid Credentials")  // Muestra un error si no se puede autenticar
+      error: () => alert('Credenciales inválidas')
     });
   }
-
-
-  ngOnInit() {
-
-
-  }
-
 }

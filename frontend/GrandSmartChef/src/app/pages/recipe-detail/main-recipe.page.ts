@@ -30,7 +30,7 @@ import {environment} from "../../../environments/environment.prod";
   styleUrls: ['./main-recipe.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule,
-    IonRow, IonImg, IonButton, IonIcon, IonCol, IonGrid, IonList, IonItem, IonLabel, IonText, ModalRateComponent, CollectionModalComponent, FooterNavComponent]
+    IonRow, IonButton, IonIcon, IonCol, IonGrid, IonList, IonItem, IonLabel, IonText, ModalRateComponent, CollectionModalComponent, FooterNavComponent, IonImg]
 })
 export class MainRecipePage implements OnInit {
   private location = inject(Location);
@@ -92,34 +92,19 @@ export class MainRecipePage implements OnInit {
 
 
 
-  addToFavorite(idCollection: number, recipe: RecipeDTO): void {
-    const token = this.auth.getToken();
-    if (!token) {
-      console.error('No authentication token');
-      this.toast.create({message: 'No estás autenticado', duration: 2000}).then(t => t.present());
-      return;
-    }
-
-    this.collectionService.addRecipeToCollection(idCollection, recipe.id).subscribe({
+  addToFavorite(collectionId: number, recipe: RecipeDTO): void {
+    this.collectionService.addRecipeToCollection(collectionId, recipe.id).subscribe({
       next: () => {
-        const currentCollections = this.collections();
-        const updatedCollections = currentCollections.map(c => {
-          if (c.id === idCollection) {
-            const recipes = c.recipes || [];
-            if (!recipes.includes(recipe)) {
-              recipes.push(recipe);
-            }
-            return {...c, recipes};
-          }
-          return c;
-        });
-
-        this.collections.set(updatedCollections);
-        this.toast.create({message: 'Receta añadida a favoritos', duration: 2000}).then(t => t.present());
+        this.toast.create({
+          message: 'Receta añadida a favoritos',
+          duration: 2000
+        }).then(t => t.present());
       },
-      error: (err) => {
-        console.error(err);
-        this.toast.create({message: 'Error al añadir a favoritos', duration: 2000}).then(t => t.present());
+      error: () => {
+        this.toast.create({
+          message: 'Error al añadir a favoritos',
+          duration: 2000
+        }).then(t => t.present());
       }
     });
   }
@@ -139,7 +124,7 @@ export class MainRecipePage implements OnInit {
 
   private loadCollections() {
     if (this.user?.id) {
-      this.collectionService.getAllFavoriteCollections(this.user.id).subscribe();
+      this.collectionService.loadCollections(this.user.id);
     }
 
   }
@@ -159,45 +144,39 @@ export class MainRecipePage implements OnInit {
   }
 
   async openAddToCollection(recipe: RecipeDTO) {
-    this.collectionService.getAllFavoriteCollections(this.user!.id).subscribe(
-      async (collections) => {
-        const validCollections = this.collections().filter((c) => c.id);
+    const collections = this.collections().filter(c => c.id);
 
-        if (!validCollections || validCollections.length === 0) {
-          this.pendingRecipeToAdd.set(recipe);
-          this.openModalCollection();
-          return;
-        }
+    if (collections.length === 0) {
+      this.pendingRecipeToAdd.set(recipe);
+      this.openModalCollection();
+      return;
+    }
 
-        const buttons = validCollections.map((c) => ({
-          text: c.title,
-          handler: () => {
-            if (c.id) this.addToFavorite(c.id, recipe);
-          },
-        }));
-
-        buttons.push({
-          text: 'Crear nueva colección',
-          handler: () => {
-            this.pendingRecipeToAdd.set(recipe);
-            this.modalService.open('collection')
-          },
-        });
-
-        buttons.push({
-          text: 'Cancelar',
-          handler() {
-          },
-        });
-
-        const actionSheet = await this.actionSheetCtrl.create({
-          header: 'Añadir a colección',
-          buttons,
-        });
-
-        await actionSheet.present();
+    const buttons = collections.map(c => ({
+      text: c.title,
+      handler: () => {
+        if (c.id) this.addToFavorite(c.id, recipe);
       }
-    );
+    }));
+
+    buttons.push({
+      text: 'Crear nueva colección',
+      handler: () => {
+        this.pendingRecipeToAdd.set(recipe);
+        this.modalService.open('collection');
+      }
+    });
+
+    buttons.push({ text: 'Cancelar',
+      handler() {}
+    });
+
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Añadir a colección',
+      buttons
+    });
+
+    await actionSheet.present();
   }
     async openRemoveFromCollection(recipeId: number) {
       const collections = this.collections().filter((c) =>
@@ -247,37 +226,23 @@ export class MainRecipePage implements OnInit {
       await actionSheet.present();
     }
 
-  removeFromCollection(collectionId: number, recipeId: number, showToast = true) {
+removeFromCollection(collectionId: number, recipeId: number, showToast = true) {
+    console.log(collectionId, recipeId);
     this.collectionService.removeRecipeFromCollection(collectionId, recipeId).subscribe({
       next: () => {
-        const updated = this.collections().map((c) => {
-          if (c.id === collectionId) {
-            const recipes = c.recipes?.filter((r) => r.id !== recipeId) || [];
-            return { ...c, recipes };
-          }
-          return c;
-        });
-
-        this.collections.set(updated);
-
         if (showToast) {
-          this.toast
-            .create({
-              message: 'Receta eliminada de favoritos',
-              duration: 2000,
-            })
-            .then((t) => t.present());
+          this.toast.create({
+            message: 'Receta eliminada de favoritos',
+            duration: 2000
+          }).then(t => t.present());
         }
       },
-      error: (err) => {
-        console.error(err);
-        this.toast
-          .create({
-            message: 'Error al eliminar de favoritos',
-            duration: 2000,
-          })
-          .then((t) => t.present());
-      },
+      error: () => {
+        this.toast.create({
+          message: 'Error al eliminar de favoritos',
+          duration: 2000
+        }).then(t => t.present());
+      }
     });
   }
 

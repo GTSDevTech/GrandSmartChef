@@ -14,7 +14,7 @@ public enum Unit {
     // Volumen líquido
     MILILITRO("ml"),
     CENTILITRO("cl"),
-    LITRO("L"),
+    LITRO("l"),
     TAZA("taza"),
     CUCHARADA("cda"),
     CUCHARADITA("cdta"),

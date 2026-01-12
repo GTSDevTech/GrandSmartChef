@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-    @RequestMapping("api/favorite-collections")
+@RequestMapping("api/favorite-collections")
 @RequiredArgsConstructor
 public class FavoriteCollectionController {
     private final FavoriteCollectionService favoriteCollectionService;
@@ -102,4 +102,31 @@ public class FavoriteCollectionController {
         favoriteCollectionService.delete(collectionId);
         return null;
     }
+
+    @GetMapping("/count")
+    public Long countFavoriteCollections(
+            HttpServletRequest request,
+            @RequestParam @Valid Long clientId
+    ){
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Colección eliminada correctamente"
+        );
+        return favoriteCollectionService.countAllCollectionByUser(clientId);
+    }
+
+    @GetMapping("/recipes/count")
+    public Long countFavoriteRecipes(
+            HttpServletRequest request,
+            @RequestParam @Valid Long clientId
+    ){
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Colección eliminada correctamente"
+        );
+        return favoriteCollectionService.countAllFavoriteRecipesByUser(clientId);
+    }
+
+
+
 }

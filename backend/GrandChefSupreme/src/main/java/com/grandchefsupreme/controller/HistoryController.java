@@ -43,4 +43,19 @@ public class HistoryController {
 
         return historyService.getRecipesLast7daysByClient(date, clientId);
     }
+
+    @GetMapping("/cooked/count")
+    public Long countCookedRecipesByClient(
+            HttpServletRequest request,
+            @RequestParam @Valid Long clientId
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Número de recetas cocinadas obtenido correctamente"
+        );
+
+        return historyService.countCookedRecipesByClient(clientId);
+    }
+
+
 }

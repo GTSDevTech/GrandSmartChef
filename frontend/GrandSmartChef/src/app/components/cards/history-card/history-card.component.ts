@@ -1,5 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import {IonCheckbox, IonIcon, IonImg, IonItem, IonItemDivider, IonLabel, IonList} from "@ionic/angular/standalone";
+import {Component, inject, input, Input, OnInit, signal} from '@angular/core';
+import {
+  IonCheckbox,
+  IonCol,
+  IonIcon,
+  IonImg,
+  IonItem,
+  IonItemDivider,
+  IonLabel,
+  IonList, IonRow, IonText
+} from "@ionic/angular/standalone";
+import {HistoryDTO} from "../../../models/history.model";
+import {RecipeService} from "../../../services/recipe/recipe.service";
+import {RecipeDTO} from "../../../models/recipe.model";
+import {KeyValuePipe} from "@angular/common";
+import {RecipeCardDTO} from "../../../models/recipe-card.model";
+import {environment} from "../../../../environments/environment.prod";
+import {RatingService} from "../../../services/rating/rating.service";
 
 @Component({
   selector: 'app-history-card',
@@ -11,13 +27,33 @@ import {IonCheckbox, IonIcon, IonImg, IonItem, IonItemDivider, IonLabel, IonList
     IonLabel,
     IonItem,
     IonIcon,
-    IonImg
+    IonImg,
+    IonText,
+    IonRow,
+
   ]
 })
 export class HistoryCardComponent  implements OnInit {
 
-  constructor() { }
+  private readonly backendUrl = environment.imageBaseUrl;
+  private ratingService = inject(RatingService);
 
-  ngOnInit() {}
+  histories = input<HistoryDTO[]>();
+
+
+  ngOnInit() {
+    console.log(this.histories());
+  }
+
+  getRecipeImage(imageUrl?: string | null): string {
+    if (!imageUrl) {
+      return '/assets/images/recipes/default_profile_image.png';
+    }
+    return `${this.backendUrl}${imageUrl}`;
+  }
+
+  getStars(recipe: RecipeCardDTO) {
+    return this.ratingService.getStars(recipe.averageRating);
+  }
 
 }

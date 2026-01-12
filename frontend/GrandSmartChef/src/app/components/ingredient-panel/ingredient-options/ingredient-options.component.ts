@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {IonButton, IonCol, IonImg, IonRow} from "@ionic/angular/standalone";
+import {Component, inject, OnInit} from '@angular/core';
+import {IonButton, IonChip, IonCol, IonImg, IonLabel, IonRow} from "@ionic/angular/standalone";
 import {SearcherIngredientComponent} from "../../searchers/searcher-ingredient/searcher-ingredient.component";
+import {Router} from "@angular/router";
+import {IngredientService} from "../../../services/ingredient/ingredient.service";
+import {RecipeService} from "../../../services/recipe/recipe.service";
 
 @Component({
   selector: 'app-ingredient-options',
@@ -11,12 +14,30 @@ import {SearcherIngredientComponent} from "../../searchers/searcher-ingredient/s
     IonImg,
     IonButton,
     SearcherIngredientComponent,
-    IonCol
+    IonCol,
+    IonChip,
+    IonLabel
   ]
 })
 export class IngredientOptionsComponent  implements OnInit {
 
-  constructor() { }
+  private ingredientService = inject(IngredientService);
+  private recipeService = inject(RecipeService);
+  private router = inject(Router);
+
+  selected = this.ingredientService.selectedIngredients;
+
+  applyFilter() {
+    this.router.navigate(['/home'], {
+      queryParams: { refresh: Date.now() }
+    });
+  }
+
+  clearAll() {
+    this.ingredientService.clearSelection();
+    this.recipeService.clearFilters();
+    this.applyFilter();
+  }
 
   ngOnInit() {}
 

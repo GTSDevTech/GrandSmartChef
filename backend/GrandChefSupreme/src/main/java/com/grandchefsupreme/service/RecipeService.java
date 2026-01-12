@@ -7,13 +7,12 @@ import com.grandchefsupreme.mapper.RecipeDetailMapper;
 import com.grandchefsupreme.model.*;
 import com.grandchefsupreme.model.Enums.Difficulty;
 import com.grandchefsupreme.repository.IngredientRepository;
+import com.grandchefsupreme.repository.RecipeRatingRepository;
 import com.grandchefsupreme.repository.RecipeRepository;
 import com.grandchefsupreme.repository.TagRepository;
 import com.grandchefsupreme.utils.FileStorageUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +22,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -32,6 +30,7 @@ import java.util.Set;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeRatingRepository recipeRatingRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeCardMapper recipeCardMapper;
     private final RecipeDetailMapper recipeDetailMapper;
@@ -41,15 +40,31 @@ public class RecipeService {
 
     @Transactional(readOnly = true)
     public List<RecipeCardDTO> getAllActiveRecipesForCards() {
-        List<Recipe> recipes = recipeRepository.findByIsActiveTrue();
-        return recipeCardMapper.toDTO(recipes);
-    }
 
+        List<Recipe> recipes = recipeRepository.findByIsActiveTrue();
+
+        return recipes.stream()
+                .map(recipe -> {
+                    RecipeCardDTO dto = recipeCardMapper.toDTO(recipe);
+                    Double avg = recipeRatingRepository.findAverageRatingByRecipeId(recipe.getId());
+                    dto.setAverageRating(avg != null ? avg : 0.0);
+                    return dto;
+                })
+                .toList();
+    }
 
     @Transactional(readOnly = true)
     public List<RecipeCardDTO> getAllRecipes() {
         List<Recipe> recipes = recipeRepository.findAll();
-        return recipeCardMapper.toDTO(recipes);
+        return recipes.stream()
+                .map(recipe -> {
+                    RecipeCardDTO dto = recipeCardMapper.toDTO(recipe);
+                    dto.setAverageRating(
+                            recipeRatingRepository.findAverageRatingByRecipeId(recipe.getId())
+                    );
+                    return dto;
+                })
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +76,8 @@ public class RecipeService {
         }
         RecipeDTO recipeDTO = recipeDetailMapper.toDto(recipe);
 
+        Double avg = recipeRatingRepository.findAverageRatingByRecipeId(recipe.getId());
+        recipeDTO.setAverageRating(avg != null ? avg : 0.0);
         recipeDTO.setNutritionInfo(getNutritionInfo(recipeDTO.getIngredients(), recipeDTO.getServings()));
 
         return recipeDTO;

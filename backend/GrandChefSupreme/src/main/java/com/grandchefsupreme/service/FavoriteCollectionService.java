@@ -9,6 +9,7 @@ import com.grandchefsupreme.model.Recipe;
 import com.grandchefsupreme.repository.ClientRepository;
 import com.grandchefsupreme.repository.FavoriteCollectionRepository;
 import com.grandchefsupreme.repository.RecipeRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -79,4 +80,12 @@ public class FavoriteCollectionService {
     }
 
 
+    public Long countAllCollectionByUser(Long clientId) {
+        return favoriteCollectionRepository.countFavoriteCollectionByClient_Id(clientId);
+    }
+
+    public Long countAllFavoriteRecipesByUser(@Valid Long clientId) {
+
+        return favoriteCollectionRepository.countFavoriteRecipesByClientId(clientId);
+    }
 }

@@ -14,15 +14,15 @@ import {FavoriteCollectionDTO} from "../../models/collection.model";
 import {AuthService} from "../../services/auth/auth.service";
 import {IonButton, IonCol, IonContent, IonGrid, IonIcon, IonRow} from "@ionic/angular/standalone";
 import {
-  AddRecipeToCollectionSheetComponent
-} from "../../components/modals/add-recipe-to-collection-sheet/add-recipe-to-collection-sheet.component";
+  AddRecipeToCollectionModalComponent
+} from "../../components/modals/add-recipe-to-collection-modal/add-recipe-to-collection-modal.component";
 
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterNavComponent, CollectionComponent, RouterModule, CollectionModalComponent, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, AddRecipeToCollectionSheetComponent]
+  imports: [CommonModule, FormsModule, HeaderComponent, FooterNavComponent, CollectionComponent, RouterModule, CollectionModalComponent, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, AddRecipeToCollectionModalComponent]
 })
 export class FavoritesPage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
@@ -32,29 +32,25 @@ export class FavoritesPage implements OnInit {
   private auth = inject(AuthService);
   user = this.auth.getCurrentUser();
   collections = this.collectionService.collections;
-  collectionModalData = this.modalService.getData('collection');
-
-
-
 
 
   constructor() {
     effect(() => {
-      const newCollection = this.collectionModalData();
+      const newCollection = this.modalService.getData('collection')();
       if (newCollection) {
-        this.collections.update(prev => [...prev, newCollection]);
         this.modalService.clearData('collection');
       }
     });
-
 
   }
 
   ngOnInit() {
 
     const user = this.auth.getCurrentUser();
-    if(!user?.id) return;
-    this.collectionService.getAllFavoriteCollections(user.id).subscribe();
+    if (!user?.id) return;
+
+    this.collectionService.loadCollections(user.id);
+    console.log(this.collections());
 
   }
 
@@ -63,9 +59,9 @@ export class FavoritesPage implements OnInit {
   }
 
   onCollectionDeleted(id: number) {
-    if(!id) return;
-    this.collections.update(prev => prev.filter(c => c.id !== id));
+    if (!id) return;
 
+    this.collectionService.deleteCollection(id).subscribe();
   }
 
   goToBack() {
@@ -73,10 +69,7 @@ export class FavoritesPage implements OnInit {
   }
 
   onRecipesAdded(id: number) {
-    this.collectionService.getCollectionById(id).subscribe( updatedCollection => {
-      this.collections.update(prev => prev.map(c => c.id === updatedCollection.id ? updatedCollection : c));
-      }
-    );
+    this.collectionService.getCollectionById(id).subscribe();
 
   }
 

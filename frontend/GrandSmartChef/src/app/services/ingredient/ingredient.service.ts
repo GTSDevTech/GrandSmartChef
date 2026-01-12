@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {AuthService} from "../auth/auth.service";
 import {environment} from "../../../environments/environment";
@@ -13,45 +13,60 @@ import {IngredientDTO} from "../../models/ingredient.model";
 export class IngredientService {
 
   private http = inject(HttpClient);
-  private auth = inject(AuthService)
   private apiUrl = `${environment.apiUrl}/ingredient`;
-  private token = this.auth.getToken();
 
-  getAllCategoriesWithIngredient(){
+  private _selectedIngredients = signal<IngredientDTO[]>([]);
+  selectedIngredients = this._selectedIngredients.asReadonly();
 
-    if(!this.token){
-      return throwError(() => new Error('No authentication token'));
-    }
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`
-    });
-    const url = `${this.apiUrl}/categories`;
-    return this.http.get<CategoryDTO[]>(url, {headers});
+
+  getAllCategoriesWithIngredient() {
+    return this.http.get<CategoryDTO[]>(
+      `${this.apiUrl}/categories`
+    );
   }
 
-  getAllIngredientByCategories(categoryId: string){
-    if(!this.token){
-      return throwError(() => new Error('No authentication token'));
-    }
-    const params = new HttpParams().set('id', categoryId);
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`
-    });
-    const url = `${this.apiUrl}/by-category/${categoryId}`;
-    return this.http.get<IngredientDTO[]>(url, {headers, params});
+  getAllIngredientByCategories(categoryId: string) {
+    return this.http.get<IngredientDTO[]>(
+      `${this.apiUrl}/by-category/${categoryId}`
+    );
   }
-
 
   getAllIngredients() {
-    if(!this.token){
-      return throwError(() => new Error('No authentication token'));
-    }
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`
-    });
-    const url = `${this.apiUrl}/all`;
-    return this.http.get<IngredientDTO[]>(url, {headers});
+    return this.http.get<IngredientDTO[]>(
+      `${this.apiUrl}/all`
+    );
   }
+
+  toggleIngredient(ingredient: IngredientDTO) {
+    const current = this._selectedIngredients();
+    const exists = current.find(i => i.id === ingredient.id);
+
+    if (exists) {
+      this._selectedIngredients.set(
+        current.filter(i => i.id !== ingredient.id)
+      );
+      return;
+    }
+
+    if (current.length >= 3) {
+      return;
+    }
+
+    this._selectedIngredients.set([...current, ingredient]);
+  }
+
+  clearSelection() {
+    this._selectedIngredients.set([]);
+  }
+
+  isSelected(id: number): boolean {
+    return this._selectedIngredients().some(i => i.id === id);
+  }
+
+  getSelectedIds(): number[] {
+    return this._selectedIngredients().map(i => i.id);
+  }
+
 
 
 }

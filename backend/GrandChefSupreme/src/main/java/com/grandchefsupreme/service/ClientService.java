@@ -51,7 +51,6 @@ public class ClientService {
         Client client = clientRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Client not found"));
 
-        // Limpia siempre (permite desactivar todas)
         client.getPreferences().clear();
 
         if (prefs != null && !prefs.isEmpty()) {

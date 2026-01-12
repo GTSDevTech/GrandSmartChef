@@ -5,8 +5,8 @@
           {{category().name}}
         </ion-label>
         <ion-item
-          button lines="none"
-          detail="false"
+          lines="none"
+          [detail]="false"
           (click)="onCategoryClick()"
           class="item-ingr ion-padding">
           <ion-img [src]="category().photoUrl" [alt]="category().name">

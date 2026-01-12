@@ -1,10 +1,8 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {AuthService} from "../auth/auth.service";
 import {environment} from "../../../environments/environment";
-import {catchError, Observable, tap, throwError} from "rxjs";
 import {FavoriteCollectionDTO} from "../../models/collection.model";
-import {ToastController} from "@ionic/angular";
+import {Observable, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,104 +10,112 @@ import {ToastController} from "@ionic/angular";
 export class CollectionService {
 
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
-  private toast = inject(ToastController);
   private apiUrl = `${environment.apiUrl}/favorite-collections`;
-  collections = signal<FavoriteCollectionDTO[]>([]);
 
-  getCollectionById(id: number): Observable<FavoriteCollectionDTO> {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
+  private _collections = signal<FavoriteCollectionDTO[]>([]);
+  collections = this._collections.asReadonly();
 
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}`});
-    const url = `${this.apiUrl}/${id}`;
+  private loaded = false;
 
-    return this.http.get<FavoriteCollectionDTO>(url, { headers });
+
+  loadCollections(clientId: number) {
+    if (this.loaded) return;
+
+    this.http.get<FavoriteCollectionDTO[]>(
+      `${this.apiUrl}/collections`,
+      { params: new HttpParams().set('clientId', clientId) }
+    ).subscribe({
+      next: data => {
+        this._collections.set(data ?? []);
+        this.loaded = true;
+      },
+      error: () => {
+        this._collections.set([]);
+        this.loaded = true;
+      }
+    });
   }
 
-  getAllFavoriteCollections(clientId:number): Observable<FavoriteCollectionDTO[]> {
-    const token = this.auth.getToken();
+  getCollectionById(id: number): Observable<FavoriteCollectionDTO> {
+    return this.http.get<FavoriteCollectionDTO>(`${this.apiUrl}/${id}`);
+  }
 
-    const params = new HttpParams().set('clientId', clientId);
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}`});
-    const url = `${this.apiUrl}/collections`;
-
-    return this.http.get<FavoriteCollectionDTO[]>(url, { headers, params }).pipe(
-      tap(data => this.collections.set(data)),
-      catchError(err => {
-
-        this.collections.set([]);
-        return throwError(() => err);
+  createCollection(dto: FavoriteCollectionDTO) {
+    return this.http.post<FavoriteCollectionDTO>(
+      `${this.apiUrl}/create`,
+      dto
+    ).pipe(
+      tap(created => {
+        this._collections.update(cols => [...cols, created]);
       })
     );
   }
 
-  createCollection(favoriteCollectionDTO: FavoriteCollectionDTO) {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    return this.http.post<FavoriteCollectionDTO>(
-      `${this.apiUrl}/create`,
-      favoriteCollectionDTO,
-      { headers }
-    );
-  }
-
   deleteCollection(id: number) {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
     return this.http.delete<void>(
-      `${this.apiUrl}/${id}`,
-      { headers }
+      `${this.apiUrl}/${id}`
+    ).pipe(
+      tap(() => {
+        this._collections.update(cols =>
+          cols.filter(c => c.id !== id)
+        );
+      })
     );
-
   }
+
 
   addRecipeToCollection(collectionId: number, recipeId: number) {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    const body = {collectionId,  recipeId };
-
     return this.http.post<void>(
       `${this.apiUrl}/${collectionId}/add-recipe/${recipeId}`,
-      body,
-      { headers }
+      {}
+    ).pipe(
+      tap(() => {
+        this._collections.update(cols =>
+          cols.map(c =>
+            c.id !== collectionId
+              ? c
+              : {
+                ...c,
+                recipes: [...(c.recipes ?? []), { id: recipeId } as any]
+              }
+          )
+        );
+      })
     );
   }
 
   removeRecipeFromCollection(collectionId: number, recipeId: number) {
-    const token = this.auth.getToken();
-    if (!token) return throwError(() => new Error('No authentication token'));
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    const options = {
-      headers,
-      body: {collectionId, recipeId }
-    };
-
     return this.http.delete<void>(
-      `${this.apiUrl}/${collectionId}/remove-recipe/${recipeId}`,
-      options
+      `${this.apiUrl}/${collectionId}/remove/${recipeId}`
+    ).pipe(
+      tap(() => {
+        this._collections.update(cols =>
+          cols.map(c =>
+            c.id !== collectionId
+              ? c
+              : {
+                ...c,
+                recipes: c.recipes?.filter(r => r.id !== recipeId) ?? []
+              }
+          )
+        );
+      })
     );
   }
 
+  countFavoriteCollectionsAvailables(clientId: number): Observable<number> {
+    return this.http.get<number>(
+      `${this.apiUrl}/count`,
+      { params: new HttpParams().set('clientId', clientId) }
+    );
+  }
+
+  countFavoriteRecipesAvailables(clientId: number): Observable<number> {
+    return this.http.get<number>(
+      `${this.apiUrl}/recipes/count`,
+      { params: new HttpParams().set('clientId', clientId) }
+    );
+  }
 
 
 

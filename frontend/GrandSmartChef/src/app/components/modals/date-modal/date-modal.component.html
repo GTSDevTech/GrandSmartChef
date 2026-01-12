@@ -1,0 +1,26 @@
+<ion-modal
+  [isOpen]="isOpen()"
+  cssClass="date-modal"
+  (didDismiss)="close()">
+
+  <ng-template>
+    <div class="date-modal-wrapper">
+
+      <ion-datetime
+        presentation="date"
+        locale="es-ES"
+        [max]="today"
+        (ionChange)="onDateChange($event)">
+      </ion-datetime>
+
+      <ion-button
+        expand="block"
+        class="date-confirm-btn"
+        (click)="confirm()">
+        Aceptar
+      </ion-button>
+
+    </div>
+  </ng-template>
+
+</ion-modal>

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -18,6 +18,7 @@ import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-fo
 import {IonButton, IonCol, IonContent, IonIcon, IonRow} from "@ionic/angular/standalone";
 import {ClientService} from "../../services/client/client.service";
 import {FilterProfileComponent} from "../../components/filters/filter-profile/filter-profile.component";
+import {IngredientService} from "../../services/ingredient/ingredient.service";
 
 @Component({
   selector: 'app-home',
@@ -30,42 +31,43 @@ import {FilterProfileComponent} from "../../components/filters/filter-profile/fi
 export class HomePage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
   private recipeService = inject(RecipeService);
+  private ingredientService = inject(IngredientService);
   private modalService = inject(ModalService);
   private auth = inject(AuthService);
   private collectionService = inject(CollectionService);
   private clientService = inject(ClientService);
 
-  user = this.auth.currentUser();
 
-  recipes = signal<RecipeCardDTO[]>([]);
+  user = this.auth.currentUser;
+  recipes = this.recipeService.recipes;
+
   constructor() {
+    effect(() => {
+      const user = this.user();
+      if (!user?.id) return;
+      this.collectionService.loadCollections(user.id);
+    });
+
+    effect(() => {
+      const user = this.user();
+      const ingredientIds = this.ingredientService.getSelectedIds();
+
+      const hasIngredients = ingredientIds.length > 0;
+      const hasPrefs = (user?.preferences?.length ?? 0) > 0;
+
+      if (hasIngredients) {
+        this.recipeService.filterByIngredients(ingredientIds);
+        this.recipeService.filterByUserPreferences(hasPrefs ? user!.id! : null);
+        return;
+      }
+      this.recipeService.filterByUserPreferences(hasPrefs ? user?.id ?? null : null);
+    });
   }
 
   ngOnInit() {
     this.auth.ensureCurrentUserLoaded();
-    this.loadRecipes();
-    this.loadUserCollections();
-  }
+    this.recipeService.loadActiveRecipes();
 
-
-  private loadRecipes(): void {
-    this.recipeService.getAllActiveRecipes().subscribe({
-      next: (recipes) => {
-        this.recipes.set(recipes ?? []);
-      },
-      error: (error) => {
-        console.error('Error cargando recetas', error);
-        this.recipes.set([]);
-      }
-    });
-  }
-
-  private loadUserCollections(): void {
-    if (!this.user?.id) return;
-
-    this.collectionService
-      .getAllFavoriteCollections(this.user.id)
-      .subscribe();
   }
 
 
@@ -81,7 +83,17 @@ export class HomePage implements OnInit {
   }
 
   onPreferencesChange(prefs: { id: number; name: string }[]) {
-    this.clientService.updatePreferences(prefs).subscribe();
+    this.clientService.updatePreferences(prefs).subscribe({
+      next: () => {
+
+      }
+    });
+  }
+
+
+  clearFilters() {
+    this.ingredientService.clearSelection();
+    this.recipeService.clearFilters();
   }
 
 }

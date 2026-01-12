@@ -5,13 +5,21 @@
   align-items: center;
   justify-self: center;
 
-
 }
+
+.history-empty{
+  margin-top: 5vh;
+  display: flex;
+  width: 70%;
+  text-align: center;
+}
+
 
 ion-item.list-cooking-recipes{
   width: 80vw;
   justify-self: center;
   border-radius: 30px;
+  margin-bottom: 1.5rem;
 
 
 }
@@ -22,11 +30,27 @@ ion-item-divider.cooking-date{
   margin-bottom: 1rem;
   overflow: hidden;
   border-radius: 20px;
+  background: var(--secondary-green-color);
+  color: whitesmoke;
 }
 
 ion-label.label-recipe{
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  text-align: left;
   margin: 1rem;
   h3{
+    justify-self: left;
     font-weight: bolder;
+    font-size: 0.8rem;
   }
+
+  .span-rating{
+    color: var(--primary-gray-color);
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 3%;
+  }
+
 }

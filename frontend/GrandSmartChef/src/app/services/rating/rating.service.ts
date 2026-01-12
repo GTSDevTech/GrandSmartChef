@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AuthService} from "../auth/auth.service";
+import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
-import {throwError} from "rxjs";
 import {RatingDTO} from "../../models/recipe-rating";
+import {tap} from "rxjs";
+import {RecipeService} from "../recipe/recipe.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,20 +11,36 @@ import {RatingDTO} from "../../models/recipe-rating";
 export class RatingService {
 
   private http = inject(HttpClient);
-  private auth = inject(AuthService);
+  private recipeService = inject(RecipeService);
   private apiUrl = `${environment.apiUrl}/rating`;
 
-  ratingRecipe(body: RatingDTO){
-    const token = this.auth.getToken();
-    if (!token) {
-      return throwError(() => new Error('No authentication token'));
-    }
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const url = `${this.apiUrl}/vote`;
-    return this.http.post<RatingDTO[]>(url,body, {headers});
+  rateRecipe(body: RatingDTO) {
+    return this.http.post<void>(
+      `${this.apiUrl}/vote`,
+      body
+    ).pipe(
+      tap(() => {
+        // 🔁 Actualiza rating en memoria (cards + detalle)
+        this.recipeService.updateRecipeRating(
+          body.recipeId,
+          body.rating
+        );
+      })
+    );
   }
 
+  getStars(rating: number | null | undefined): ('full' | 'half' | 'empty')[] {
+    const stars: ('full' | 'half' | 'empty')[] = [];
+    let value = rating ?? 0;
+
+    for (let i = 0; i < 5; i++) {
+      if (value >= 1) stars.push('full');
+      else if (value >= 0.5) stars.push('half');
+      else stars.push('empty');
+      value -= 1;
+    }
+
+    return stars;
+  }
 
 }

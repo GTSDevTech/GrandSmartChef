@@ -24,7 +24,7 @@
     </ion-col>
   }
   <app-filter
-    [initialPreferences]="user?.preferences ?? []"
+    [initialPreferences]="user()?.preferences ?? []"
     (preferencesChange)="onPreferencesChange($event)">
   </app-filter>
 </ion-content>

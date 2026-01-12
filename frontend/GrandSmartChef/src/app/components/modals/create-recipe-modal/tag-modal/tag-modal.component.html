@@ -23,7 +23,7 @@
       <ion-list>
         @for (tag of filteredTags(); track tag.id) {
           <ion-item
-            class="card-tag "
+            class="card-tag"
             [class.disabled]="isDisabled(tag)"
             [button]="!isDisabled(tag)"
             (click)="!isDisabled(tag) && select(tag)">

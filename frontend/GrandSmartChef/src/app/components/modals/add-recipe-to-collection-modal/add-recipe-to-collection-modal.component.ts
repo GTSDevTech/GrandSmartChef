@@ -7,17 +7,18 @@ import {
   IonAvatar,
   IonButton,
   IonCol,
-  IonContent,
+  IonContent, IonHeader,
   IonIcon, IonImg,
   IonItem, IonLabel,
-  IonList, IonModal, IonRow, IonSearchbar,
+  IonList, IonModal, IonRow, IonSearchbar, IonToolbar,
 } from "@ionic/angular/standalone";
 import {forkJoin} from "rxjs";
+import {environment} from "../../../../environments/environment.prod";
 
 @Component({
   selector: 'app-add-recipe-to-collection-sheet',
-  templateUrl: './add-recipe-to-collection-sheet.component.html',
-  styleUrls: ['./add-recipe-to-collection-sheet.component.scss'],
+  templateUrl: './add-recipe-to-collection-modal.component.html',
+  styleUrls: ['./add-recipe-to-collection-modal.component.scss'],
   imports: [
     IonModal,
     IonContent,
@@ -31,11 +32,14 @@ import {forkJoin} from "rxjs";
     IonImg,
     IonRow,
     IonCol,
-    IonIcon
+    IonIcon,
+    IonHeader,
+    IonToolbar
   ]
 })
-export class AddRecipeToCollectionSheetComponent implements OnInit {
+export class AddRecipeToCollectionModalComponent implements OnInit {
 
+  private readonly backendUrl = environment.imageBaseUrl;
   private recipeService = inject(RecipeService);
   private collectionService = inject(CollectionService);
   private modalService = inject(ModalService);
@@ -43,7 +47,7 @@ export class AddRecipeToCollectionSheetComponent implements OnInit {
   isOpen = this.modalService.isOpen('add-recipe-to-collection');
   collectionId = this.modalService.getData('add-recipe-to-collection');
 
-  recipes = signal<RecipeCardDTO[]>([]);
+  recipes = this.recipeService.recipes;
   selectedRecipes = signal<number[]>([]);
   searchRecipe = signal<string>('');
   recipesToAdd = output<number>();
@@ -71,15 +75,9 @@ export class AddRecipeToCollectionSheetComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadRecipes();
+    this.recipeService.loadActiveRecipes();
   }
 
-  loadRecipes() {
-    this.recipeService.getAllActiveRecipes().subscribe({
-      next: (res) => this.recipes.set(res ?? []),
-      error: (err) => console.error('Error loading recipes', err)
-    });
-  }
 
   isAlreadyInCollection(recipeId: number): boolean {
     return this.alreadyInCollectionIds().includes(recipeId);
@@ -126,7 +124,15 @@ export class AddRecipeToCollectionSheetComponent implements OnInit {
   filteredRecipes() {
     const term = this.searchRecipe().trim().toLowerCase();
     if (!term) return this.recipes();
-    return this.recipes().filter(r => r.name.toLowerCase().includes(term));
+    return this.recipes().filter(r => r.name.toLowerCase().includes(term)
+    );
+  }
+
+  getRecipeImage(imageUrl?: string | null): string {
+    if (!imageUrl) {
+      return '/assets/images/recipes/default_profile_image.png';
+    }
+    return `${this.backendUrl}${imageUrl}`;
   }
 
   close() {

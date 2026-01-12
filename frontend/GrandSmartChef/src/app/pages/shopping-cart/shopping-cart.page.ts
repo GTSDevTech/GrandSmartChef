@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import {CommonModule, Location} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {HeaderComponent} from "../../components/headers/main-header/header.component";
@@ -42,23 +42,19 @@ export class ShoppingCartPage implements OnInit {
 
 
 
-  constructor() { }
+  constructor() {
+    effect(() => {
+      this.progressService.updateProgress(this.shoppingLists());
+    });
+  }
 
   ngOnInit(): void {
     const user = this.auth.getCurrentUser();
     if (!user?.id) return;
 
-    this.shoppingListService
-      .getAllShoppingListByUserId(user.id)
-      .subscribe({
-        next: (lists) => {
-          this.progressService.updateProgress(lists ?? []);
-        },
-        error: (err) => {
-          console.error('Error cargando listas', err);
-          this.progressService.updateProgress([]);
-        }
-      });
+    this.shoppingListService.getAllShoppingListByUserId(user.id);
+
+
   }
 
 
@@ -85,19 +81,11 @@ export class ShoppingCartPage implements OnInit {
   deleteCompletedIngredients() {
     const user = this.auth.getCurrentUser();
     if (!user?.id) return;
-    return this.shoppingListService.deleteAllBoughtIngredientsByUser(user.id)
+
+    this.shoppingListService
+      .deleteAllBoughtIngredientsByUser(user.id)
       .subscribe(() => {
-        this.shoppingLists.update(lists =>
-          lists.map(list => ({
-            ...list,
-            items: list.items.filter(i => !i.bought)
-          }))
-            .filter(list => list.items.length > 0)
-        );
-
         this.recalculateProgress();
-
       });
-
   }
 }

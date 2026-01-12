@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { EditProfileFormComponent } from './edit-profile-form.component';
+import { CountryModalComponent } from './country-modal.component';
 
-describe('EditProfileFormComponent', () => {
-  let component: EditProfileFormComponent;
-  let fixture: ComponentFixture<EditProfileFormComponent>;
+describe('CountryModalComponent', () => {
+  let component: CountryModalComponent;
+  let fixture: ComponentFixture<CountryModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditProfileFormComponent ],
+      declarations: [ CountryModalComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EditProfileFormComponent);
+    fixture = TestBed.createComponent(CountryModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
