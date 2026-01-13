@@ -96,7 +96,7 @@ public class ClientServiceTest {
         }
 
         @Test
-        @DisplayName("password null → BadRequestException")
+        @DisplayName("password null Caso - Negativo")
         void shouldThrowWhenPasswordNull() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("UserNullPass");
@@ -110,7 +110,7 @@ public class ClientServiceTest {
         }
 
         @Test
-        @DisplayName("password vacío → BadRequestException")
+        @DisplayName("password vacío, Caso - Negativo")
         void shouldThrowWhenPasswordEmpty() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("UserEmptyPass");
