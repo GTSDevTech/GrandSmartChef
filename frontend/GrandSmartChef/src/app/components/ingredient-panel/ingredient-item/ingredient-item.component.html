@@ -5,12 +5,19 @@
         {{ingredient().name}}
       </ion-label>
       <ion-item
-        button lines="none"
-        detail="false"
-        class="item-ingr ion-padding">
-        <ion-img [src]="ingredient().urlPhoto" [alt]="ingredient().name">
-          <ion-icon class="check-icon" name="checkmark-circle-outline"></ion-icon>
+        lines="none"
+        (click)="toggle()"
+        class="item-ingr ion-padding"
+        [class.selected]="isSelected()">
+        <ion-img [src]="ingredient().urlPhoto">
+          @if(isSelected()){
+            <ion-icon
+              name="checkmark-circle"
+              class="check-icon">
+            </ion-icon>
+          }
         </ion-img>
+        <ion-label>{{ ingredient().name }}</ion-label>
       </ion-item>
     </ion-col>
   </ion-row>

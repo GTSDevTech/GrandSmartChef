@@ -1,0 +1,73 @@
+<ion-modal
+  [isOpen]="isOpen() && !!collectionId()"
+  [initialBreakpoint]="1"
+  [breakpoints]="[0.5, 1]"
+  [handle]="true"
+  (didDismiss)="close()"
+  class="tag-sheet add-recipe-sheet">
+
+  <ng-template>
+
+    <ion-header>
+      <ion-toolbar class="sheet-toolbar">
+        <ion-label>Añadir recetas</ion-label>
+      </ion-toolbar>
+
+      <ion-row class="top-bar">
+        <ion-col size="9">
+          <ion-searchbar
+            placeholder="Buscar receta…"
+            [value]="searchRecipe()"
+            (ionInput)="updateSearch($event)">
+          </ion-searchbar>
+        </ion-col>
+
+        <ion-col size="3" class="center-container-row">
+          <ion-button
+            class="add-recipe-btn-top"
+            (click)="confirm()"
+            [disabled]="selectedRecipes().length === 0">
+            Añadir
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-header>
+
+    <ion-content class="ion-padding add-recipe-modal">
+      <ion-list>
+        @for (recipe of filteredRecipes(); track recipe.id) {
+          <ion-item
+            class="card-tag recipe-item"
+            [class.selected]="selectedRecipes().includes(recipe.id)"
+            [class.disabled]="isAlreadyInCollection(recipe.id)"
+            (click)="!isAlreadyInCollection(recipe.id) && toggleSelection(recipe.id)">
+
+            <ion-avatar slot="start" class="recipe-avatar">
+              <ion-img [src]="getRecipeImage(recipe.imageUrl)"></ion-img>
+            </ion-avatar>
+
+            <ion-label class="recipe-label">
+              <h2 class="recipe-title">{{ recipe.name }}</h2>
+              <p class="recipe-rating">
+                <ion-icon name="star" color="warning" class="star-icon"></ion-icon>
+                <span class="rating-value">{{ recipe.averageRating }}</span>
+              </p>
+            </ion-label>
+
+          </ion-item>
+        }
+
+        @if (filteredRecipes().length === 0) {
+          <ion-item lines="none">
+            <ion-label class="ion-text-center ion-text-muted">
+              No se encontraron recetas
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+
+    </ion-content>
+
+  </ng-template>
+
+</ion-modal>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment.prod';
 import { ClientDTO } from '../../models/client.model';
 import { ClientLoginDTO } from '../../models/client-login.model';
+import {tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,8 @@ export class AuthService {
     return this.http.post<{ token: string }>(
       `${this.authApiUrl}/login`,
       { username, password }
+    ).pipe(
+      tap(res => this.setToken(res.token))
     );
   }
 
@@ -74,38 +77,12 @@ export class AuthService {
     );
   }
 
-  updatePreferences(prefs: { id: number; name: string }[]) {
-    const token = this.getToken();
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    const formData = new FormData();
-    formData.append(
-      'profile',
-      new Blob([JSON.stringify({ preferences: prefs })], {
-        type: 'application/json'
-      })
-    );
-
-    return this.http.put<ClientDTO>(
-      `${this.authApiUrl}/register-step2`,
-      formData,
-      { headers }
-    );
-  }
-
 
   ensureCurrentUserLoaded() {
     if (this.currentUser()) return;
 
     this.getAuthUser().subscribe({
       next: () => {
-        // Usa el endpoint real que ya tengas para perfil completo
         this.http.get<ClientDTO>(`${this.clientApiUrl}/profile`)
           .subscribe({
             next: client => this.setCurrentUser(client),

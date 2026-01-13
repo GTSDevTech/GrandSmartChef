@@ -12,6 +12,7 @@ import {RouterLink} from "@angular/router";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {CollectionService} from "../../../services/collection/collection.service";
 import {environment} from "../../../../environments/environment.prod";
+import {RatingService} from "../../../services/rating/rating.service";
 
 @Component({
   selector: 'app-home-card',
@@ -36,6 +37,8 @@ export class HomeCardComponent  implements OnInit {
 
   private readonly backendUrl = environment.imageBaseUrl;
   private collectionService = inject(CollectionService);
+  private ratingService = inject(RatingService);
+
   recipe = input.required<RecipeCardDTO>();
 
 
@@ -59,23 +62,12 @@ export class HomeCardComponent  implements OnInit {
     return this.isFavorite();
   }
 
-  getStars(): ('full' | 'half' | 'empty')[] {
-    const stars: ('full' | 'half' | 'empty')[] = [];
-    let rating = this.recipe().averageRating || 0;
-
-    for(let i=0; i<5; i++){
-      if(rating >= 1){
-        stars.push('full');
-      }else if(rating >= 0.5){
-        stars.push('half');
-      }else{
-        stars.push('empty')
-      }
-      rating -=1;
-
-    }
-    return stars;
+  getStars() {
+    return this.ratingService.getStars(
+      this.recipe().averageRating
+    );
   }
+
 
   getRecipeImage(imageUrl?: string | null): string {
     if (!imageUrl) {

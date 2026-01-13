@@ -1,20 +1,52 @@
 <ion-list class="list-cooked-recipe">
-  <ion-item-divider color="light" class="cooking-date">
-    <ion-label>
-      14/10/2025
-    </ion-label>
-  </ion-item-divider>
-  <ion-item class="list-cooking-recipes shadow-box" >
-    <ion-img class="history-recipe" alt="Silhouette of a person's head" [src]="'assets/images/carbonara.png'"/>
-    <ion-label class="label-recipe">
-      <h3>Espaguetis</h3>
-      <ion-icon name="star" color="warning" class="star-card"></ion-icon>
-      <ion-icon name="star" color="warning" class="star-card"></ion-icon>
-      <ion-icon name="star" color="warning" class="star-card"></ion-icon>
-      <ion-icon name="star" color="warning" class="star-card"></ion-icon>
-      <ion-icon name="star" color="warning" class="star-card"></ion-icon>
-    </ion-label>
-    <ion-icon name="close" slot="end"></ion-icon>
-  </ion-item>
+
+  @if (!histories() || histories()!.length === 0) {
+    <ion-row class="history-empty" >
+      <ion-text color="medium">
+        No se han cocinado recetas en los últimos 7 días
+      </ion-text>
+    </ion-row>
+
+  }
+
+  @for (history of histories(); track history.id) {
+
+    <ion-item-divider class="cooking-date">
+      <ion-label>
+        {{ history.date }}
+      </ion-label>
+    </ion-item-divider>
+
+    <ion-item class="list-cooking-recipes shadow-box">
+
+      <ion-img
+        class="history-recipe"
+        [src]="getRecipeImage(history.recipe.imageUrl)">
+      </ion-img>
+
+      <ion-label class="label-recipe">
+        <ion-row>
+          <h3>{{ history.recipe.name }}</h3>
+
+        </ion-row>
+     <ion-row class="row-history">
+       @for (star of getStars(history.recipe); track $index) {
+         <ion-icon
+           [name]="star === 'full' ? 'star' : (star === 'half' ? 'star-half' : 'star-outline')"
+           color="warning"
+           class="star-card">
+         </ion-icon>
+       }
+       <span class="span-rating">
+          {{ history.recipe.averageRating }}
+        </span>
+     </ion-row>
+
+      </ion-label>
+
+      <ion-icon name="close" slot="end"></ion-icon>
+    </ion-item>
+  }
+
 </ion-list>
 

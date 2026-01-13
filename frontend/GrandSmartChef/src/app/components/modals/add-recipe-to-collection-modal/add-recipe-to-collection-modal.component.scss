@@ -1,0 +1,117 @@
+ion-modal.add-recipe-sheet {
+  --height: 60%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1),
+  0 4px 6px -4px rgb(0 0 0 / .1);
+}
+
+ion-modal.add-recipe-sheet::part(backdrop) {
+  background: rgba(209, 213, 219, 0.8);
+  opacity: 1;
+}
+
+/* Toolbar */
+ion-toolbar.sheet-toolbar {
+  --background: var(--primary-green-color);
+  --color: white;
+  text-align: center;
+
+  ion-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}
+
+/* --- TOP BAR (search + botón) --- */
+.top-bar {
+  padding: 6px 10px 0 10px;
+}
+
+/* Botón arriba */
+.add-recipe-btn-top {
+  --background: var(--secondary-green-color);
+  --color: white;
+  --border-radius: 12px;
+
+  height: 40px;
+  width: 100%;
+}
+
+/* Searchbar estilo app */
+ion-searchbar {
+  --background: #f8f9fa;
+  --border-radius: 12px;
+}
+
+/* --- LISTA --- */
+ion-item.card-tag.recipe-item {
+  margin: 10px auto;
+  width: 92%;
+  border-radius: 18px;
+  --background: white;
+  --color: var(--primary-green-color);
+
+  &::part(native) {
+    border-radius: 18px;
+  }
+}
+
+/* Avatar */
+.recipe-avatar {
+  width: 52px;
+  height: 52px;
+
+  ion-img {
+    border-radius: 8px;
+    object-fit: cover;
+  }
+}
+
+/* Info a la izquierda */
+.recipe-label {
+  text-align: left;
+}
+
+/* Título visible SIEMPRE */
+.recipe-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: inherit;
+}
+
+/* Rating */
+.recipe-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 0 0;
+  font-weight: 600;
+  color: inherit;
+}
+
+.star-icon { font-size: 16px; }
+
+/* --- SELECCIONADA --- */
+ion-item.card-tag.selected {
+  --background: var(--secondary-green-color);
+  --color: white;
+
+  .recipe-title,
+  .recipe-rating,
+  .rating-value,
+  ion-icon {
+    color: white !important;
+  }
+}
+
+/* --- YA EN COLECCIÓN --- */
+ion-item.card-tag.disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* Texto vacío */
+.ion-text-muted {
+  color: var(--primary-gray-color);
+}

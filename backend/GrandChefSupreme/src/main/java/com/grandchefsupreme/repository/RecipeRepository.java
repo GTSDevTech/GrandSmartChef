@@ -22,23 +22,28 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
 
     @Query(value = """
-        SELECT DISTINCT r.*
-        FROM recipe r
-        LEFT JOIN recipe_tag rt ON r.id = rt.id_recipe
-        JOIN client_tag ct ON ct.id_tag = rt.id_tag
-        LEFT JOIN client c ON ct.id_client = c.id
-        WHERE ct.id_client = :userId
-            AND ct.id_tag = rt.id_tag
-            AND r.is_active = TRUE
-    """, nativeQuery = true)
-    List<Recipe> findByUserIdAndUserPreferences(@PathVariable("userId") Long userId);
+    SELECT r.*
+    FROM recipe r
+    JOIN recipe_tag rt ON r.id = rt.id_recipe
+    JOIN client_tag ct ON ct.id_tag = rt.id_tag
+    WHERE ct.id_client = :userId
+      AND r.is_active = TRUE
+    GROUP BY r.id
+    HAVING COUNT(DISTINCT ct.id_tag) = (
+        SELECT COUNT(*)
+        FROM client_tag
+        WHERE id_client = :userId
+    )
+""", nativeQuery = true)
+    List<Recipe> findByUserIdAndUserPreferences(@Param("userId") Long userId);
 
 
     @Query(value = """
-    select DISTINCT r.*  from recipe r
+    select DISTINCT r.*
+    from recipe r
     left join recipe_ingredient ri on r.id = ri.id_recipe
-    left join ingredient i on ri.id_ingredient = i.id
-    where ri.id_ingredient = (:ingredientIds)
+    where ri.id_ingredient IN (:ingredientIds)
+    AND r.is_active = TRUE
     """, nativeQuery = true)
     List<Recipe> findByIngredientIds(@Param("ingredientIds") List<Long> ingredientIds);
 

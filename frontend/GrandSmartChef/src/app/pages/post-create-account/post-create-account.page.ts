@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, effect,
   ElementRef,
   inject,
   OnInit,
@@ -10,8 +10,8 @@ import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
   IonButton,
-  IonContent, IonDatetime, IonFab, IonFabButton,
-  IonGrid, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonModal,
+  IonContent, IonFab, IonFabButton,
+  IonGrid, IonIcon, IonImg, IonInput, IonItem, IonLabel,
   IonRow,
 } from '@ionic/angular/standalone';
 import {AuthService} from "../../services/auth/auth.service";
@@ -20,6 +20,10 @@ import {ClientService} from "../../services/client/client.service";
 import {CameraService} from "../../services/camera/camera.service";
 import {Capacitor} from "@capacitor/core";
 import { FilterProfileComponent } from "src/app/components/filters/filter-profile/filter-profile.component";
+import {DateModalComponent} from "../../components/modals/date-modal/date-modal.component";
+import {ModalService} from "../../services/modal/modal.service";
+import {CountryModalComponent} from "../../components/modals/country-modal/country-modal.component";
+import {ClientLoginDTO} from "../../models/client-login.model";
 
 
 
@@ -29,24 +33,54 @@ import { FilterProfileComponent } from "src/app/components/filters/filter-profil
   styleUrls: ['./post-create-account.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, IonRow,
-    IonGrid, ReactiveFormsModule, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, FilterProfileComponent, IonModal, IonDatetime]
+    IonGrid, ReactiveFormsModule, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, FilterProfileComponent, DateModalComponent, CountryModalComponent]
 })
 export class PostCreateAccountPage implements OnInit {
 
+  private modalService = inject(ModalService);
   private auth = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private clientService = inject(ClientService);
   private cameraService = inject(CameraService);
+  authUser = signal<ClientLoginDTO | null>(null);
 
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
-  dateModalOpen = false;
   birthdateDisplay: string | null = null
-  today = new Date().toISOString().split('T')[0];
+
+
+  @ViewChild(CountryModalComponent)
+  countryModal!: CountryModalComponent;
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  constructor() {
+
+    effect(() => {
+      const country = this.modalService.getData('country-modal')();
+      if (country) {
+        this.formSignal().get('country')?.setValue(country);
+        this.modalService.clearData('country-modal');
+      }
+    });
+
+    effect(() => {
+      const iso = this.modalService.getData('date-modal')();
+      if (!iso) return;
+
+      const date = new Date(iso);
+
+      this.birthdateDisplay = date.toLocaleDateString('es-ES');
+
+      const backendDate = date.toISOString().split('T')[0];
+      this.formSignal().get('birthdate')?.setValue(backendDate);
+
+      this.modalService.clearData('date-modal');
+    });
+  }
+
 
   formSignal = signal(this.fb.group({
     fullName: ['', Validators.required],
@@ -55,25 +89,24 @@ export class PostCreateAccountPage implements OnInit {
     preferences: this.fb.control<{ id: number; name: string }[]>([])
   }));
 
+  openCountryModal() {
+    this.modalService.open('country-modal');
+  }
 
-  onDateSelected(event: CustomEvent) {
-    const iso = event.detail.value as string;
-    if (!iso) return;
-
-    const date = new Date(iso);
-    this.birthdateDisplay = date.toLocaleDateString('es-ES');
-
-    const backendDate = date.toISOString().split('T')[0];
-    this.formSignal().get('birthdate')?.setValue(backendDate);
+  openDateModal() {
+    this.modalService.open('date-modal');
   }
 
   ngOnInit() {
-
     const token = this.auth.getToken();
     if (!token) {
       this.router.navigate(['/register']);
       return;
     }
+    this.auth.getAuthUser().subscribe({
+      next: user => this.authUser.set(user),
+      error: () => this.router.navigate(['/login'])
+    });
 
   }
 
@@ -116,7 +149,7 @@ export class PostCreateAccountPage implements OnInit {
 
   CompleteRegister() {
     const form: FormGroup = this.formSignal();
-
+    const user = this.authUser();
 
     if (form.invalid) return;
 
@@ -130,6 +163,7 @@ export class PostCreateAccountPage implements OnInit {
 
     const profileData = {
       fullName: data.fullName,
+      email: user?.email,
       birthdate: isoBirthdate,
       country: data.country,
       preferences: data.preferences ?? [],
@@ -151,11 +185,6 @@ export class PostCreateAccountPage implements OnInit {
       });
     });
   }
-
-  openDateModal() {
-    this.dateModalOpen = true;
-  }
-
 
 
 }

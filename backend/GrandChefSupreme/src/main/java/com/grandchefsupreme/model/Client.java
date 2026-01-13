@@ -21,10 +21,10 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = false)
 public class Client extends User {
 
-    @Column(name = "full_name", nullable = false, length = 150)
+    @Column(name = "full_name", length = 150)
     private String fullName;
 
-    @Column(name = "birth_date", nullable = false)
+    @Column(name = "birth_date")
     private LocalDate birthdate;
 
     @Column(name = "country", length = 50)

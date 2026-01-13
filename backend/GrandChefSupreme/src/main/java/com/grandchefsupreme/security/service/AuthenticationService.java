@@ -23,7 +23,7 @@ public class AuthenticationService {
     private final ClientService clientService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final ClientMapper clientMapper;
+
 
 
     public AuthenticationResponseDTO register(RegisterStep1DTO clientDTO) {

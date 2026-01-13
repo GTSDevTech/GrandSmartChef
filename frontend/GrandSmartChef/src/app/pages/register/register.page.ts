@@ -34,14 +34,16 @@ export class RegisterPage implements OnInit {
   }
 
   createClient(formData: { username: string; email: string; password: string }) {
-    this.auth.registerStep1(formData.username, formData.email, formData.password)
-      .subscribe({
-        next: (response) => {
-          this.auth.setToken(response.token);
-          this.router.navigate(['/post-create-account']);
-        },
-        error: (err) => console.error("Error al registrar usuario")
-      });
+    this.auth.registerStep1(
+      formData.username,
+      formData.email,
+      formData.password
+    ).subscribe({
+      next: res => {
+        this.auth.setToken(res.token);
+        this.router.navigate(['/post-create-account']);
+      }
+    });
   }
 
   onClose() {

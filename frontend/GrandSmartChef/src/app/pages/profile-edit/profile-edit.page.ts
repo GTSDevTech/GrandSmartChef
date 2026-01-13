@@ -1,49 +1,86 @@
-import {Component, ElementRef, inject, OnInit, signal, ViewChild} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {
-  IonButton,
-  IonContent, IonFab, IonFabButton,
-  IonIcon, IonImg, IonInput, IonItem,
-  IonLabel,
-  IonRow,
+import {Component, effect, ElementRef, inject, OnInit, signal, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
-} from '@ionic/angular/standalone';
-
-import {BackHeaderComponent} from "../../components/headers/back-header/back-header.component";
 import {AuthService} from "../../services/auth/auth.service";
 import {ClientService} from "../../services/client/client.service";
 import {CameraService} from "../../services/camera/camera.service";
 import {Capacitor} from "@capacitor/core";
 import {ToastController} from "@ionic/angular";
+import {ModalService} from "../../services/modal/modal.service";
+import {CountryModalComponent} from "../../components/modals/country-modal/country-modal.component";
+import {
+  IonButton,
+  IonContent,
+  IonFab, IonFabButton,
+  IonIcon,
+  IonImg,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonRow
+} from "@ionic/angular/standalone";
+import {DateModalComponent} from "../../components/modals/date-modal/date-modal.component";
+import {BackHeaderComponent} from "../../components/headers/back-header/back-header.component";
+
+
+type ProfileFormValue = {
+  fullName: string | null;
+  email: string | null;
+  birthdate: string | null;
+  country: string | null;
+};
 
 @Component({
   selector: 'app-profile-edit',
   templateUrl: './profile-edit.page.html',
   styleUrls: ['./profile-edit.page.scss'],
-  standalone: true,
-  imports: [IonContent, CommonModule, FormsModule,
-    BackHeaderComponent, IonIcon, IonRow, IonLabel,
-    IonButton, IonInput, IonItem, ReactiveFormsModule,
-    IonFab, IonFabButton, IonImg]
+  imports: [
+    IonRow,
+    IonButton,
+    CountryModalComponent,
+    DateModalComponent,
+    IonItem,
+    IonIcon,
+    IonLabel,
+    IonInput,
+    IonFab,
+    ReactiveFormsModule,
+    IonImg,
+    IonContent,
+    BackHeaderComponent,
+    IonFabButton
+  ]
 })
 export class ProfileEditPage implements OnInit {
+
+  private modalService = inject(ModalService);
   protected auth = inject(AuthService);
   private fb = inject(FormBuilder);
   private clientService = inject(ClientService);
   private cameraService = inject(CameraService);
   private toastCtrl = inject(ToastController);
-  private initialFormValue: any;
 
+  private initialFormValue: any;
   private hasChanges = false;
 
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  birthdateDisplay: string | null = null;
 
+  @ViewChild('fileInput')
+  fileInput!: ElementRef<HTMLInputElement>;
 
+  @ViewChild(CountryModalComponent)
+  countryModal!: CountryModalComponent;
 
+  openCountryModal() {
+    this.modalService.open('country-modal');
+  }
+
+  openDateModal() {
+    this.modalService.open('date-modal');
+  }
 
   formSignal = signal(
     this.fb.group({
@@ -53,6 +90,35 @@ export class ProfileEditPage implements OnInit {
       country: ['']
     })
   );
+
+  constructor() {
+
+    effect(() => {
+      const country = this.modalService.getData('country-modal')();
+      if (country) {
+        this.formSignal().get('country')?.setValue(country);
+        this.modalService.clearData('country-modal');
+      }
+    });
+
+    effect(() => {
+      const iso = this.modalService.getData('date-modal')();
+      if (!iso) return;
+
+      const date = new Date(iso);
+      this.birthdateDisplay = date.toLocaleDateString('es-ES');
+
+      const backendDate = date.toISOString().split('T')[0];
+      this.formSignal().get('birthdate')?.setValue(backendDate);
+
+      this.modalService.clearData('date-modal');
+    });
+
+    this.formSignal().valueChanges.subscribe(() => {
+      this.updateHasChanges();
+    });
+
+  }
 
   ngOnInit() {
     const user = this.auth.getCurrentUser();
@@ -77,7 +143,7 @@ export class ProfileEditPage implements OnInit {
       birthdate: user.birthdate ?? '',
       country: user.country ?? ''
     });
-
+    this.birthdateDisplay = user.birthdate ?? '';
     this.previewUrl = this.auth.getCurrentUserPhoto();
     this.initialFormValue = structuredClone(this.formSignal().value);
   }
@@ -94,7 +160,6 @@ export class ProfileEditPage implements OnInit {
     };
     reader.readAsDataURL(this.selectedFile);
   }
-
 
   async pickImage() {
     if (Capacitor.getPlatform() === 'web') {
@@ -145,37 +210,41 @@ export class ProfileEditPage implements OnInit {
       next: updatedClient => {
         this.auth.setCurrentUser(updatedClient);
         this.initialFormValue = structuredClone(this.formSignal().value);
+        this.hasChanges = false
         this.showSuccessToast();
       },
-      error: (err) => {
+      error: err => {
         console.log('Error during update:');
-        console.log('Error status:', err.status);
-        console.log('Error statusText:', err.statusText);
-        console.log('Error URL:', err.url);
-        console.log('Error body:', err.error);
       }
     });
   }
 
-  unSaveFormChange(): boolean{
-    const currentValue = this.formSignal().value;
+  unSaveFormChange(): boolean {
+    if (!this.initialFormValue) return false;
 
-    const formChanged = (Object.keys(currentValue) as (keyof typeof currentValue)[])
-      .some(key => currentValue[key] !== this.initialFormValue);
+    const currentValue = this.formSignal().value as ProfileFormValue;
+
+    const keys = Object.keys(currentValue) as (keyof ProfileFormValue)[];
+    const formChanged = keys.some(key => currentValue[key] !== this.initialFormValue![key]);
 
     const photoChanged = this.previewUrl !== this.auth.getCurrentUserPhoto();
 
     return formChanged || photoChanged;
   }
 
-
+  private updateHasChanges() {
+    this.hasChanges = this.unSaveFormChange();
+  }
 
   async showSuccessToast() {
     const toast = await this.toastCtrl.create({
-      message: 'Perfil actualizado correctamente',
+      message: 'Perfil actualizado correctamente', color: 'success',
       duration: 2000,
       position: 'bottom',
     });
     await toast.present();
   }
+
+
+
 }

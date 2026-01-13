@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { AddRecipeToCollectionSheetComponent } from './add-recipe-to-collection-sheet.component';
+import { AddRecipeToCollectionModalComponent } from './add-recipe-to-collection-modal.component';
 
 describe('AddRecipeToCollectionSheetComponent', () => {
-  let component: AddRecipeToCollectionSheetComponent;
-  let fixture: ComponentFixture<AddRecipeToCollectionSheetComponent>;
+  let component: AddRecipeToCollectionModalComponent;
+  let fixture: ComponentFixture<AddRecipeToCollectionModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddRecipeToCollectionSheetComponent ],
+      declarations: [ AddRecipeToCollectionModalComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddRecipeToCollectionSheetComponent);
+    fixture = TestBed.createComponent(AddRecipeToCollectionModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

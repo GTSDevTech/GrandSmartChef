@@ -7,7 +7,7 @@
     </ion-row>
     <app-ingredient-options></app-ingredient-options>
     <ion-col class="categories-grid">
-      @for (categ of category(); track category){
+      @for (categ of category(); track categ.id) {
       <app-category-item [category]="categ"></app-category-item>
       } @empty {
         <ion-col>

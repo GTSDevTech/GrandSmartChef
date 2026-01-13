@@ -1,0 +1,41 @@
+<ion-modal
+  [isOpen]="isOpen()"
+  (didDismiss)="close()"
+  class="tag-sheet">
+
+  <ng-template>
+
+    <ion-header>
+      <ion-toolbar class="sheet-toolbar">
+        <ion-label>Selecciona país</ion-label>
+      </ion-toolbar>
+
+      <ion-searchbar
+        placeholder="Buscar país…"
+        (ionInput)="onSearch($event)">
+      </ion-searchbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        @for (c of filteredCountries; track c.code) {
+          <ion-item
+            class="card-tag"
+            (click)="select(c)">
+            <ion-label class="ion-text-center">
+              {{ c.name }} ({{c.code}})
+            </ion-label>
+          </ion-item>
+        }
+        @if (filteredCountries.length === 0) {
+          <ion-item lines="none">
+            <ion-label class="ion-text-center ion-text-muted">
+              No se encontraron tags
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    </ion-content>
+
+  </ng-template>
+</ion-modal>

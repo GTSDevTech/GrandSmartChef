@@ -22,6 +22,7 @@ import {CollectionService} from "../../services/collection/collection.service";
 
 import {ModalService} from "../../services/modal/modal.service";
 import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment.prod";
 
 
 @Component({
@@ -47,7 +48,7 @@ import {Router} from "@angular/router";
   ]
 })
 export class CollectionComponent  implements OnInit {
-
+  private readonly backendUrl = environment.imageBaseUrl;
   private route = inject(Router);
   private alertController = inject(AlertController)
   private collectionService = inject(CollectionService);
@@ -102,7 +103,6 @@ export class CollectionComponent  implements OnInit {
 
 
   addRecipe() {
-    console.log('ADD RECIPE CLICK', this.collection().id);
     const id = this.collection().id;
     if (!id) return;
     this.modalService.open('add-recipe-to-collection',  id );
@@ -112,4 +112,14 @@ export class CollectionComponent  implements OnInit {
   navToRecipe(recipeId:number) {
     this.route.navigate(['/main-recipe', recipeId]).then();
   }
+
+
+  getRecipeImage(imageUrl?: string | null): string {
+    if (!imageUrl) {
+      return '/assets/images/recipes/default_profile_image.png';
+    }
+    console.log(`${this.backendUrl}${imageUrl}`);
+    return `${this.backendUrl}${imageUrl}`;
+  }
+
 }

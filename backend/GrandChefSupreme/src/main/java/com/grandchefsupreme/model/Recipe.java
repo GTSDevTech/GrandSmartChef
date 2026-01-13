@@ -26,7 +26,7 @@ public class Recipe {
     @Column(name = "name", nullable = false, length = 150)
     private String name;
 
-    @Column(name = "difficulty", columnDefinition = "SMALLINT")
+    @Column(name = "difficulty",columnDefinition = "SMALLINT")
     @Enumerated(EnumType.ORDINAL)
     private Difficulty difficulty;
 

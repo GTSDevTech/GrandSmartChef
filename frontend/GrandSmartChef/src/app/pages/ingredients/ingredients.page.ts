@@ -18,28 +18,28 @@ import {ActivatedRoute} from "@angular/router";
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, BackHeaderComponent, IngredientOptionsComponent, IonCol, IonLabel, IonRow, IngredientItemComponent]
 })
-export class IngredientsPage implements OnInit {
-  private activatedRoute = inject(ActivatedRoute);
-  private ingredientService = inject(IngredientService);
-  ingredient = signal<IngredientDTO[]>([]);
-  categoryId: string = '';
+  export class IngredientsPage implements OnInit {
+    private activatedRoute = inject(ActivatedRoute);
+    private ingredientService = inject(IngredientService);
+    ingredient = signal<IngredientDTO[]>([]);
+    categoryId: string = '';
 
-  constructor() { }
+    constructor() { }
 
-  loadIngredientsByCategory() {
-    this.ingredientService.getAllIngredientByCategories(this.categoryId).subscribe({
-      next: (data) => this.ingredient.set(data),
-      error: (err) => console.error("Error cargando ingredientes", err),
-    });
+    loadIngredientsByCategory() {
+      this.ingredientService.getAllIngredientByCategories(this.categoryId).subscribe({
+        next: (data) => this.ingredient.set(data),
+        error: (err) => console.error("Error cargando ingredientes", err),
+      });
+    }
+
+    ngOnInit() {
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.categoryId = params['categoryId'];
+        this.loadIngredientsByCategory();
+      });
+
+    }
+
+
   }
-
-  ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.categoryId = params['categoryId'];
-      this.loadIngredientsByCategory();
-    });
-
-  }
-
-
-}

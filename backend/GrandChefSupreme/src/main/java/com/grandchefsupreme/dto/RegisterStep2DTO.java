@@ -23,6 +23,7 @@ public class RegisterStep2DTO {
     private String country;
 
     @Email(message = "Email inválido")
+    @NotBlank
     private String email;
 
     private List<TagDTO> preferences;

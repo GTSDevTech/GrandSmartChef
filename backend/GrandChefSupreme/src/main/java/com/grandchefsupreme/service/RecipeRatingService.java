@@ -35,7 +35,7 @@ public class RecipeRatingService {
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
 
         RecipeRating rating = ratingRepository
-                .findByRecipeIdAndClientId(recipe.getId(), client.getId())
+                .findByRecipe_IdAndClient_Id(recipe.getId(), client.getId())
                 .orElseGet(() -> {
                     RecipeRating r = new RecipeRating();
                     r.setRecipe(recipe);

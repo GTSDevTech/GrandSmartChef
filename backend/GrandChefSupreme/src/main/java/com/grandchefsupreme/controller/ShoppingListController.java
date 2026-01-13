@@ -21,7 +21,7 @@ public class ShoppingListController {
     public ShoppingListDTO createShoppingList(
             HttpServletRequest request,
             @Valid @RequestParam Long userId,
-            @RequestParam Long recipeId
+            @Valid @RequestParam Long recipeId
     ) {
         request.setAttribute(
                 ApiResponseMessage.MESSAGE_ATTR,

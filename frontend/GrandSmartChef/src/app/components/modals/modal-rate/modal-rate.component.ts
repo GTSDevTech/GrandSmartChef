@@ -68,12 +68,11 @@ export class ModalRateComponent  implements OnInit {
 
   ngOnInit() {}
 
-  stars = computed(() => {
-    return Array.from({ length: this.maxStars }, (_, i) => {
-      const value = this.hoverRating() || this.rating();
-      return value >= i + 1 ? 'star' : 'star-outline';
-    });
-  });
+  stars = computed(() =>
+    this.ratingService.getStars(
+      this.hoverRating() || this.rating()
+    )
+  );
 
   setRating(index: number) {
     this.rating.set(index + 1);
@@ -102,10 +101,9 @@ export class ModalRateComponent  implements OnInit {
   submitRating() {
     const user = this.auth.currentUser();
     const recipeId = this.recipeId();
-    console.log(user, recipeId)
-    if (!user || recipeId === undefined) {
 
-      this.toast.show(ToastType.ERROR, 'Error, No se pudo valorar la receta');
+    if (!user || !recipeId) {
+      this.toast.show(ToastType.ERROR, 'Error al valorar');
       return;
     }
 
@@ -114,24 +112,18 @@ export class ModalRateComponent  implements OnInit {
       return;
     }
 
-    const body = {
-
-      recipeId: recipeId,
+    this.ratingService.rateRecipe({
+      recipeId,
       clientId: user.id,
       rating: this.rating(),
       review: this.comment()
-    };
-    console.log(body)
-    this.ratingService.ratingRecipe(body).subscribe({
+    }).subscribe({
       next: () => {
-
         this.toast.show(ToastType.RECIPE_RATED);
         this.ratingSubmitted.emit();
         this.modalService.close('rate');
-
       },
       error: () => {
-        console.log(body)
         this.toast.show(ToastType.ERROR, 'No se pudo valorar la receta');
       }
     });

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -19,6 +19,10 @@ import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-fo
 import {HistoryCardComponent} from "../../components/cards/history-card/history-card.component";
 import {DataHistoryUserComponent} from "../../components/data-history-user/data-history-user.component";
 import {RouterModule} from "@angular/router";
+import {HistoryService} from "../../services/history/history.service";
+import {AuthService} from "../../services/auth/auth.service";
+import {ModalService} from "../../services/modal/modal.service";
+import {DateModalComponent} from "../../components/modals/date-modal/date-modal.component";
 
 @Component({
   selector: 'app-history',
@@ -27,14 +31,53 @@ import {RouterModule} from "@angular/router";
   standalone: true,
   imports: [IonContent, CommonModule,
     FormsModule, HeaderComponent, FooterNavComponent, IonCol, IonGrid, IonIcon, IonRow,
-    IonInput, HistoryCardComponent, DataHistoryUserComponent, RouterModule, IonButton, IonItem]
+    HistoryCardComponent, DataHistoryUserComponent, RouterModule, IonButton, IonItem, IonLabel, DateModalComponent]
 })
 export class HistoryPage implements OnInit {
 
+  private modalService = inject(ModalService);
   private scrollFooter = inject(ScrollFooterService);
-  constructor() { }
+  private historyService = inject(HistoryService);
+  private auth = inject(AuthService);
+
+  histories = this.historyService.histories;
+
+  selectedDate = this.today();
+  selectedDateDisplay: string | null = null;
+
+
+  constructor() {
+
+    effect(() => {
+      const iso = this.modalService.getData('date-modal')();
+      if (!iso) return;
+
+      const date = new Date(iso);
+
+      this.selectedDateDisplay = date.toLocaleDateString('es-ES');
+      this.selectedDate = date.toISOString().split('T')[0];
+
+      const user = this.auth.getCurrentUser();
+      if (user?.id) {
+        this.historyService.loadHistoryByDate(user.id, this.selectedDate);
+      }
+
+      this.modalService.clearData('date-modal');
+    });
+  }
+
 
   ngOnInit() {
+    const user = this.auth.getCurrentUser();
+    if (!user?.id) return;
+
+    this.historyService.loadHistoryByDate(user.id, this.selectedDate);
+
+  }
+
+
+  protected today(): string {
+    return new Date().toISOString().split('T')[0];
   }
 
   onScroll(event: any) {
@@ -43,5 +86,9 @@ export class HistoryPage implements OnInit {
 
   createHistory() {
 
+  }
+
+  openDateModal() {
+    this.modalService.open('date-modal');
   }
 }

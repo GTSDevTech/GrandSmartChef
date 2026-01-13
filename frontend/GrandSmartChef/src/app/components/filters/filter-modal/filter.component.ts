@@ -30,18 +30,15 @@ export class FilterComponent  implements OnInit {
   private modalService = inject(ModalService);
   isOpen = this.modalService.isOpen('recipe-filter');
   initialPreferences = input<PreferenceDTO[] | null>(null);
-  readonly options = USER_OPTIONS;
 
+
+  readonly options = USER_OPTIONS;
   private selectedIds = signal<Set<number>>(new Set());
   preferencesChange = output<PreferenceDTO[]>();
 
   constructor() {
     effect(() => {
-      const prefs = this.initialPreferences();
-      if (!prefs) {
-        return;
-      }
-
+      const prefs = this.initialPreferences() ?? [];
       this.selectedIds.set(new Set(prefs.map(p => p.id)));
     });
   }
@@ -66,24 +63,14 @@ export class FilterComponent  implements OnInit {
 
   onToggle(id: number, checked: boolean): void {
     const next = new Set(this.selectedIds());
-
-    if (checked) {
-      next.add(id);
-    } else {
-      next.delete(id);
-    }
-
+    checked ? next.add(id) : next.delete(id);
     this.selectedIds.set(next);
 
     const prefs: PreferenceDTO[] = this.options
       .filter(o => next.has(o.id))
-      .map(o => ({
-        id: o.id,
-        name: o.name,
-      }));
+      .map(o => ({ id: o.id, name: o.name }));
 
     this.preferencesChange.emit(prefs);
   }
-
 
 }

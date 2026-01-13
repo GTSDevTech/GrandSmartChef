@@ -44,7 +44,7 @@
             <ion-img
               class="logo-recipe"
               alt="recipe image"
-              [src]="recipe.imageUrl"/>
+              [src]="getRecipeImage(recipe.imageUrl)"/>
           </ion-thumbnail>
           <ion-label>{{recipe.name}}</ion-label>
         </ion-item>
