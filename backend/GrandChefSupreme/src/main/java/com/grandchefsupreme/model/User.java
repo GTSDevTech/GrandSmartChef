@@ -15,7 +15,7 @@ import java.util.Collections;
 
 
 @Entity
-@Table (name = "user", schema = "public")
+@Table (name = "\"user\"", schema = "public")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn (name = "role", discriminatorType = DiscriminatorType.INTEGER)
 @Getter @Setter
