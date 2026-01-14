@@ -1,6 +1,7 @@
 package com.grandchefsupreme.service;
 
 import com.grandchefsupreme.dto.*;
+import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.exceptions.NotFoundException;
 import com.grandchefsupreme.mapper.RecipeCardMapper;
 import com.grandchefsupreme.mapper.RecipeDetailMapper;
@@ -71,9 +72,7 @@ public class RecipeService {
     public RecipeDTO getRecipeForDetails(Long id) {
         Recipe recipe = recipeRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new NotFoundException("Receta no encontrada"));
-        if (recipe == null) {
-            return null;
-        }
+
         RecipeDTO recipeDTO = recipeDetailMapper.toDto(recipe);
 
         Double avg = recipeRatingRepository.findAverageRatingByRecipeId(recipe.getId());
@@ -118,6 +117,21 @@ public class RecipeService {
 
     @Transactional
     public RecipeDTO createRecipe(RecipeDTO recipeDTO, MultipartFile photoFile) throws IOException {
+
+        if (recipeDTO == null) {
+            throw new BadRequestException("Los datos de la receta son obligatorios");
+        }
+
+        if (recipeDTO.getIngredients() == null || recipeDTO.getIngredients().isEmpty()) {
+            throw new BadRequestException("La receta debe tener al menos un ingrediente");
+        }
+
+        if (recipeDTO.getSteps() == null || recipeDTO.getSteps().isEmpty()) {
+            throw new BadRequestException("La receta debe tener al menos un paso");
+        }
+
+
+
         Recipe recipe = recipeDetailMapper.toEntity(recipeDTO);
         recipe.setIsActive(true);
 

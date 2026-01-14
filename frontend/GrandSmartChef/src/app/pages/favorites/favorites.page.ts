@@ -69,7 +69,7 @@ export class FavoritesPage implements OnInit {
   }
 
   onRecipesAdded(id: number) {
-    this.collectionService.getCollectionById(id).subscribe();
+    this.collectionService.refreshCollection(id);
 
   }
 

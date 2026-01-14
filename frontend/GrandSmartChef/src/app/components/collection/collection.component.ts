@@ -77,7 +77,10 @@ export class CollectionComponent  implements OnInit {
           text: 'Borrar',
           role: 'confirm',
           handler: () => {
-            this.deleteCollection();
+            const id = this.collection().id;
+            if (id) {
+              this.deleted.emit(id);
+            }
           }
         }
       ]
@@ -85,21 +88,6 @@ export class CollectionComponent  implements OnInit {
     await alert.present();
   }
 
-
-  private deleteCollection() {
-    const id = this.collection().id;
-    if(!id) return;
-
-    this.collectionService.deleteCollection(id).subscribe({
-      next: (res) => {
-        console.log('DELETE RESPONSE:', res);
-        this.deleted.emit(id);
-      },
-      error: (err: any) => {
-        console.error('Error deleting collection:', err);
-      }
-    });
-  }
 
 
   addRecipe() {
