@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("auth")
+@Tag("register")
 @DisplayName("AuthenticationService - registro (step1) + login")
 public class AuthenticationServiceTest {
 
@@ -47,11 +48,6 @@ public class AuthenticationServiceTest {
         clientRepository.deleteAll();
 
     }
-
-
-
-
-
     @Nested
     @DisplayName("Register Step 1")
     class RegisterStep1Tests {
@@ -87,8 +83,7 @@ public class AuthenticationServiceTest {
                     () -> assertEquals("gts@gmail.com", client.getEmail()),
                     () -> assertTrue(client.getIsActive()),
                     () -> assertEquals("Registro correcto", auth.getMessage())
-                    );
-
+                );
         }
     }
 
