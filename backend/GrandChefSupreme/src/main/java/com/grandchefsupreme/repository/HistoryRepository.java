@@ -18,8 +18,8 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     @Query(value = """
     select DISTINCT h.*
     from history h
-    left join client c on h.id_user = c.id
-    left join recipe r on h.id_recipe = r.id
+    left join public.client c on h.id_user = c.id
+    left join public.recipe r on h.id_recipe = r.id
      WHERE c.id = :clientId
           AND h.date BETWEEN :startDate AND :endDate
         order by h.date DESC

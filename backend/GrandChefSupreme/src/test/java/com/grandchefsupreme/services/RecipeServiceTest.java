@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -72,6 +73,9 @@ public class RecipeServiceTest {
         registerStep1DTO.setEmail("gts@gmail.com");
 
         client  = clientService.createClient(registerStep1DTO);
+
+        clientRepository.findById(client.getId())
+                .orElseThrow(()-> new AssertionError("El Cliente no se ha guardado"));
 
         Tag vegetariano = tagRepository.findByNameIgnoreCase("Vegetariano")
                 .orElseThrow(() -> new AssertionError("Tag Vegetariano no encontrado"));
@@ -595,8 +599,107 @@ public class RecipeServiceTest {
 
             }
 
+            @Test
+            @DisplayName("Ingredients & User Preferences - Positive Case")
+            void searchByIngredientsAndUserPreferences() throws IOException {
+                loadRecipeByFilter();
+                List<Long> ingredientIds = List.of(ingredient.getId());
+
+                List<RecipeCardDTO> result = recipeService.searchRecipes(client.getId(), ingredientIds);
+
+                assertNotNull(result);
+
+            }
+
         }
     }
+
+    @Nested
+    @DisplayName("Filter Recipes - Negative Cases")
+    class FilterRecipesNegative {
+
+        @Test
+        @DisplayName("Sin UserId y sin ingredientes - lista vacía")
+        void searchByInvalidUserOnly() throws IOException {
+            loadRecipeByFilter();
+
+            Long invalidUserId = 999L;
+
+            List<RecipeCardDTO> result = recipeService.searchRecipes(invalidUserId, null);
+
+            assertAll(
+                    () -> assertNotNull(result, "La lista no debe ser null"),
+                    () -> assertTrue(result.isEmpty(),
+                            "Debe devolver lista vacía si el usuario no existe o no tiene preferencias")
+            );
+        }
+
+        @Test
+        @DisplayName("IngredientId inexistente - lista vacía")
+        void searchByInvalidIngredientOnly() throws IOException {
+            loadRecipeByFilter();
+
+            List<Long> ingredientIds = List.of(999L); // id que no existe
+
+            List<RecipeCardDTO> result = recipeService.searchRecipes(null, ingredientIds);
+
+            assertAll(
+                    () -> assertNotNull(result, "La lista no debe ser null"),
+                    () -> assertTrue(result.isEmpty(),
+                            "Debe devolver lista vacía si los ingredientes no existen o no hay coincidencias")
+            );
+        }
+
+        @Test
+        @DisplayName("User + Ingredient sin coincidencias - lista vacía")
+        void searchByUserAndIngredientNoMatch() throws IOException {
+            loadRecipeByFilter();
+
+            IngredientCategory category = ingredientCategoryRepository.findAll().getFirst();
+
+            Ingredient otherIngredient = new Ingredient();
+            otherIngredient.setName("Carne");
+            otherIngredient.setCalories(new BigDecimal("200"));
+            otherIngredient.setProteins(new BigDecimal("30"));
+            otherIngredient.setCarbs(new BigDecimal("0"));
+            otherIngredient.setFats(new BigDecimal("15"));
+            otherIngredient.setUnit(Unit.GRAMO);
+            otherIngredient.setPhotoUrl("carne.png");
+            otherIngredient.setIngredientCategory(category);
+
+            otherIngredient = ingredientRepository.saveAndFlush(otherIngredient);
+
+            List<Long> ingredientIds = List.of(otherIngredient.getId());
+
+            List<RecipeCardDTO> result =
+                    recipeService.searchRecipes(client.getId(), ingredientIds);
+
+            assertAll(
+                    () -> assertNotNull(result, "La lista no debe ser null"),
+                    () -> assertTrue(result.isEmpty(),
+                            "Debe devolver lista vacía si no coinciden preferencias del usuario e ingredientes")
+            );
+        }
+
+        @Test
+        @DisplayName("Lista de ingredientes vacía - como sin filtros")
+        void searchWithEmptyIngredientListBehavesLikeNoFilters() throws IOException {
+            loadRecipeByFilter();
+
+            List<RecipeCardDTO> resultWithEmptyList =
+                    recipeService.searchRecipes(null, Collections.emptyList());
+
+            List<RecipeCardDTO> resultNoFilters =
+                    recipeService.searchRecipes(null, null);
+
+            assertAll(
+                    () -> assertNotNull(resultWithEmptyList),
+                    () -> assertEquals(resultNoFilters.size(), resultWithEmptyList.size(),
+                            "Con lista vacía de ingredientes debe comportarse igual que sin filtros")
+            );
+        }
+    }
+
 }
 
 

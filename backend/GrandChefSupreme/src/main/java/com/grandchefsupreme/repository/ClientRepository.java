@@ -18,10 +18,10 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Query(value = """
     SELECT DISTINCT c.id, u.username, u.email
-    FROM "user" u
-    JOIN client c
+    FROM public."user" u
+    JOIN public.client c
         ON u.id = c.id
-    JOIN favorite_collection fc
+    JOIN public.favorite_collection fc
         ON c.id = fc.id_user
     JOIN favorite_collection_recipe fcr
         ON fc.id = fcr.id_collection
