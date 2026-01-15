@@ -2,15 +2,11 @@ package com.grandchefsupreme.services;
 import com.grandchefsupreme.dto.*;
 import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.exceptions.NotFoundException;
+import com.grandchefsupreme.model.*;
 import com.grandchefsupreme.model.Enums.Unit;
-import com.grandchefsupreme.model.Ingredient;
-import com.grandchefsupreme.model.IngredientCategory;
-import com.grandchefsupreme.model.Recipe;
 import com.grandchefsupreme.model.Tag;
-import com.grandchefsupreme.repository.IngredientCategoryRepository;
-import com.grandchefsupreme.repository.IngredientRepository;
-import com.grandchefsupreme.repository.RecipeRepository;
-import com.grandchefsupreme.repository.TagRepository;
+import com.grandchefsupreme.repository.*;
+import com.grandchefsupreme.service.ClientService;
 import com.grandchefsupreme.service.IngredientService;
 import com.grandchefsupreme.service.RecipeService;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,11 +28,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
-@org.junit.jupiter.api.Tag("auth")
+@org.junit.jupiter.api.Tag("recipe")
 @DisplayName("RecipeService - Create Recipe Complete & Update")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RecipeServiceTest {
-
 
 
     @Autowired
@@ -54,28 +49,97 @@ public class RecipeServiceTest {
     @Autowired
     IngredientCategoryRepository ingredientCategoryRepository;
 
+    @Autowired
+    RecipeRatingRepository recipeRatingRepository;
+
+    @Autowired
+    ClientRepository clientRepository;
+
+    @Autowired
+    ClientService clientService;
+
     private Tag tagVegetariano;
     private Tag tagVegano;
     private Ingredient ingredient;
-    @Autowired
-    private IngredientService ingredientService;
+    private Client client;
+
+
+    private void loadRecipeByFilter() throws IOException {
+
+        RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
+        registerStep1DTO.setUsername("GuilleTeSa");
+        registerStep1DTO.setPassword("root");
+        registerStep1DTO.setEmail("gts@gmail.com");
+
+        client  = clientService.createClient(registerStep1DTO);
+
+        Tag vegetariano = tagRepository.findByNameIgnoreCase("Vegetariano")
+                .orElseThrow(() -> new AssertionError("Tag Vegetariano no encontrado"));
+
+        client.setPreferences(new HashSet<>(List.of(vegetariano)));
+
+        TagDTO tagDTO = new TagDTO();
+        tagDTO.setName("Vegetariano");
+
+        IngredientDTO ingredientDTO = new IngredientDTO();
+        ingredientDTO.setId(ingredient.getId());
+
+        RecipeIngredientDTO recipeIngredientDTO = new RecipeIngredientDTO();
+        recipeIngredientDTO.setIngredient(ingredientDTO);
+        recipeIngredientDTO.setQuantity(new BigDecimal("200"));
+        recipeIngredientDTO.setUnit(Unit.GRAMO);
+
+        RecipeStepDTO recipeStepDTO = new RecipeStepDTO();
+        recipeStepDTO.setStepNumber(1);
+        recipeStepDTO.setInstruction("Pelar las verduras");
+
+
+        //GIVEN
+        RecipeDTO recipeDTO = new RecipeDTO();
+        recipeDTO.setName("Paella");
+        recipeDTO.setDifficulty("MEDIA");
+        recipeDTO.setServings(3);
+        recipeDTO.setPrepTime(20.0);
+        recipeDTO.setAverageRating(null);
+        recipeDTO.setDescription("Arroz valenciano");
+        recipeDTO.setImageUrl(null);
+        recipeDTO.setTags(new HashSet<>(List.of(tagDTO)));
+        recipeDTO.setIngredients(new ArrayList<>(List.of(recipeIngredientDTO)));
+        recipeDTO.setSteps(new ArrayList<>(List.of(recipeStepDTO)));
+
+        //THEN
+
+        RecipeDTO dto = recipeService.createRecipe(recipeDTO, null);
+
+        recipeRepository.findById(dto.getId())
+                .orElseThrow(
+                        () -> new AssertionError("Receta no encontrada"));
+    }
+
+
+
 
     @BeforeAll
-    void setUpRecipeAttributes()
-    {
+    void setUpRecipeAttributes() {
+
+        clientRepository.deleteAll();
+        clientRepository.deleteAll();
+        tagRepository.deleteAll();
+        ingredientRepository.deleteAll();
+
         tagVegetariano = new Tag();
         tagVegetariano.setName("Vegetariano");
         tagVegano = new Tag();
         tagVegano.setName("Vegano");
 
-        tagRepository.saveAll(List.of(tagVegano,tagVegetariano));
+        tagRepository.saveAll(List.of(tagVegano, tagVegetariano));
 
         IngredientCategory ingredientCategory = new IngredientCategory();
         ingredientCategory.setName("Cereales");
         ingredientCategory.setDescription("Fuente principal de carbohidratos");
         ingredientCategory.setPhotoUrl("cereales.png");
 
-        ingredientCategory = ingredientCategoryRepository.save(ingredientCategory);
+        ingredientCategory = ingredientCategoryRepository.saveAndFlush(ingredientCategory);
 
         ingredient = new Ingredient();
         ingredient.setName("Arroz");
@@ -87,7 +151,7 @@ public class RecipeServiceTest {
         ingredient.setPhotoUrl("arroz.png");
         ingredient.setIngredientCategory(ingredientCategory);
 
-        ingredient = ingredientRepository.save(ingredient);
+        ingredient = ingredientRepository.saveAndFlush(ingredient);
 
     }
 
@@ -167,7 +231,7 @@ public class RecipeServiceTest {
                     () -> assertTrue(
                             recipe.getTags().stream()
                                     .anyMatch(t -> t.getName().equalsIgnoreCase("Vegetariano"))
-                            ),
+                    ),
                     () -> assertEquals("uploads/profile/default_profile_image.png",
                             recipe.getImageUrl())
 
@@ -182,7 +246,9 @@ public class RecipeServiceTest {
 
             @Test
             @DisplayName("Negative Case - Ingredient Not Exist")
-            void failWhenIngredientNotExist(){
+            void failWhenIngredientNotExist() {
+
+                //GIVEN
                 TagDTO tagDTO = new TagDTO();
                 tagDTO.setName("Vegetariano");
 
@@ -199,7 +265,6 @@ public class RecipeServiceTest {
                 recipeStepDTO.setInstruction("Pelar las verduras");
 
 
-                //GIVEN
                 RecipeDTO recipeDTO = new RecipeDTO();
                 recipeDTO.setName("Paella");
                 recipeDTO.setDifficulty("MEDIA");
@@ -218,7 +283,7 @@ public class RecipeServiceTest {
 
             @Test
             @DisplayName("Negative Case - Steps is null")
-            void failWhenStepsIsEmpty(){
+            void failWhenStepsIsEmpty() {
                 TagDTO tagDTO = new TagDTO();
                 tagDTO.setName("Vegetariano");
 
@@ -253,7 +318,7 @@ public class RecipeServiceTest {
 
             @Test
             @DisplayName("Negative Case - Ingredient is null")
-            void failWhenIngredientIsEmpty(){
+            void failWhenIngredientIsEmpty() {
                 TagDTO tagDTO = new TagDTO();
                 tagDTO.setName("Vegetariano");
 
@@ -290,7 +355,7 @@ public class RecipeServiceTest {
 
             @Test
             @DisplayName("Negative Case - Recipe is null")
-            void failWhenRecipeIsNull(){
+            void failWhenRecipeIsNull() {
 
                 //GIVEN
                 RecipeDTO recipeDTO = null;
@@ -299,17 +364,14 @@ public class RecipeServiceTest {
 
             }
 
-
         }
-
-
 
     }
 
 
     @Nested
     @DisplayName("Search Recipe with Details")
-    class SearchRecipe{
+    class SearchRecipe {
 
         @Test
         @DisplayName("Search Successfully")
@@ -360,8 +422,10 @@ public class RecipeServiceTest {
                     () -> assertEquals(3, findRecipe.getServings()),
                     () -> assertEquals(20.0, findRecipe.getPrepTime()),
                     () -> assertEquals("Arroz valenciano", findRecipe.getDescription()),
+                    () -> assertNotNull(findRecipe.getAverageRating()),
                     () -> assertEquals(0.0, findRecipe.getAverageRating(),
-                            "Sin valoraciones, la media debe ser 0.0"),
+                            "Sin valoraciones, la primera media debe ser 0.0"),
+
 
                     // ingredientes
                     () -> assertNotNull(findRecipe.getIngredients()),
@@ -369,6 +433,7 @@ public class RecipeServiceTest {
                             "Debe devolver al menos un ingrediente"),
                     () -> assertEquals(1, findRecipe.getIngredients().size(),
                             "Debe haber exactamente un ingrediente"),
+
 
                     () -> {
                         RecipeIngredientDTO ing = findRecipe.getIngredients().getFirst();
@@ -403,7 +468,7 @@ public class RecipeServiceTest {
                             findRecipe.getImageUrl(),
                             "Debe tener la imagen por defecto al no subir foto"),
 
-                    // info nutricional calculada
+                    // info nutricional
                     () -> assertNotNull(findRecipe.getNutritionInfo(),
                             "La información nutricional no debe ser null")
 
@@ -414,13 +479,127 @@ public class RecipeServiceTest {
 
         @Test
         @DisplayName("Recipe not found - Negative Case")
-        void searchRecipeNotFound(){
+        void searchRecipeNotFound() {
 
             assertThrows(NotFoundException.class, () -> recipeService.getRecipeForDetails(99L),
                     "Debe lanzar NotFoundException si la receta no existe o no está activa");
 
         }
 
-    }
+        @Test
+        @DisplayName("Recipe found - Average Wrong Type")
+        void AverageRatingWhenIsNull() throws IOException {
+            TagDTO tagDTO = new TagDTO();
+            tagDTO.setName("Vegetariano");
 
+            IngredientDTO ingredientDTO = new IngredientDTO();
+            ingredientDTO.setId(ingredient.getId());
+
+            RecipeIngredientDTO recipeIngredientDTO = new RecipeIngredientDTO();
+            recipeIngredientDTO.setIngredient(ingredientDTO);
+            recipeIngredientDTO.setQuantity(new BigDecimal("200"));
+            recipeIngredientDTO.setUnit(Unit.GRAMO);
+
+            RecipeStepDTO recipeStepDTO = new RecipeStepDTO();
+            recipeStepDTO.setStepNumber(1);
+            recipeStepDTO.setInstruction("Pelar las verduras");
+
+
+            //GIVEN
+            RecipeDTO recipeDTO = new RecipeDTO();
+            recipeDTO.setName("Paella");
+            recipeDTO.setDifficulty("MEDIA");
+            recipeDTO.setServings(3);
+            recipeDTO.setPrepTime(20.0);
+            recipeDTO.setAverageRating(null);
+            recipeDTO.setDescription("Arroz valenciano");
+            recipeDTO.setImageUrl(null);
+            recipeDTO.setTags(new HashSet<>(List.of(tagDTO)));
+            recipeDTO.setIngredients(new ArrayList<>(List.of(recipeIngredientDTO)));
+            recipeDTO.setSteps(new ArrayList<>(List.of(recipeStepDTO)));
+
+            RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
+            registerStep1DTO.setUsername("GuilleTeSa");
+            registerStep1DTO.setPassword("root");
+            registerStep1DTO.setEmail("gts@gmail.com");
+
+            //THEN
+            Client createdClient = clientService.createClient(registerStep1DTO);
+
+
+            //THEN
+            RecipeDTO savedRecipe = recipeService.createRecipe(recipeDTO, null);
+            Recipe findRecipe = recipeRepository.findById(savedRecipe.getId())
+                    .orElseThrow(() -> new AssertionError("Receta no encontrada"));
+
+            RecipeRating recipeRating = new RecipeRating();
+            recipeRating.setClient(createdClient);
+            recipeRating.setRecipe(findRecipe);
+            recipeRating.setRating(-1);
+            recipeRating.setReview("Valoración corrupta de prueba");
+
+            recipeRatingRepository.saveAndFlush(recipeRating);
+
+            assertThrows(IllegalArgumentException.class,
+                    () -> recipeService.getRecipeForDetails(findRecipe.getId()),
+                    "Valor corrupto en BBDD"
+            );
+        }
+
+        @Nested
+        @DisplayName("Filter Recipes - All Conditions")
+        class filterRecipes {
+
+            @Test
+            @DisplayName("Sin usuario ni ingredientes - Caso Positivo")
+            void searchAllWhenNoFilters() throws IOException {
+                loadRecipeByFilter();
+                List<RecipeCardDTO> result = recipeService.searchRecipes(null, null);
+
+                assertAll(
+                        () -> assertThat(result)
+                                .as("La lista no debe ser nula")
+                                .isNotNull(),
+                        () -> assertThat(result.size())
+                                .isNotEqualTo(0),
+                        () -> assertFalse(result.isEmpty(),
+                                "Debe devolver al menos una receta activa")
+
+                );
+            }
+
+            @Test
+            @DisplayName("Solo userId - Caso Positivo")
+            void searchByUserOnly() throws IOException {
+                loadRecipeByFilter();
+                Long userId = client.getId();
+                List<RecipeCardDTO> result = recipeService.searchRecipes(userId, null);
+
+                assertAll(
+                        () -> assertThat(result)
+                                .as("La lista no debe ser nula")
+                                .isNotNull()
+                );
+            }
+
+
+            @Test
+            @DisplayName("Solo IngredientId - Positive Case")
+            void searchByIngredientsOnly() throws IOException {
+                loadRecipeByFilter();
+                List<Long> ingredientIds = List.of(ingredient.getId());
+
+                List<RecipeCardDTO> result = recipeService.searchRecipes(null, ingredientIds);
+
+                assertNotNull(result);
+
+            }
+
+        }
+    }
 }
+
+
+
+
+

@@ -76,7 +76,17 @@ public class RecipeService {
         RecipeDTO recipeDTO = recipeDetailMapper.toDto(recipe);
 
         Double avg = recipeRatingRepository.findAverageRatingByRecipeId(recipe.getId());
-        recipeDTO.setAverageRating(avg != null ? avg : 0.0);
+
+        if (avg == null) {
+            avg = 0.0;
+        }
+
+        if (avg.isNaN() || avg.isInfinite() || avg < 0 || avg > 5) {
+            throw new IllegalArgumentException(
+                    "Valor de media inválido o corrupto: " + avg
+            );
+        }
+        recipeDTO.setAverageRating(avg);
         recipeDTO.setNutritionInfo(getNutritionInfo(recipeDTO.getIngredients(), recipeDTO.getServings()));
 
         return recipeDTO;
@@ -130,6 +140,9 @@ public class RecipeService {
             throw new BadRequestException("La receta debe tener al menos un paso");
         }
 
+        if(recipeDTO.getAverageRating() == null){
+            recipeDTO.setAverageRating(0.0);
+        }
 
 
         Recipe recipe = recipeDetailMapper.toEntity(recipeDTO);

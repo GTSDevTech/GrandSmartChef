@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
-@org.junit.jupiter.api.Tag("auth")
+@org.junit.jupiter.api.Tag("register")
 @DisplayName("ClientService - Full Register and Update Profile")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ClientServiceTest {
