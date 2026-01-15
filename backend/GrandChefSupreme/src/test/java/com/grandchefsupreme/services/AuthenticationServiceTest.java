@@ -3,14 +3,12 @@ package com.grandchefsupreme.services;
 
 import com.grandchefsupreme.dto.RegisterStep1DTO;
 import com.grandchefsupreme.exceptions.AlreadyUserExist;
-import com.grandchefsupreme.exceptions.BadRequestException;
-import com.grandchefsupreme.exceptions.UnauthorizedException;
+
 import com.grandchefsupreme.model.Client;
 import com.grandchefsupreme.repository.ClientRepository;
 import com.grandchefsupreme.security.auth.AuthenticationResponseDTO;
 import com.grandchefsupreme.security.service.AuthenticationService;
 import com.grandchefsupreme.security.service.JwtService;
-import com.grandchefsupreme.service.ClientService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +24,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("auth")
-@Tag("register")
-@DisplayName("AuthenticationService - registro (step1) + login")
+@DisplayName("AuthenticationService - Register (step1) + login")
 public class AuthenticationServiceTest {
 
 
     @Autowired
     private AuthenticationService authenticationService;
-
-    @Autowired
-    private ClientService clientService;
 
     @Autowired
     private ClientRepository clientRepository;
@@ -48,6 +42,9 @@ public class AuthenticationServiceTest {
         clientRepository.deleteAll();
 
     }
+
+
+
     @Nested
     @DisplayName("Register Step 1")
     class RegisterStep1Tests {
@@ -83,7 +80,8 @@ public class AuthenticationServiceTest {
                     () -> assertEquals("gts@gmail.com", client.getEmail()),
                     () -> assertTrue(client.getIsActive()),
                     () -> assertEquals("Registro correcto", auth.getMessage())
-                );
+            );
+
         }
     }
 
@@ -101,8 +99,11 @@ public class AuthenticationServiceTest {
 
             authenticationService.register(registerStep1DTO);
 
-            assertThrows(AlreadyUserExist.class, () -> authenticationService.register(registerStep1DTO));
-            assertEquals(1, clientRepository.count(),
+            assertThrows(AlreadyUserExist.class,
+                    () -> authenticationService.register(registerStep1DTO),
+                    "El usuario ya está registrado");
+            assertEquals(1,
+                    clientRepository.count(),
                     "Solo debe haber un cliente en BBDD con ese email");
 
         }
@@ -117,8 +118,11 @@ public class AuthenticationServiceTest {
 
             authenticationService.register(registerStep1DTO);
 
-            assertThrows(AlreadyUserExist.class, () -> authenticationService.register(registerStep1DTO));
-            assertEquals(1, clientRepository.count(),
+            assertThrows(AlreadyUserExist.class,
+                    () -> authenticationService.register(registerStep1DTO),
+                    "El nombre de usuario ya está registrado");
+            assertEquals(1,
+                    clientRepository.count(),
                     "Solo debe existir un cliente en BBDD con ese username");
         }
 

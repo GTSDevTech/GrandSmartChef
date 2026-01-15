@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
+@org.junit.jupiter.api.Tag("register")
+@DisplayName("ClientService - Full Register and Update Profile")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ClientServiceTest {
 
@@ -96,8 +98,8 @@ public class ClientServiceTest {
         }
 
         @Test
-        @DisplayName("password null - BadRequestException")
-        void shouldThrowWhenPasswordNull() {
+        @DisplayName("password null Caso - Negativo")
+        void FailWhenPasswordNull() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("UserNullPass");
             registerStep1DTO.setPassword(null);
@@ -110,8 +112,8 @@ public class ClientServiceTest {
         }
 
         @Test
-        @DisplayName("password vacío - BadRequestException")
-        void shouldThrowWhenPasswordEmpty() {
+        @DisplayName("password vacío, Caso - Negativo")
+        void FailWhenPasswordEmpty() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("UserEmptyPass");
             registerStep1DTO.setPassword("");

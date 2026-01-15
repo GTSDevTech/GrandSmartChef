@@ -6,7 +6,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table (name = "favorite_collection", schema = "public")
@@ -46,7 +48,7 @@ public class FavoriteCollection {
             joinColumns = @JoinColumn(name = "id_collection"),
             inverseJoinColumns = @JoinColumn(name = "id_recipe")
     )
-    private List<Recipe> recipes = new ArrayList<>();
+    private Set<Recipe> recipes = new HashSet<>();
 
 
 

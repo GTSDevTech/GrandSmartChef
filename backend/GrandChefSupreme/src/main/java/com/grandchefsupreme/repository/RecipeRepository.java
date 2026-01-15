@@ -17,56 +17,55 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT r FROM Recipe r WHERE r.isActive = true")
     List<Recipe> findByIsActiveTrue();
 
-
     Optional<Recipe> findByIdAndIsActiveTrue(Long id);
 
-
     @Query(value = """
-    SELECT r.*
-    FROM recipe r
-    JOIN recipe_tag rt ON r.id = rt.id_recipe
-    JOIN client_tag ct ON ct.id_tag = rt.id_tag
-    WHERE ct.id_client = :userId
-      AND r.is_active = TRUE
-    GROUP BY r.id
-    HAVING COUNT(DISTINCT ct.id_tag) = (
-        SELECT COUNT(*)
-        FROM client_tag
-        WHERE id_client = :userId
+        SELECT r.*
+        FROM public.recipe r
+        JOIN recipe_tag rt ON r.id = rt.id_recipe
+        JOIN client_tag ct ON ct.id_tag = rt.id_tag
+        WHERE ct.id_client = :userId
+          AND r.is_active = TRUE
+        GROUP BY r.id
+        HAVING COUNT(DISTINCT ct.id_tag) = (
+            SELECT COUNT(*)
+            FROM client_tag
+            WHERE id_client = :userId
+        )
+        """,
+            nativeQuery = true
     )
-""", nativeQuery = true)
     List<Recipe> findByUserIdAndUserPreferences(@Param("userId") Long userId);
 
 
     @Query(value = """
-    select DISTINCT r.*
-    from recipe r
-    left join recipe_ingredient ri on r.id = ri.id_recipe
-    where ri.id_ingredient IN (:ingredientIds)
-    AND r.is_active = TRUE
-    """, nativeQuery = true)
+        SELECT DISTINCT r.*
+        FROM public.recipe r
+        LEFT JOIN recipe_ingredient ri ON r.id = ri.id_recipe
+        WHERE ri.id_ingredient IN (:ingredientIds)
+          AND r.is_active = TRUE
+        """,
+            nativeQuery = true
+    )
     List<Recipe> findByIngredientIds(@Param("ingredientIds") List<Long> ingredientIds);
 
+
     @Query(value = """
-    SELECT DISTINCT r.*
-    FROM recipe r
-    JOIN recipe_tag rt ON r.id = rt.id_recipe
-    JOIN client_tag ct ON ct.id_tag = rt.id_tag
-    JOIN recipe_ingredient ri ON r.id = ri.id_recipe
-    WHERE ct.id_client = :userId
-      AND ri.id_ingredient IN (:ingredientIds)
-      AND r.is_active = TRUE
-""", nativeQuery = true)
+        SELECT DISTINCT r.*
+        FROM public.recipe r
+        JOIN public.recipe_tag rt ON r.id = rt.id_recipe
+        JOIN public.client_tag ct ON ct.id_tag = rt.id_tag
+        JOIN recipe_ingredient ri ON r.id = ri.id_recipe
+        WHERE ct.id_client = :userId
+          AND ri.id_ingredient IN (:ingredientIds)
+          AND r.is_active = TRUE
+        """,
+            nativeQuery = true
+    )
     List<Recipe> findByUserPreferencesAndIngredients(
             @Param("userId") Long userId,
             @Param("ingredientIds") List<Long> ingredientIds
     );
-
-
-
 }
-
-
-
 
 

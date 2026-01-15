@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -49,7 +50,7 @@ public class FavoriteCollectionService {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new NotFoundException("Recipe not found"));
 
-        collection.getRecipes().add(recipe);
+        collection.setRecipes(new HashSet<>(List.of(recipe)));
         favoriteCollectionRepository.saveAndFlush(collection);
 
         return favoriteCollectionMapper.toDTO(collection);

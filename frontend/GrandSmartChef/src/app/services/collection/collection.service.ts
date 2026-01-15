@@ -117,7 +117,18 @@ export class CollectionService {
     );
   }
 
-
+  refreshCollection(id: number) {
+    this.getCollectionById(id).subscribe({
+      next: col => {
+        this._collections.update(cols =>
+          cols.map(c => c.id === id ? col : c)
+        );
+      },
+      error: err => {
+        console.error('Error refreshing collection', err);
+      }
+    });
+  }
 
 
 }
