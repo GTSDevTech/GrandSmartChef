@@ -67,8 +67,13 @@ public class AuthenticationController {
     public AuthenticationResponseDTO login(
             HttpServletRequest request,
             @RequestBody @Valid LoginRequestDTO dto
-    ) {
 
+
+    ) {
+        request.setAttribute(
+                ApiResponseMessage.MESSAGE_ATTR,
+                "Authentificación correctas"
+        );
         return authenticationService.login(dto);
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
         List<Ingredient> getAllByIngredientCategory(@Param("idCategory") Long idCategory);
 
         @Query(value = """
-        select i.name , count(DISTINCT ri.id_recipe) as recipes_count from ingredient i
+        select i.name , count(DISTINCT ri.id_recipe) as recipes_count from public.ingredient i
         join recipe_ingredient ri on i.id = ri.id_ingredient
         group by i.name
         order by recipes_count desc

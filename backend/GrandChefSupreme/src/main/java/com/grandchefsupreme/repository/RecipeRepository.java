@@ -53,8 +53,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query(value = """
         SELECT DISTINCT r.*
         FROM public.recipe r
-        JOIN public.recipe_tag rt ON r.id = rt.id_recipe
-        JOIN public.client_tag ct ON ct.id_tag = rt.id_tag
+        JOIN recipe_tag rt ON r.id = rt.id_recipe
+        JOIN client_tag ct ON ct.id_tag = rt.id_tag
         JOIN recipe_ingredient ri ON r.id = ri.id_recipe
         WHERE ct.id_client = :userId
           AND ri.id_ingredient IN (:ingredientIds)

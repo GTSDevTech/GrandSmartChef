@@ -2,7 +2,7 @@ package com.grandchefsupreme.controller;
 
 import com.grandchefsupreme.dto.TopClientDTO;
 import com.grandchefsupreme.dto.TopIngredientsDTO;
-import com.grandchefsupreme.service.StatisticsService;
+import com.grandchefsupreme.service.StadisticService;
 import com.grandchefsupreme.utils.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatisticsController {
 
-    private final StatisticsService statisticsService;
+    private final StadisticService stadisticService;
 
     @GetMapping("/top5ingredients")
     public List<TopIngredientsDTO> getTop5Ingredients(HttpServletRequest request) {
@@ -27,7 +27,7 @@ public class StatisticsController {
                 "Top 5 ingredientes más utilizados"
         );
 
-        return statisticsService.getTop5Ingredients();
+        return stadisticService.getTop5Ingredients();
     }
 
 
@@ -39,7 +39,7 @@ public class StatisticsController {
                 "Clientes con más recetas favoritas"
         );
 
-        return statisticsService.getTopRecipes();
+        return stadisticService.getTopRecipes();
     }
 
 }

@@ -10,6 +10,7 @@ public class ShoppingListIngredientDTO {
 
 
     private Long id;
+
     @NotBlank(message = "La receta no puede ser nula")
     private Long recipeId;
     @NotBlank(message = "Debe tener al menos un ingrediente")

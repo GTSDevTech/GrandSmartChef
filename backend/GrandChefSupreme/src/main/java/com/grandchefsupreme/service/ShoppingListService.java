@@ -1,6 +1,7 @@
 package com.grandchefsupreme.service;
 
 import com.grandchefsupreme.dto.ShoppingListDTO;
+import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.exceptions.NotFoundException;
 import com.grandchefsupreme.mapper.ShoppingListMapper;
 import com.grandchefsupreme.model.*;
@@ -25,6 +26,21 @@ public class ShoppingListService {
 
     @Transactional
     public ShoppingListDTO addRecipeToShoppingList(Long userId, Long recipeId) {
+
+        if (userId == null || recipeId == null) {
+            throw new BadRequestException("La receta no puede ser nula");
+        }
+
+        List<ShoppingListDTO> shoppingLists = getAllListsByUser(userId);
+
+        boolean shoppingListExist = shoppingLists.stream()
+                .filter(shoppingList -> Boolean.FALSE.equals(shoppingList.getStatus()))
+                .flatMap(sl -> sl.getItems().stream())
+                .anyMatch(item -> item.getRecipeId().equals(recipeId));
+
+        if (shoppingListExist) {
+            throw new BadRequestException("La receta ya está activa en la lista de la compra");
+        }
 
         Client client = clientRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
