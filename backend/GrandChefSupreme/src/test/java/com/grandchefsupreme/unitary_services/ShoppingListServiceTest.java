@@ -1,4 +1,4 @@
-package com.grandchefsupreme.services;
+package com.grandchefsupreme.unitary_services;
 
 
 import com.grandchefsupreme.dto.*;
@@ -10,7 +10,6 @@ import com.grandchefsupreme.repository.*;
 import com.grandchefsupreme.service.ClientService;
 import com.grandchefsupreme.service.RecipeService;
 import com.grandchefsupreme.service.ShoppingListService;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

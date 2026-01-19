@@ -1,4 +1,4 @@
-package com.grandchefsupreme.services;
+package com.grandchefsupreme.unitary_services;
 
 
 import com.grandchefsupreme.dto.*;
@@ -307,7 +307,7 @@ public class StadisticServiceTest {
         }
 
         @Test
-        @DisplayName("sin favoritos devuelve lista vacía - Negative Case")
+        @DisplayName("Sin favoritos devuelve lista vacía - Negative Case")
         void showTopUsersWhenNoFavoritesReturnsEmptyList() {
 
             List<TopClientDTO> result = stadisticsService.getTopRecipes();

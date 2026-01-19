@@ -1,4 +1,4 @@
-package com.grandchefsupreme.services;
+package com.grandchefsupreme.unitary_services;
 import com.grandchefsupreme.dto.*;
 import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.exceptions.NotFoundException;
@@ -7,7 +7,6 @@ import com.grandchefsupreme.model.Enums.Unit;
 import com.grandchefsupreme.model.Tag;
 import com.grandchefsupreme.repository.*;
 import com.grandchefsupreme.service.ClientService;
-import com.grandchefsupreme.service.IngredientService;
 import com.grandchefsupreme.service.RecipeService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;

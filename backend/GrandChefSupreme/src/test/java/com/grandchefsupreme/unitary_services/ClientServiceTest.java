@@ -1,4 +1,4 @@
-package com.grandchefsupreme.services;
+package com.grandchefsupreme.unitary_services;
 
 import com.grandchefsupreme.dto.RegisterStep1DTO;
 import com.grandchefsupreme.exceptions.BadRequestException;
