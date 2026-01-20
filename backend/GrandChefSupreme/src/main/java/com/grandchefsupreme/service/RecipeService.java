@@ -125,75 +125,78 @@ public class RecipeService {
     }
 
 
-    @Transactional
-    public RecipeDTO createRecipe(RecipeDTO recipeDTO, MultipartFile photoFile) throws IOException {
+        @Transactional
+        public RecipeDTO createRecipe(RecipeDTO recipeDTO, MultipartFile photoFile) throws IOException {
 
-        if (recipeDTO == null) {
-            throw new BadRequestException("Los datos de la receta son obligatorios");
-        }
-
-        if (recipeDTO.getIngredients() == null || recipeDTO.getIngredients().isEmpty()) {
-            throw new BadRequestException("La receta debe tener al menos un ingrediente");
-        }
-
-        if (recipeDTO.getSteps() == null || recipeDTO.getSteps().isEmpty()) {
-            throw new BadRequestException("La receta debe tener al menos un paso");
-        }
-
-        if(recipeDTO.getAverageRating() == null){
-            recipeDTO.setAverageRating(0.0);
-        }
-
-
-        Recipe recipe = recipeDetailMapper.toEntity(recipeDTO);
-        recipe.setIsActive(true);
-
-        if (recipe.getRecipeIngredients() != null) {
-            for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
-
-                Long ingredientId = ri.getIngredient().getId();
-
-                Ingredient ingredient = ingredientRepository.findById(ingredientId)
-                        .orElseThrow(() ->
-                                new EntityNotFoundException("Ingrediente no encontrado con id " + ingredientId));
-
-                ri.setIngredient(ingredient);
-                ri.setRecipe(recipe);
-            }
-        }
-
-        if (recipeDTO.getSteps() != null && !recipeDTO.getSteps().isEmpty()) {
-            for (RecipeStep step : recipe.getRecipeSteps()) {
-                step.setRecipe(recipe);
-            }
-        }
-
-        if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
-
-            Set<Tag> resolvedTags = new HashSet<>();
-
-            for (Tag tag : recipe.getTags()) {
-                Tag resolved = tagRepository
-                        .findByNameIgnoreCase(tag.getName())
-                        .orElseGet(() -> tagRepository.save(tag));
-
-                resolvedTags.add(resolved);
+            if (recipeDTO == null) {
+                throw new BadRequestException("Los datos de la receta son obligatorios");
             }
 
-            recipe.setTags(resolvedTags);
-        }
+            if (recipeDTO.getIngredients() == null || recipeDTO.getIngredients().isEmpty()) {
+                throw new BadRequestException("La receta debe tener al menos un ingrediente");
+            }
 
-        if (photoFile != null && !photoFile.isEmpty()) {
-            String photoPath = fileStorageUtil.saveProfilePhoto(photoFile);
-            recipe.setImageUrl(photoPath);
-        } else if (recipe.getImageUrl() == null || recipe.getImageUrl().isEmpty()) {
-            String DEFAULT_PHOTO = "uploads/profile/default_profile_image.png";
-            recipe.setImageUrl(DEFAULT_PHOTO);
-        }
+            if (recipeDTO.getSteps() == null || recipeDTO.getSteps().isEmpty()) {
+                throw new BadRequestException("La receta debe tener al menos un paso");
+            }
+            if (recipeDTO.getTags() == null || recipeDTO.getTags().isEmpty()) {
+                throw new BadRequestException("La receta debe tener al menos un paso");
+            }
 
-        Recipe savedRecipe = recipeRepository.saveAndFlush(recipe);
-        return recipeDetailMapper.toDto(savedRecipe);
-    }
+            if(recipeDTO.getAverageRating() == null){
+                recipeDTO.setAverageRating(0.0);
+            }
+
+
+            Recipe recipe = recipeDetailMapper.toEntity(recipeDTO);
+            recipe.setIsActive(true);
+
+            if (recipe.getRecipeIngredients() != null) {
+                for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
+
+                    Long ingredientId = ri.getIngredient().getId();
+
+                    Ingredient ingredient = ingredientRepository.findById(ingredientId)
+                            .orElseThrow(() ->
+                                    new EntityNotFoundException("Ingrediente no encontrado con id " + ingredientId));
+
+                    ri.setIngredient(ingredient);
+                    ri.setRecipe(recipe);
+                }
+            }
+
+            if (recipeDTO.getSteps() != null && !recipeDTO.getSteps().isEmpty()) {
+                for (RecipeStep step : recipe.getRecipeSteps()) {
+                    step.setRecipe(recipe);
+                }
+            }
+
+            if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
+
+                Set<Tag> resolvedTags = new HashSet<>();
+
+                for (Tag tag : recipe.getTags()) {
+                    Tag resolved = tagRepository
+                            .findByNameIgnoreCase(tag.getName())
+                            .orElseGet(() -> tagRepository.save(tag));
+
+                    resolvedTags.add(resolved);
+                }
+
+                recipe.setTags(resolvedTags);
+            }
+
+            if (photoFile != null && !photoFile.isEmpty()) {
+                String photoPath = fileStorageUtil.saveProfilePhoto(photoFile);
+                recipe.setImageUrl(photoPath);
+            } else if (recipe.getImageUrl() == null || recipe.getImageUrl().isEmpty()) {
+                String DEFAULT_PHOTO = "uploads/profile/default_profile_image.png";
+                recipe.setImageUrl(DEFAULT_PHOTO);
+            }
+
+            Recipe savedRecipe = recipeRepository.saveAndFlush(recipe);
+            return recipeDetailMapper.toDto(savedRecipe);
+        }
 
     @Transactional
     public RecipeDTO updateRecipe(RecipeDTO recipeDTO, MultipartFile photoFile) throws IOException {

@@ -593,8 +593,6 @@ WHERE fcr.id_recipe = (
 )
 
 
-
-
 select * from favorite_collection_recipe f
 order by f.id_recipe
 
