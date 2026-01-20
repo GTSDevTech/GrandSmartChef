@@ -48,7 +48,7 @@ public class StadisticServiceTest {
 
     @Autowired
     RecipeIngredientRepository recipeIngredientRepository;
-    
+
     @Autowired
     ClientRepository clientRepository;
 
