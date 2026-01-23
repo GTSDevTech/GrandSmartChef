@@ -75,7 +75,7 @@ public class RecipeService {
 
         RecipeDTO recipeDTO = recipeDetailMapper.toDto(recipe);
 
-        Double avg = recipeRatingRepository.findAverageRatingByRecipeId(recipe.getId());
+        Double avg = recipeRatingRepository.findAverageRatingByRecipeId(id);
 
         if (avg == null) {
             avg = 0.0;

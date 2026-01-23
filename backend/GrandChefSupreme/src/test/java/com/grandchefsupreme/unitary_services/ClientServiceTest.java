@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @org.junit.jupiter.api.Tag("register")
 @DisplayName("ClientService - Full Register and Update Profile")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ClientServiceTest {
+public class    ClientServiceTest {
 
     @Autowired
     private ClientService clientService;
@@ -65,7 +65,7 @@ public class ClientServiceTest {
     class CreateClient{
 
         @Test
-        @DisplayName("Creación positiva ")
+        @DisplayName("Create Client Successfully - Positive Case")
         void registerClientSuccessfully(){
 
             //GIVEN
@@ -77,7 +77,7 @@ public class ClientServiceTest {
             //THEN
             Client created = clientService.createClient(registerStep1DTO);
             Client persistClient = clientRepository.findById(created.getId())
-                    .orElseThrow(() -> new AssertionError("Cliente no se guardó en BBDD"));
+                    .orElseThrow(() -> new AssertionError("The client was not persisted in the database"));
 
 
             //WHEN
@@ -89,7 +89,7 @@ public class ClientServiceTest {
                     () -> assertThat(registerStep1DTO.getPassword())
                             .isNotBlank()
                             .isNotEqualTo(persistClient.getPassword())
-                            .as("Password debe ser válido y estar codificado"),
+                            .as("Password must be valid and encoded"),
                     () -> assertTrue(passwordEncoder.matches(registerStep1DTO.getPassword(), created.getPassword())),
                     () -> assertEquals(persistClient.getId(), created.getId()),
                     () -> assertEquals(persistClient.getEmail(), created.getEmail())
@@ -98,7 +98,7 @@ public class ClientServiceTest {
         }
 
         @Test
-        @DisplayName("password null Caso - Negativo")
+        @DisplayName("Password null - Negative Case")
         void FailWhenPasswordNull() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("UserNullPass");
@@ -112,7 +112,7 @@ public class ClientServiceTest {
         }
 
         @Test
-        @DisplayName("password vacío, Caso - Negativo")
+        @DisplayName("Password empty - Negative Case")
         void FailWhenPasswordEmpty() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("UserEmptyPass");

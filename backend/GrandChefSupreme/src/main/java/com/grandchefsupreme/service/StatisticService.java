@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class StadisticService {
+public class StatisticService {
 
     private final ClientRepository clientRepository;
     private final IngredientRepository ingredientRepository;

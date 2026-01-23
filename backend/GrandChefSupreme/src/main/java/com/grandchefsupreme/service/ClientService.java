@@ -34,10 +34,16 @@ public class ClientService {
     private final FileStorageUtil fileStorageUtil;
 
     public Client createClient(RegisterStep1DTO clientDTO) {
-        Client client = clientMapper.toEntity(clientDTO);
+
+        if(clientDTO == null){
+            throw new IllegalArgumentException("Client data cannot be null");
+        }
+
         if (clientDTO.getPassword() == null || clientDTO.getPassword().isEmpty()) {
             throw new BadRequestException("Password cannot be null or empty");
         }
+        Client client = clientMapper.toEntity(clientDTO);
+
         client.setPassword(passwordEncoder.encode(clientDTO.getPassword()));
         client.setIsActive(true);
 

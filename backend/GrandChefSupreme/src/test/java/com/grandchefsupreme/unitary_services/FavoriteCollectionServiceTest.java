@@ -136,7 +136,7 @@ public class FavoriteCollectionServiceTest {
 
         recipe = recipeRepository.findById(dto.getId())
                 .orElseThrow(
-                        () -> new AssertionError("Receta no encontrada"));
+                        () -> new AssertionError("Recipe not found"));
 
 
 
@@ -197,11 +197,11 @@ public class FavoriteCollectionServiceTest {
     }
 
     @Nested
-    @DisplayName("addFavoriteRecipeToCollection - Casos negativos")
+    @DisplayName("addFavoriteRecipeToCollection - Negative Cases")
     class AddFavoriteNegativeTests {
 
         @Test
-        @DisplayName("Falla cuando la colección no existe")
+        @DisplayName("Fail when collection does not exist")
         void failWhenCollectionNotFound() {
             Long invalidCollectionId = 999L;
             Long recipeId = recipe.getId();
@@ -213,7 +213,7 @@ public class FavoriteCollectionServiceTest {
 
 
         @Test
-        @DisplayName("Falla cuando la receta no existe")
+        @DisplayName("Fail when recipe does not exist")
         void failWhenRecipeNotFound() {
             Long collectionId = collection.getId();
             Long invalidRecipeId = 999L;

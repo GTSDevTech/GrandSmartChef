@@ -11,7 +11,7 @@ import com.grandchefsupreme.repository.*;
 import com.grandchefsupreme.service.ClientService;
 import com.grandchefsupreme.service.FavoriteCollectionService;
 import com.grandchefsupreme.service.RecipeService;
-import com.grandchefsupreme.service.StadisticService;
+import com.grandchefsupreme.service.StatisticService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @org.junit.jupiter.api.Tag("statistics")
 @DisplayName("HistoryService - Create & Search Recipes History")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class StadisticServiceTest {
+public class StatisticsServiceTest {
 
     @Autowired
     RecipeService recipeService;
@@ -56,7 +56,7 @@ public class StadisticServiceTest {
     ClientService clientService;
 
     @Autowired
-    StadisticService stadisticsService;
+    StatisticService stadisticsService;
 
     @Autowired
     private FavoriteCollectionService favoriteCollectionService;
@@ -64,9 +64,9 @@ public class StadisticServiceTest {
     @Autowired
     private FavoriteCollectionRepository favoriteCollectionRepository;
 
-    private Ingredient ingredientArroz;
-    private Ingredient ingredientPollo;
-    private Ingredient ingredientTomate;
+    private Ingredient riceIngredient;
+    private Ingredient chickenIngredient;
+    private Ingredient TomatoIngredient;
 
 
     @BeforeAll
@@ -85,38 +85,38 @@ public class StadisticServiceTest {
         ingredientCategory = ingredientCategoryRepository.saveAndFlush(ingredientCategory);
 
         // Ingredientes
-        ingredientArroz = new Ingredient();
-        ingredientArroz.setName("Arroz");
-        ingredientArroz.setCalories(new BigDecimal("100"));
-        ingredientArroz.setProteins(new BigDecimal("5"));
-        ingredientArroz.setCarbs(new BigDecimal("30"));
-        ingredientArroz.setFats(new BigDecimal("1"));
-        ingredientArroz.setUnit(Unit.GRAMO);
-        ingredientArroz.setPhotoUrl("arroz.png");
-        ingredientArroz.setIngredientCategory(ingredientCategory);
-        ingredientArroz = ingredientRepository.saveAndFlush(ingredientArroz);
+        riceIngredient = new Ingredient();
+        riceIngredient.setName("Arroz");
+        riceIngredient.setCalories(new BigDecimal("100"));
+        riceIngredient.setProteins(new BigDecimal("5"));
+        riceIngredient.setCarbs(new BigDecimal("30"));
+        riceIngredient.setFats(new BigDecimal("1"));
+        riceIngredient.setUnit(Unit.GRAMO);
+        riceIngredient.setPhotoUrl("arroz.png");
+        riceIngredient.setIngredientCategory(ingredientCategory);
+        riceIngredient = ingredientRepository.saveAndFlush(riceIngredient);
 
-        ingredientPollo = new Ingredient();
-        ingredientPollo.setName("Pollo");
-        ingredientPollo.setCalories(new BigDecimal("150"));
-        ingredientPollo.setProteins(new BigDecimal("25"));
-        ingredientPollo.setCarbs(new BigDecimal("0"));
-        ingredientPollo.setFats(new BigDecimal("5"));
-        ingredientPollo.setUnit(Unit.GRAMO);
-        ingredientPollo.setPhotoUrl("pollo.png");
-        ingredientPollo.setIngredientCategory(ingredientCategory);
-        ingredientPollo = ingredientRepository.saveAndFlush(ingredientPollo);
+        chickenIngredient = new Ingredient();
+        chickenIngredient.setName("Pollo");
+        chickenIngredient.setCalories(new BigDecimal("150"));
+        chickenIngredient.setProteins(new BigDecimal("25"));
+        chickenIngredient.setCarbs(new BigDecimal("0"));
+        chickenIngredient.setFats(new BigDecimal("5"));
+        chickenIngredient.setUnit(Unit.GRAMO);
+        chickenIngredient.setPhotoUrl("pollo.png");
+        chickenIngredient.setIngredientCategory(ingredientCategory);
+        chickenIngredient = ingredientRepository.saveAndFlush(chickenIngredient);
 
-        ingredientTomate = new Ingredient();
-        ingredientTomate.setName("Tomate");
-        ingredientTomate.setCalories(new BigDecimal("20"));
-        ingredientTomate.setProteins(new BigDecimal("1"));
-        ingredientTomate.setCarbs(new BigDecimal("4"));
-        ingredientTomate.setFats(new BigDecimal("0"));
-        ingredientTomate.setUnit(Unit.GRAMO);
-        ingredientTomate.setPhotoUrl("tomate.png");
-        ingredientTomate.setIngredientCategory(ingredientCategory);
-        ingredientTomate = ingredientRepository.saveAndFlush(ingredientTomate);
+        TomatoIngredient = new Ingredient();
+        TomatoIngredient.setName("Tomate");
+        TomatoIngredient.setCalories(new BigDecimal("20"));
+        TomatoIngredient.setProteins(new BigDecimal("1"));
+        TomatoIngredient.setCarbs(new BigDecimal("4"));
+        TomatoIngredient.setFats(new BigDecimal("0"));
+        TomatoIngredient.setUnit(Unit.GRAMO);
+        TomatoIngredient.setPhotoUrl("tomate.png");
+        TomatoIngredient.setIngredientCategory(ingredientCategory);
+        TomatoIngredient = ingredientRepository.saveAndFlush(TomatoIngredient);
 
 
 
@@ -177,29 +177,29 @@ public class StadisticServiceTest {
 
 
     @Nested
-    @DisplayName("Top Ingredientes - getTop5Ingredients")
+    @DisplayName("Top Ingredients - getTop5Ingredients")
     class TopIngredientsTests {
 
         @Test
-        @DisplayName("Positivo: devuelve ingredientes ordenados con el nº de recetas correcto")
+        @DisplayName("Return Ingredients with Recipe's number ID - Positive Case")
         void showIngredientRankSuccessfully() throws IOException {
 
             recipeService.createRecipe(
-                    buildRecipeDTO("Receta 1", List.of(ingredientArroz, ingredientPollo)),
+                    buildRecipeDTO("Receta 1", List.of(riceIngredient, chickenIngredient)),
                     null
             );
             recipeService.createRecipe(
-                    buildRecipeDTO("Receta 2", List.of(ingredientArroz)),
+                    buildRecipeDTO("Receta 2", List.of(riceIngredient)),
                     null
             );
             recipeService.createRecipe(
-                    buildRecipeDTO("Receta 3", List.of(ingredientPollo, ingredientTomate)),
+                    buildRecipeDTO("Receta 3", List.of(chickenIngredient, TomatoIngredient)),
                     null
             );
 
             List<TopIngredientsDTO> result = stadisticsService.getTop5Ingredients();
 
-            assertAll("Top ingredientes - Caso positivo",
+            assertAll("Top ingredients - Positive Case",
                     () -> assertNotNull(result, "La lista no debe ser null"),
                     () -> assertFalse(result.isEmpty(), "Debe devolver al menos un ingrediente"),
                     () -> assertTrue(result.size() <= 5, "Nunca debe devolver más de 5 ingredientes"),
@@ -235,7 +235,7 @@ public class StadisticServiceTest {
         }
 
         @Test
-        @DisplayName("Negativo: sin recetas ni relaciones devuelve lista vacía")
+        @DisplayName("Return Empty List When No Recipes - Negative Case")
         void showIngredientRankWhenNoRecipesReturnsEmptyList() {
             List<TopIngredientsDTO> result = stadisticsService.getTop5Ingredients();
             assertAll("Top ingredientes - sin datos",
@@ -261,7 +261,7 @@ public class StadisticServiceTest {
         void showTopUsersByMostFavoritedRecipe() throws IOException {
 
             RecipeDTO recetaDTO = recipeService.createRecipe(
-                    buildRecipeDTO("Receta Popular", List.of(ingredientArroz)),
+                    buildRecipeDTO("Receta Popular", List.of(riceIngredient)),
                     null
             );
             Recipe receta = recipeRepository.findById(recetaDTO.getId())

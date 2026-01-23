@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class HistoryService {
+public class    HistoryService {
 
     private final HistoryRepository historyRepository;
     private final RecipeRatingRepository recipeRatingRepository;

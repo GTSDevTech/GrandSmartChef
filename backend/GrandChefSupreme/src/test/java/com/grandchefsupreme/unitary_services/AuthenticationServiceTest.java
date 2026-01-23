@@ -50,7 +50,7 @@ public class AuthenticationServiceTest {
     class RegisterStep1Tests {
 
         @Test
-        @DisplayName("Register Step 1 - Casos Positivos")
+        @DisplayName("Register Step 1 - Positive Cases")
         void registerNewClientAndReturnTokenSuccessfully(){
 
             //Given
@@ -86,11 +86,11 @@ public class AuthenticationServiceTest {
     }
 
     @Nested
-    @DisplayName("Register Step 1 - Casos Negativos")
+    @DisplayName("Register Step 1 - Negative Cases")
     class RegisterStep1NegativeTest {
 
         @Test
-        @DisplayName("Email ya existe")
+        @DisplayName("Already email exits")
         void FailWhenEmailAlreadyExist() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("GuilleTeSa");
@@ -101,15 +101,15 @@ public class AuthenticationServiceTest {
 
             assertThrows(AlreadyUserExist.class,
                     () -> authenticationService.register(registerStep1DTO),
-                    "El usuario ya está registrado");
+                    "The email is already registered");
             assertEquals(1,
                     clientRepository.count(),
-                    "Solo debe haber un cliente en BBDD con ese email");
+                    "Only one client should exist in DB with that email");
 
         }
 
         @Test
-        @DisplayName("Username ya existe")
+        @DisplayName("Already Username exists")
         void FailWhenUsernameAlreadyExist() {
             RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
             registerStep1DTO.setUsername("GuilleTeSa");
@@ -120,10 +120,10 @@ public class AuthenticationServiceTest {
 
             assertThrows(AlreadyUserExist.class,
                     () -> authenticationService.register(registerStep1DTO),
-                    "El nombre de usuario ya está registrado");
+                    "The username is already registered");
             assertEquals(1,
                     clientRepository.count(),
-                    "Solo debe existir un cliente en BBDD con ese username");
+                    "Only one client should exist in DB with that email");
         }
 
 
