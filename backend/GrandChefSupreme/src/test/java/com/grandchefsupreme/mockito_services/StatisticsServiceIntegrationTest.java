@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +54,8 @@ public class StatisticsServiceIntegrationTest {
             //WHEN
 
             Mockito.verify(ingredientRepository).findTop5IngredientsByRecipeCount();
+            Mockito.verify(ingredientRepository, Mockito.times(1)).findTop5IngredientsByRecipeCount();
+            Mockito.verifyNoMoreInteractions(ingredientRepository);
 
 
         }
@@ -74,8 +77,40 @@ public class StatisticsServiceIntegrationTest {
             Mockito.verify(clientRepository, Mockito.times(1)).findClientByTopRecipes();
             Mockito.verify(clientRepository).findClientByTopRecipes();
 
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Calculate Statistics of Recipes and Users - Negative Cases")
+    class StatisticsOfRecipesAndUsersWithoutData {
 
 
+        @Test
+        @DisplayName("Search History of Recipes With Empty List - Negative Case")
+        void statisticsTop5IngredientsWithEmptyList() {
+
+            Mockito.when(ingredientRepository.findTop5IngredientsByRecipeCount()).thenReturn(Collections.emptyList());
+
+            statisticsService.getTop5Ingredients();
+
+            Mockito.verify(ingredientRepository, Mockito.times(1)).findTop5IngredientsByRecipeCount();
+            Mockito.verifyNoMoreInteractions(ingredientRepository);
+
+        }
+
+
+
+        @Test
+        @DisplayName("Search Users With Same Recipes - Positive Case")
+        void statisticsTopClient() {
+
+            Mockito.when(clientRepository.findClientByTopRecipes()).thenReturn(Collections.emptyList());
+
+            statisticsService.getTopRecipes();
+
+            Mockito.verify(clientRepository, Mockito.times(1)).findClientByTopRecipes();
+            Mockito.verifyNoMoreInteractions(clientRepository);
         }
 
     }

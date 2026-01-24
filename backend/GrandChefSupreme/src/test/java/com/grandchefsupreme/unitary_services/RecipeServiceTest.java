@@ -315,7 +315,10 @@ public class RecipeServiceTest {
                 recipeDTO.setTags(new HashSet<>(List.of(tagDTO)));
                 recipeDTO.setIngredients(new ArrayList<>(List.of(recipeIngredientDTO)));
                 recipeDTO.setSteps(null);
-                assertThrows(BadRequestException.class, () -> recipeService.createRecipe(recipeDTO, null));
+
+
+                assertThrows(BadRequestException.class,
+                        () -> recipeService.createRecipe(recipeDTO, null));
 
             }
 

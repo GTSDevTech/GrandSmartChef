@@ -22,6 +22,17 @@ public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long
     Optional<ShoppingList> findByIdWithItems(@Param("id") Long id);
 
 
+
+    @Query("""
+    select count(sli) > 0
+    from ShoppingListIngredient sli
+    join sli.shoppingList sl
+    where sl.status = false
+      and sli.id = :recipeId
+""")
+    boolean existsItemWithRecipeInActiveShoppingList(@Param("recipeId") Long recipeId);
+
+
     List<ShoppingList> findAllByClientId(Long userId);
 
      @Modifying

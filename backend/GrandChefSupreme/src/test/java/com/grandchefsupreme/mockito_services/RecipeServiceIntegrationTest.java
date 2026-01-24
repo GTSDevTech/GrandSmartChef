@@ -5,16 +5,16 @@ import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.mapper.IngredientCategoryMapper;
 import com.grandchefsupreme.mapper.RecipeCardMapper;
 import com.grandchefsupreme.mapper.RecipeDetailMapper;
+import com.grandchefsupreme.model.*;
 import com.grandchefsupreme.model.Enums.Difficulty;
 import com.grandchefsupreme.model.Enums.Unit;
-import com.grandchefsupreme.model.Ingredient;
-import com.grandchefsupreme.model.IngredientCategory;
-import com.grandchefsupreme.model.Recipe;
-import com.grandchefsupreme.model.RecipeStep;
 import com.grandchefsupreme.repository.IngredientRepository;
 import com.grandchefsupreme.repository.RecipeRatingRepository;
 import com.grandchefsupreme.repository.RecipeRepository;
+import com.grandchefsupreme.repository.TagRepository;
 import com.grandchefsupreme.service.RecipeService;
+import com.grandchefsupreme.utils.FileStorageUtil;
+import jakarta.persistence.EntityNotFoundException;
 import org.checkerframework.checker.units.qual.N;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,7 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -53,9 +55,58 @@ public class RecipeServiceIntegrationTest {
     @Mock
     public IngredientRepository ingredientRepository;
 
+    @Mock
+    public TagRepository tagRepository;
+
+    @Mock
+    public FileStorageUtil fileStorageUtil;
+
 
     @Nested
-    @DisplayName("Test de Integración -> Create Recipes")
+    @DisplayName("Create Recipes Positive Cases")
+    class createRecipePositiveCases{
+
+
+        @Test
+        @DisplayName("Create Recipe - Positive Case")
+        void createRecipe() throws IOException {
+
+            MultipartFile file = Mockito.mock(MultipartFile.class);
+            Mockito.when(file.isEmpty()).thenReturn(false);
+
+
+            RecipeDTO recipeDTO = new RecipeDTO();
+            recipeDTO.setTags(new HashSet<>(List.of(new TagDTO())));
+            recipeDTO.setIngredients(new ArrayList<>(List.of(new RecipeIngredientDTO())));
+            recipeDTO.setSteps(new ArrayList<>(List.of(new RecipeStepDTO())));
+
+            //GIVEN
+            Mockito.when(recipeDetailMapper.toEntity(Mockito.any(RecipeDTO.class))).thenReturn(new Recipe());
+            Mockito.when(fileStorageUtil.saveProfilePhoto(Mockito.any(MultipartFile.class))).thenReturn("uploads/recipe/photo.png");
+            Mockito.when(recipeRepository.saveAndFlush(Mockito.any(Recipe.class))).thenReturn(Mockito.mock(Recipe.class));
+            Mockito.when(recipeDetailMapper.toDto(Mockito.any(Recipe.class))).thenReturn(Mockito.mock(RecipeDTO.class));
+
+            //THEN
+            recipeService.createRecipe(recipeDTO, file);
+
+            //WHEN
+
+            Mockito.verify(recipeDetailMapper).toEntity(Mockito.any(RecipeDTO.class));
+            Mockito.verify(ingredientRepository, Mockito.times(0)).findById(Mockito.anyLong());
+            Mockito.verify(tagRepository ,Mockito.times(0)).findByNameIgnoreCase(Mockito.anyString());
+            Mockito.verify(tagRepository,Mockito.times(0)).save(Mockito.any(Tag.class));
+            Mockito.verify(fileStorageUtil, Mockito.times(1)).saveProfilePhoto(Mockito.any(MultipartFile.class));
+            Mockito.verify(recipeRepository, Mockito.times(1)).saveAndFlush(Mockito.any(Recipe.class));
+            Mockito.verify(recipeDetailMapper, Mockito.times(1)).toDto(Mockito.any(Recipe.class));
+
+
+
+
+        }
+    }
+
+    @Nested
+    @DisplayName("Create Recipes - Negative Cases")
     class createRecipeNegativeCases {
 
 
@@ -71,6 +122,7 @@ public class RecipeServiceIntegrationTest {
 
             //THEN
             Mockito.verify(recipeRepository, Mockito.never()).saveAndFlush(Mockito.any(Recipe.class));
+            Mockito.verifyNoInteractions(recipeDetailMapper);
 
         }
 
@@ -78,45 +130,97 @@ public class RecipeServiceIntegrationTest {
         @DisplayName("Attributes Recipe - List Null or Empty")
         void createRecipeWithoutData(){
 
-            RecipeDTO recipeDTO = new RecipeDTO();
-            recipeDTO.setTags(new HashSet<>(List.of(new TagDTO())));
-            recipeDTO.setIngredients(null);
-            recipeDTO.setSteps(new ArrayList<>(List.of(new RecipeStepDTO())));
+            RecipeDTO recipeDTO = Mockito.mock(RecipeDTO.class);
+            //GIVEN
 
+
+            //WHEN
             assertThrows(
                     BadRequestException.class,
-                    () -> recipeService.createRecipe(recipeDTO, null)
+                    () -> {
+                        Mockito.when(recipeDTO.getIngredients()).thenReturn(null);
+                        recipeService.createRecipe(recipeDTO, null);
+                        Mockito.verify(recipeRepository, Mockito.never()).saveAndFlush(Mockito.any(Recipe.class));
+                        Mockito.verify(recipeDetailMapper, Mockito.never()).toDto(Mockito.any(Recipe.class));
+                        Mockito.verify(recipeDetailMapper, Mockito.never()).toEntity(Mockito.any(RecipeDTO.class));
+                    }
+
+            );
+            assertThrows(BadRequestException.class,
+                    () -> {
+                        Mockito.when(recipeDTO.getIngredients()).thenReturn(List.of(Mockito.mock(RecipeIngredientDTO.class)));
+                        Mockito.when(recipeDTO.getSteps()).thenReturn(null);
+
+                        recipeService.createRecipe(recipeDTO, null);
+
+                        Mockito.verify(recipeRepository, Mockito.never()).saveAndFlush(Mockito.any(Recipe.class));
+                        Mockito.verify(recipeDetailMapper, Mockito.never()).toDto(Mockito.any(Recipe.class));
+                        Mockito.verify(recipeDetailMapper, Mockito.never()).toEntity(Mockito.any(RecipeDTO.class));
+                    }
             );
 
-            Mockito.verify(recipeRepository, Mockito.never()).saveAndFlush(Mockito.any(Recipe.class));
+            assertThrows(BadRequestException.class,
+                    () -> {
+                        Mockito.when(recipeDTO.getIngredients()).thenReturn(List.of(Mockito.mock(RecipeIngredientDTO.class)));
+                        Mockito.when(recipeDTO.getSteps()).thenReturn(List.of(Mockito.mock(RecipeStepDTO.class)));
+                        Mockito.when(recipeDTO.getTags()).thenReturn(null);
+                        recipeService.createRecipe(recipeDTO, null);
+
+                        Mockito.verify(recipeRepository, Mockito.never()).saveAndFlush(Mockito.any(Recipe.class));
+                        Mockito.verify(recipeDetailMapper, Mockito.never()).toDto(Mockito.any(Recipe.class));
+                        Mockito.verify(recipeDetailMapper, Mockito.never()).toEntity(Mockito.any(RecipeDTO.class));
+                    }
+            );
 
 
         }
-
-
-    }
-
-    @Nested
-    @DisplayName("Test de Integración -> Create Recipes")
-    class createRecipePositiveCases{
-
 
         @Test
-        @DisplayName("Create Recipe - Positive Case")
-        void createRecipe(){
+        @DisplayName("Create Recipe With Ingredient DB Not Found")
+        void createRecipeWithIngredientNotFound(){
 
-            TagDTO tagDTO = new TagDTO();
-            tagDTO.setName("test");
+            Recipe recipe = Mockito.mock(Recipe.class);
+            recipe.setRecipeIngredients(new HashSet<>());
 
-            IngredientDTO ingredientDTO = new IngredientDTO();
+            RecipeIngredient recipeIngredient = Mockito.mock(RecipeIngredient.class);
 
-            RecipeDTO recipeDTO = new RecipeDTO();
-            recipeDTO.setTags(new HashSet<>(List.of(tagDTO)));
+            Ingredient ingredient = Mockito.mock(Ingredient.class);
+            Mockito.when(recipeIngredient.getIngredient()).thenReturn(ingredient);
+            Mockito.when(ingredient.getId()).thenReturn(99L);
 
+            RecipeIngredientDTO recipeIngredientDTO = Mockito.mock(RecipeIngredientDTO.class);
+            RecipeDTO recipeDTO = Mockito.mock(RecipeDTO.class);
+
+
+            //GIVEN
+
+            assertThrows(EntityNotFoundException.class,
+                    () -> {
+                        Mockito.when(recipeDTO.getIngredients()).thenReturn(List.of(recipeIngredientDTO));
+                        Mockito.when(recipeDTO.getSteps()).thenReturn(List.of(Mockito.mock(RecipeStepDTO.class)));
+                        Mockito.when(recipeDTO.getTags()).thenReturn(new HashSet<>(List.of(new TagDTO())));
+
+                        Mockito.when(recipeDetailMapper.toEntity(Mockito.any(RecipeDTO.class))).thenReturn(recipe);
+                        Mockito.when(recipe.getRecipeIngredients()).thenReturn(new HashSet<>(List.of(recipeIngredient)));
+                        Mockito.when(ingredientRepository.findById(Mockito.eq(99L))).thenReturn(Optional.empty());
+
+                        //THEN
+                        recipeService.createRecipe(recipeDTO, null);
+                    }
+            );
+            //WHEN
+            Mockito.verify(recipeDetailMapper, Mockito.times(1)).toEntity(Mockito.any(RecipeDTO.class));
+            Mockito.verify(ingredientRepository, Mockito.times(1)).findById(Mockito.anyLong());
+            Mockito.verify(recipeRepository, Mockito.never()).saveAndFlush(Mockito.any(Recipe.class));
+            Mockito.verify(recipeDetailMapper, Mockito.never()).toDto(Mockito.any(Recipe.class));
 
 
         }
+
+
     }
+
+
 
     @Nested
     @DisplayName("Find Recipe with Filters Successfully")

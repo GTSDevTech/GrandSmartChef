@@ -34,4 +34,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     """, nativeQuery = true)
     List<TopClientDTO> findClientByTopRecipes();
 
+    boolean existsByUsername(String username);
 }

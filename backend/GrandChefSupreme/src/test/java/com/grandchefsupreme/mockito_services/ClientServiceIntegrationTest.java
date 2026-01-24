@@ -1,5 +1,6 @@
 package com.grandchefsupreme.mockito_services;
 
+import com.grandchefsupreme.dto.ClientDTO;
 import com.grandchefsupreme.dto.RegisterStep1DTO;
 import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.mapper.ClientMapper;
@@ -68,7 +69,7 @@ public class ClientServiceIntegrationTest {
 
     @Nested
     @DisplayName("Create Client - Negative Cases")
-    class ClientNegativeCases {
+    class CreateClientNegativeCases {
 
         @Test
         @DisplayName("Create Client with null DTO and Errors - Negative Case")
@@ -90,8 +91,26 @@ public class ClientServiceIntegrationTest {
         @DisplayName("Create Client with Password Empty - Negative Case")
         void createClientWithPasswordEmpty() {
 
-            RegisterStep1DTO registerStep1DTO = new RegisterStep1DTO();
-            registerStep1DTO.setPassword("");
+            RegisterStep1DTO registerStep1DTO = Mockito.mock(RegisterStep1DTO.class);
+            Mockito.when(registerStep1DTO.getPassword()).thenReturn("");
+
+            assertThrows(BadRequestException.class, () -> {
+                clientService.createClient(registerStep1DTO);
+            });
+
+            Mockito.verifyNoInteractions(clientRepository);
+            Mockito.verifyNoInteractions(passwordEncoder);
+            Mockito.verifyNoInteractions(clientMapper);
+
+
+        }
+
+        @Test
+        @DisplayName("Create Client with Null Password - Negative Case")
+        void createClientWithNullPassword() {
+
+            RegisterStep1DTO registerStep1DTO = Mockito.mock(RegisterStep1DTO.class);
+            Mockito.when(registerStep1DTO.getPassword()).thenReturn(null);
 
             assertThrows(BadRequestException.class, () -> {
                 clientService.createClient(registerStep1DTO);

@@ -31,12 +31,7 @@ public class ShoppingListService {
             throw new BadRequestException("La receta no puede ser nula");
         }
 
-        List<ShoppingListDTO> shoppingLists = getAllListsByUser(userId);
-
-        boolean shoppingListExist = shoppingLists.stream()
-                .filter(shoppingList -> Boolean.FALSE.equals(shoppingList.getStatus()))
-                .flatMap(sl -> sl.getItems().stream())
-                .anyMatch(item -> item.getRecipeId().equals(recipeId));
+        boolean shoppingListExist = shoppingListRepository.existsItemWithRecipeInActiveShoppingList(recipeId);
 
         if (shoppingListExist) {
             throw new BadRequestException("La receta ya está activa en la lista de la compra");

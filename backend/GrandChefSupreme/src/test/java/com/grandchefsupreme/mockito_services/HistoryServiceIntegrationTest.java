@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -80,7 +81,7 @@ public class HistoryServiceIntegrationTest {
 
 
     @Nested
-    @DisplayName("Create History of Recipes Wrong Cases")
+    @DisplayName("Create History of Recipes - Negative Cases")
     class createHistoryOfRecipesWrongCases {
 
         @Test
@@ -100,13 +101,98 @@ public class HistoryServiceIntegrationTest {
             Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
 
         }
+
+        @Test
+        @DisplayName("Create History of Recipes - Null Client ID")
+        void createHistoryOfRecipesNullClientId() {
+
+            HistoryDTO historyDTO = Mockito.mock(HistoryDTO.class);
+
+            //GIVEN
+            Mockito.when(historyDTO.getClientId()).thenReturn(null);
+            //THEN
+            assertThrows(BadRequestException.class, () -> {
+                historyService.createHistory(historyDTO);
+
+            });
+
+            //WHEN
+            Mockito.verify(historyRepository, Mockito.never()).save(Mockito.any(History.class));
+            Mockito.verify(historyMapper, Mockito.never()).toEntity(Mockito.any(HistoryDTO.class));
+            Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
+        }
+
+        @Test
+        @DisplayName("Create History of Recipes - Null Recipe ID")
+        void createHistoryOfRecipesNullRecipeId() {
+
+            HistoryDTO historyDTO = Mockito.mock(HistoryDTO.class);
+
+            //GIVEN
+            Mockito.when(historyDTO.getRecipe()).thenReturn(null);
+            //THEN
+            assertThrows(BadRequestException.class, () -> {
+                historyService.createHistory(historyDTO);
+
+            });
+
+            //WHEN
+            Mockito.verify(historyRepository, Mockito.never()).save(Mockito.any(History.class));
+            Mockito.verify(historyMapper, Mockito.never()).toEntity(Mockito.any(HistoryDTO.class));
+            Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
+        }
+
+
+        @Test
+        @DisplayName("Create History of Recipes - Null Date")
+        void createHistoryOfRecipesNullDate() {
+
+            HistoryDTO historyDTO = Mockito.mock(HistoryDTO.class);
+            //GIVEN
+            //THEN
+            assertThrows(BadRequestException.class, () -> {
+                historyService.createHistory(historyDTO);
+
+            });
+
+            //WHEN
+            Mockito.verify(historyRepository, Mockito.never()).save(Mockito.any(History.class));
+            Mockito.verify(historyMapper, Mockito.never()).toEntity(Mockito.any(HistoryDTO.class));
+            Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
+        }
+
+        @Test
+        @DisplayName("Create History of Recipes - Incorrect Format Date")
+        void createHistoryOfRecipesFailWithFormatDate() {
+
+            //GIVEN
+            HistoryDTO historyDTO = Mockito.mock(HistoryDTO.class);
+            Mockito.when(historyDTO.getClientId()).thenReturn(1L);
+            Mockito.when(historyDTO.getRecipe()).thenReturn(Mockito.mock(RecipeCardDTO.class));
+            Mockito.when(historyDTO.getDate()).thenReturn("31-06-2005");
+
+
+            //THEN
+            assertThrows(BadRequestException.class, () -> {
+                historyService.createHistory(historyDTO);
+
+            });
+
+            //WHEN
+            Mockito.verify(historyRepository, Mockito.never()).save(Mockito.any(History.class));
+            Mockito.verify(historyMapper, Mockito.never()).toEntity(Mockito.any(HistoryDTO.class));
+            Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
+        }
     }
+
+
+
+
+
 
     @Nested
     @DisplayName("Create History of Recipes Successfully")
-    class SearchHistoryofRecipesSuccessfully{
-
-
+    class SearchRecipesHistorySuccessfully{
 
 
         @Test
@@ -148,6 +234,81 @@ public class HistoryServiceIntegrationTest {
             Mockito.verify(historyRepository, Mockito.times(1)).findAllFromLast7Days(Mockito.any(LocalDate.class), Mockito.any(LocalDate.class), Mockito.anyLong());
         }
 
+    }
+
+    @Nested
+    @DisplayName("Search History of Recipes With Errors - Negative Cases")
+    class SearchRecipesHistoryWithErrors {
+
+        @Test
+        @DisplayName("Search History With Null Date - Negative Case")
+        void searchHistoryOfRecipesNullDate() {
+
+            //GIVEN
+
+            //THEN
+            assertThrows(BadRequestException.class, () -> {
+                historyService.getRecipesLast7daysByClient(null, 1L);
+            });
+
+            //WHEN
+            Mockito.verify(historyRepository, Mockito.never()).findAllFromLast7Days(
+                    Mockito.any(LocalDate.class),
+                    Mockito.any(LocalDate.class),
+                    Mockito.anyLong()
+            );
+            Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
+            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+        }
+
+
+        @Test
+        @DisplayName("Search History With Null Client ID")
+        void searchHistoryOfRecipesNullClientId() {
+            LocalDate date = LocalDate.now();
+
+            //GIVEN
+
+            //THEN
+            assertThrows(BadRequestException.class, () -> {
+                historyService.getRecipesLast7daysByClient(date, null);
+            });
+
+            //WHEN
+            Mockito.verify(historyRepository, Mockito.never()).findAllFromLast7Days(
+                    Mockito.any(LocalDate.class),
+                    Mockito.any(LocalDate.class),
+                    Mockito.anyLong()
+            );
+            Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
+            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+        }
+
+
+        @Test
+        @DisplayName("Search History With Future Date")
+        void searchHistoryOfRecipesFutureDate() {
+            LocalDate date = LocalDate.now().plusDays(1);
+
+            //GIVEN
+
+            //THEN
+            assertThrows(BadRequestException.class, () -> {
+                historyService.getRecipesLast7daysByClient(date, 1L);
+            });
+
+            //WHEN
+            Mockito.verify(historyRepository, Mockito.never()).findAllFromLast7Days(
+                    Mockito.any(LocalDate.class),
+                    Mockito.any(LocalDate.class),
+                    Mockito.anyLong()
+            );
+            Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
+            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+        }
     }
 
 }

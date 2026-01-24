@@ -120,6 +120,13 @@ public class ClientService {
 
     }
 
+    public void getClientByUsername(String username) {
+
+        if (clientRepository.existsByUsername(username)) {
+            throw new AlreadyUserExist("El cliente ya existe");
+        }
+    }
+
     public void getClientByEmail(String email) {
 
         if (clientRepository.existsByEmail(email)) {

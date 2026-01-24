@@ -34,8 +34,6 @@ public class AuthenticationServiceTest {
     @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired
-    private JwtService jwtService;
 
     @BeforeEach
     void cleanDb(){
@@ -116,11 +114,17 @@ public class AuthenticationServiceTest {
             registerStep1DTO.setPassword("root");
             registerStep1DTO.setEmail("gts@gmail.com");
 
+
+
             authenticationService.register(registerStep1DTO);
 
             assertThrows(AlreadyUserExist.class,
-                    () -> authenticationService.register(registerStep1DTO),
-                    "The username is already registered");
+                    () ->{
+                        registerStep1DTO.setEmail("ppe@gmail.com");
+                        authenticationService.register(registerStep1DTO);
+                    }, "The username is already registered");
+
+
             assertEquals(1,
                     clientRepository.count(),
                     "Only one client should exist in DB with that email");

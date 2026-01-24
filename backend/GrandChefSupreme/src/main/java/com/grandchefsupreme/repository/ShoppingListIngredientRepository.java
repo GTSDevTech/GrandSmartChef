@@ -4,6 +4,7 @@ import com.grandchefsupreme.model.ShoppingListIngredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public interface ShoppingListIngredientRepository extends JpaRepository<Shopping
 
 
     List<ShoppingListIngredient> findAllByShoppingListIdAndBought(Long listId, boolean b);
+
+
 
     long countByShoppingListId(Long listId);
 

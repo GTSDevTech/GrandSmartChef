@@ -1,6 +1,7 @@
 package com.grandchefsupreme.mockito_services;
 
 import com.grandchefsupreme.dto.ShoppingListDTO;
+import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.mapper.ShoppingListMapper;
 import com.grandchefsupreme.model.*;
 import com.grandchefsupreme.repository.*;
@@ -17,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class ShoppingListServiceIntegrationTest {
@@ -90,6 +93,74 @@ public class ShoppingListServiceIntegrationTest {
 
 
 
+        }
+    }
+
+
+
+    @Nested
+    @DisplayName("Add Recipe to Shopping List - Negative Cases")
+    class AddRecipeToCollectionNegativeCases {
+
+        @Test
+        @DisplayName("Add Recipe To Collection With Errors")
+        void AddRecipeToCollectionWithNullUser() {
+
+            assertThrows(BadRequestException.class,
+                    () -> {
+                        shoppingListService.addRecipeToShoppingList(null, 1L);
+                        Mockito.verify(shoppingListRepository, Mockito.never()).save(Mockito.any(ShoppingList.class));
+                        Mockito.verify(recipeRepository, Mockito.never()).findById(Mockito.anyLong());
+                        Mockito.verify(shoppingListRepository, Mockito.never()).existsItemWithRecipeInActiveShoppingList(Mockito.anyLong());
+                        Mockito.verify(clientRepository, Mockito.never()).findById(Mockito.anyLong());
+                        Mockito.verify(recipeIngredientRepository, Mockito.never()).findAllByRecipeId(Mockito.anyLong());
+                        Mockito.verify(shoppingListIngredientRepository, Mockito.never()).save(Mockito.any(ShoppingListIngredient.class));
+                        Mockito.verify(shoppingListMapper, Mockito.never()).toDTO(Mockito.any(ShoppingList.class));
+                        Mockito.verify(shoppingListMapper, Mockito.never()).toDTO(Mockito.any(ShoppingList.class));
+
+                    }
+            );
+
+
+        }
+
+        @Test
+        @DisplayName("Add Recipe To Collection With Errors")
+        void AddRecipeToCollectionWithNullRecipe() {
+            assertThrows(BadRequestException.class,
+                    () -> {
+                        shoppingListService.addRecipeToShoppingList(1L, null);
+                        Mockito.verify(shoppingListRepository, Mockito.never()).save(Mockito.any(ShoppingList.class));
+                        Mockito.verify(recipeRepository, Mockito.never()).findById(Mockito.anyLong());
+                        Mockito.verify(shoppingListRepository, Mockito.never()).existsItemWithRecipeInActiveShoppingList(Mockito.anyLong());
+                        Mockito.verify(clientRepository, Mockito.never()).findById(Mockito.anyLong());
+                        Mockito.verify(recipeIngredientRepository, Mockito.never()).findAllByRecipeId(Mockito.anyLong());
+                        Mockito.verify(shoppingListIngredientRepository, Mockito.never()).save(Mockito.any(ShoppingListIngredient.class));
+                        Mockito.verify(shoppingListMapper, Mockito.never()).toDTO(Mockito.any(ShoppingList.class));
+                        Mockito.verify(shoppingListMapper, Mockito.never()).toDTO(Mockito.any(ShoppingList.class));
+
+                    }
+            );
+        }
+
+
+        @Test
+        @DisplayName("Add Recipe To Collection With Errors")
+        void AddRecipeToCollectionAlreadyExisting() {
+
+            assertThrows(BadRequestException.class,
+                    () -> {
+                        shoppingListService.addRecipeToShoppingList(1L, 1L);
+                        Mockito.verify(shoppingListRepository, Mockito.never()).save(Mockito.any(ShoppingList.class));
+                        Mockito.verify(recipeRepository, Mockito.never()).findById(Mockito.anyLong());
+                        Mockito.verify(shoppingListRepository, Mockito.times(1)).existsItemWithRecipeInActiveShoppingList(Mockito.anyLong());
+                        Mockito.verify(clientRepository, Mockito.never()).findById(Mockito.anyLong());
+                        Mockito.verify(recipeIngredientRepository, Mockito.never()).findAllByRecipeId(Mockito.anyLong());
+                        Mockito.verify(shoppingListIngredientRepository, Mockito.never()).save(Mockito.any(ShoppingListIngredient.class));
+                        Mockito.verify(shoppingListMapper, Mockito.never()).toDTO(Mockito.any(ShoppingList.class));
+                        Mockito.verify(shoppingListMapper, Mockito.never()).toDTO(Mockito.any(ShoppingList.class));
+                    }
+            );
         }
     }
 }

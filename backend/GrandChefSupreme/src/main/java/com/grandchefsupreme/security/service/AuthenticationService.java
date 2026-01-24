@@ -32,6 +32,7 @@ public class AuthenticationService {
             throw new UnauthorizedException("El cliente no puede ser nulo");
 
         clientService.getClientByEmail(clientDTO.getEmail());
+        clientService.getClientByUsername(clientDTO.getUsername());
         Client newClient = clientService.createClient(clientDTO);
         String token = jwtService.generateToken(newClient);
         return AuthenticationResponseDTO.builder()
