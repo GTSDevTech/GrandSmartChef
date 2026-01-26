@@ -1,4 +1,4 @@
-import {Component, inject, input, Input, OnInit, output, signal} from '@angular/core';
+import {Component, OnInit, output} from '@angular/core';
 import {IonButton, IonCol, IonGrid, IonLabel, IonRow} from "@ionic/angular/standalone";
 
 @Component({

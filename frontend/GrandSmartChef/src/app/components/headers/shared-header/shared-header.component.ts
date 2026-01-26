@@ -1,5 +1,5 @@
 import {Component, inject, input, OnInit, output} from '@angular/core';
-import {IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonRow} from "@ionic/angular/standalone";
+import {IonGrid, IonHeader, IonIcon, IonLabel, IonRow} from "@ionic/angular/standalone";
 import {Location} from "@angular/common";
 
 @Component({
@@ -7,7 +7,6 @@ import {Location} from "@angular/common";
     templateUrl: './shared-header.component.html',
     styleUrls: ['./shared-header.component.scss'],
     imports: [
-        IonCol,
         IonGrid,
         IonHeader,
         IonIcon,

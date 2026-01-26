@@ -1,7 +1,6 @@
 import {Component, effect, inject, OnInit} from '@angular/core';
 import {CommonModule, Location} from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {HeaderComponent} from "../../components/headers/main-header/header.component";
 import {FooterNavComponent} from "../../components/footer-nav/footer-nav.component";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {
@@ -16,18 +15,23 @@ import {ProgressBarComponent} from "../../components/progress-bar/progress-bar.c
 import {IngredientCardComponent} from "../../components/cards/list-ingredient-card/ingredient-card.component";
 import {ShoppingListService} from "../../services/shoppingList/shopping-list.service";
 import {AuthService} from "../../services/auth/auth.service";
-import {ShoppingListIngredientDTO} from "../../models/shoppingListIngredient.model";
 import {ShoppingProgressService} from "../../services/shopping-progress-bar/shopping-progress.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {authGuard} from "../../guards/auth-guard/auth-guard";
-import {list} from "ionicons/icons";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-shopping-cart',
   templateUrl: './shopping-cart.page.html',
   styleUrls: ['./shopping-cart.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterNavComponent, IonContent, IonGrid, IonRow, IonCol, IonIcon, ProgressBarComponent, IngredientCardComponent, IonButton]
+  imports: [
+    CommonModule,
+    FormsModule,
+    FooterNavComponent,
+    IonContent, IonGrid,
+    IonRow, IonCol, IonIcon,
+    ProgressBarComponent,
+    IngredientCardComponent,
+    IonButton]
 })
 export class ShoppingCartPage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);

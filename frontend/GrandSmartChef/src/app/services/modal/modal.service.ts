@@ -1,5 +1,4 @@
 import {computed, Injectable, signal} from '@angular/core';
-import {FavoriteCollectionDTO} from "../../models/collection.model";
 
 @Injectable({
   providedIn: 'root'

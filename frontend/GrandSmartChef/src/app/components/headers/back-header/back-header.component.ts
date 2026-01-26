@@ -1,9 +1,8 @@
 import {Component, inject, OnInit, output} from '@angular/core';
-import {IonCol, IonGrid, IonHeader, IonIcon, IonImg, IonLabel, IonRow} from "@ionic/angular/standalone";
-import {PopOverOptionComponent} from "../../pop-overs/pop-over-option/pop-over-option.component";
-import {outputFromObservable} from "@angular/core/rxjs-interop";
+import {IonGrid, IonIcon, IonRow} from "@ionic/angular/standalone";
+
 import {Location} from "@angular/common";
-import {IngredientOptionsComponent} from "../../ingredient-panel/ingredient-options/ingredient-options.component";
+
 
 @Component({
     selector: '   app-back-header',
@@ -12,12 +11,7 @@ import {IngredientOptionsComponent} from "../../ingredient-panel/ingredient-opti
   imports: [
     IonGrid,
     IonRow,
-    IonIcon,
-    IonLabel,
-    IonCol,
-    IonHeader,
-    IngredientOptionsComponent,
-
+    IonIcon
   ]
 })
 export class BackHeaderComponent  implements OnInit {

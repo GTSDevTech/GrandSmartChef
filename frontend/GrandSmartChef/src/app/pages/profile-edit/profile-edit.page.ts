@@ -1,5 +1,5 @@
 import {Component, effect, ElementRef, inject, OnInit, signal, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
 import {AuthService} from "../../services/auth/auth.service";
 import {ClientService} from "../../services/client/client.service";
@@ -19,7 +19,6 @@ import {
   IonLabel,
   IonRow
 } from "@ionic/angular/standalone";
-import {DateModalComponent} from "../../components/modals/date-modal/date-modal.component";
 import {BackHeaderComponent} from "../../components/headers/back-header/back-header.component";
 
 
@@ -37,8 +36,6 @@ type ProfileFormValue = {
   imports: [
     IonRow,
     IonButton,
-    CountryModalComponent,
-    DateModalComponent,
     IonItem,
     IonIcon,
     IonLabel,

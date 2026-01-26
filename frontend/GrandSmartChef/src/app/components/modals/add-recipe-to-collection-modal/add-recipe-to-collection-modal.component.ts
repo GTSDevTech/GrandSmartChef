@@ -1,7 +1,6 @@
-import {Component, computed, effect, inject, Input, OnInit, output, signal} from '@angular/core';
+import {Component, computed, effect, inject, OnInit, output, signal} from '@angular/core';
 import {RecipeService} from "../../../services/recipe/recipe.service";
 import {ModalService} from "../../../services/modal/modal.service";
-import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {CollectionService} from "../../../services/collection/collection.service";
 import {
   IonAvatar,

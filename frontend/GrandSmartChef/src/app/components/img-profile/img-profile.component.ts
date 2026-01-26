@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {IonFab, IonFabButton, IonIcon, IonImg, IonRow} from "@ionic/angular/standalone";
+import {IonImg, IonRow} from "@ionic/angular/standalone";
 import {AuthService} from "../../services/auth/auth.service";
 
 @Component({

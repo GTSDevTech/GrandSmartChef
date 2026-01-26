@@ -1,7 +1,5 @@
-import {Component, inject, input, Input, OnInit, signal} from '@angular/core';
+import {Component, inject, input, OnInit} from '@angular/core';
 import {
-  IonCheckbox,
-  IonCol,
   IonIcon,
   IonImg,
   IonItem,
@@ -10,9 +8,6 @@ import {
   IonList, IonRow, IonText
 } from "@ionic/angular/standalone";
 import {HistoryDTO} from "../../../models/history.model";
-import {RecipeService} from "../../../services/recipe/recipe.service";
-import {RecipeDTO} from "../../../models/recipe.model";
-import {KeyValuePipe} from "@angular/common";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {environment} from "../../../../environments/environment.prod";
 import {RatingService} from "../../../services/rating/rating.service";

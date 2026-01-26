@@ -30,8 +30,9 @@ import {DateModalComponent} from "../../components/modals/date-modal/date-modal.
   styleUrls: ['./history.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule,
-    FormsModule, HeaderComponent, FooterNavComponent, IonCol, IonGrid, IonIcon, IonRow,
-    HistoryCardComponent, DataHistoryUserComponent, RouterModule, IonButton, IonItem, IonLabel, DateModalComponent]
+    FormsModule, FooterNavComponent, IonCol, IonGrid, IonIcon, IonRow,
+    HistoryCardComponent, RouterModule, IonButton, IonItem, IonLabel
+  ]
 })
 export class HistoryPage implements OnInit {
 

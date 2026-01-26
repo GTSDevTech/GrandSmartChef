@@ -1,16 +1,14 @@
-import {Component, effect, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import {CommonModule, Location} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {HeaderComponent} from "../../components/headers/main-header/header.component";
 import {FooterNavComponent} from "../../components/footer-nav/footer-nav.component";
-import {IonicModule} from "@ionic/angular";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {CollectionComponent} from "../../components/collection/collection.component";
-import {Router, RouterModule} from "@angular/router";
+import {RouterModule} from "@angular/router";
 import {ModalService} from "../../services/modal/modal.service";
 import {CollectionModalComponent} from "../../components/modals/collection-modal/collection-modal.component";
 import {CollectionService} from "../../services/collection/collection.service";
-import {FavoriteCollectionDTO} from "../../models/collection.model";
 import {AuthService} from "../../services/auth/auth.service";
 import {IonButton, IonCol, IonContent, IonGrid, IonIcon, IonRow} from "@ionic/angular/standalone";
 import {
@@ -22,7 +20,13 @@ import {
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterNavComponent, CollectionComponent, RouterModule, CollectionModalComponent, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, AddRecipeToCollectionModalComponent]
+  imports: [CommonModule, FormsModule,
+    FooterNavComponent, CollectionComponent,
+    RouterModule, CollectionModalComponent,
+    IonContent, IonGrid, IonRow,
+    IonCol, IonIcon, IonButton,
+    AddRecipeToCollectionModalComponent
+  ]
 })
 export class FavoritesPage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);

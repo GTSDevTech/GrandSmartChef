@@ -4,19 +4,13 @@ import { FormsModule } from '@angular/forms';
 import {
   IonCol,
   IonContent,
-  IonGrid,
-  IonHeader,
   IonLabel,
   IonRow,
-  IonTitle,
-  IonToolbar
 } from '@ionic/angular/standalone';
 import {BackHeaderComponent} from "../../components/headers/back-header/back-header.component";
 import {
   IngredientOptionsComponent
 } from "../../components/ingredient-panel/ingredient-options/ingredient-options.component";
-import {IngredientCardComponent} from "../../components/cards/list-ingredient-card/ingredient-card.component";
-import {CategoryItemComponent} from "../../components/ingredient-panel/category-item/category-item.component";
 import {CategoryDTO} from "../../models/category.model";
 import {IngredientService} from "../../services/ingredient/ingredient.service";
 
@@ -26,7 +20,7 @@ import {IngredientService} from "../../services/ingredient/ingredient.service";
   styleUrls: ['./categories.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, BackHeaderComponent,
-    IonCol, CategoryItemComponent, IngredientOptionsComponent, IonLabel, IonRow]
+    IonCol, IngredientOptionsComponent, IonLabel, IonRow]
 })
 export class CategoriesPage implements OnInit {
 

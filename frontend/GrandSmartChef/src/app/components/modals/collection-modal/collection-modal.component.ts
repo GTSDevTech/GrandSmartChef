@@ -3,11 +3,11 @@ import {
   IonButton,
   IonButtons,
   IonCol,
-  IonContent, IonGrid,
-  IonIcon, IonInput,
-  IonLabel,
+  IonContent,
+  IonIcon,
+  IonInput,
   IonModal,
-  IonRow, IonTextarea, IonTitle, IonToolbar
+  IonRow, IonTitle, IonToolbar
 } from "@ionic/angular/standalone";
 import {ModalService} from "../../../services/modal/modal.service";
 import {ChooseColorComponent} from "../choose-color/choose-color.component";

@@ -1,11 +1,13 @@
 import {Component, input, OnInit} from '@angular/core';
 import {
-  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
-  IonCardTitle, IonCol, IonIcon, IonImg, IonItem, IonLabel, IonList, IonNote, IonRow, IonText, IonThumbnail
+  IonCardTitle,
+  IonCol,
+  IonLabel,
+  IonText
 } from "@ionic/angular/standalone";
 
 @Component({
@@ -20,7 +22,6 @@ import {
     IonCardTitle,
     IonLabel,
     IonText,
-    IonRow,
     IonCol
   ]
 })

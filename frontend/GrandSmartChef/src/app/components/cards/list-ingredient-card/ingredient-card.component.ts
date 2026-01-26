@@ -3,7 +3,6 @@ import {
   IonCard,
   IonCardHeader,
   IonCheckbox,
-  IonCol,
   IonIcon,
   IonItem,
   IonLabel,
@@ -12,8 +11,7 @@ import {
 import {ShoppingListDTO} from "../../../models/shoppingList.model";
 import {ShoppingListService} from "../../../services/shoppingList/shopping-list.service";
 import {ShoppingListIngredientDTO} from "../../../models/shoppingListIngredient.model";
-import {of} from "rxjs";
-import {checkbox} from "ionicons/icons";
+
 
 @Component({
   selector: 'app-ingredient-card',

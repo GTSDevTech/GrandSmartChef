@@ -3,7 +3,6 @@ import {Router, RouterModule} from "@angular/router";
 import {CommonModule, Location} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {IonButton, IonCol, IonContent, IonGrid, IonIcon, IonLabel, IonRow,} from '@ionic/angular/standalone';
-import {HeaderComponent} from "../../components/headers/main-header/header.component";
 import {FooterNavComponent} from "../../components/footer-nav/footer-nav.component";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {FilterProfileComponent} from "../../components/filters/filter-profile/filter-profile.component";
@@ -21,7 +20,6 @@ import {HistoryService} from "../../services/history/history.service";
   standalone: true,
   imports: [CommonModule,
     FormsModule,
-    HeaderComponent,
     FooterNavComponent,
     IonContent,
     IonCol, IonGrid, IonIcon, IonRow, IonLabel, IonButton,

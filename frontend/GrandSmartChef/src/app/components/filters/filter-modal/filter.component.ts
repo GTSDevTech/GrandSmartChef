@@ -1,6 +1,6 @@
 import {Component, effect, inject, input, OnInit, output, signal} from '@angular/core';
 import {
-  IonButton, IonCol,
+  IonCol,
   IonIcon,
   IonItem,
   IonLabel,

@@ -20,7 +20,6 @@ import {ClientService} from "../../services/client/client.service";
 import {CameraService} from "../../services/camera/camera.service";
 import {Capacitor} from "@capacitor/core";
 import { FilterProfileComponent } from "src/app/components/filters/filter-profile/filter-profile.component";
-import {DateModalComponent} from "../../components/modals/date-modal/date-modal.component";
 import {ModalService} from "../../services/modal/modal.service";
 import {CountryModalComponent} from "../../components/modals/country-modal/country-modal.component";
 import {ClientLoginDTO} from "../../models/client-login.model";
@@ -33,7 +32,12 @@ import {ClientLoginDTO} from "../../models/client-login.model";
   styleUrls: ['./post-create-account.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, IonRow,
-    IonGrid, ReactiveFormsModule, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, FilterProfileComponent, DateModalComponent, CountryModalComponent]
+    IonGrid, ReactiveFormsModule,
+    IonButton, IonFab, IonFabButton,
+    IonIcon, IonImg, IonInput,
+    IonItem, IonLabel,
+    FilterProfileComponent
+  ]
 })
 export class PostCreateAccountPage implements OnInit {
 

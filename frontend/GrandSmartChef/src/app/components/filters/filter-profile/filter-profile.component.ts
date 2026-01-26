@@ -1,4 +1,4 @@
-import {Component, effect, inject, input, OnInit, output, signal} from '@angular/core';
+import {Component, effect, input, OnInit, output, signal} from '@angular/core';
 import {
   IonButton, IonCol,
   IonContent,
@@ -7,8 +7,6 @@ import {
   IonLabel,
   IonList,
   IonModal,
-  IonRow,
-  IonText,
   IonToggle
 } from "@ionic/angular/standalone";
 import {PreferenceDTO} from "../../../models/preference.model";

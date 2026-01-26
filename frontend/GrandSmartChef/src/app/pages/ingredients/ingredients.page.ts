@@ -1,12 +1,11 @@
-import {Component, inject, input, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonCol, IonContent, IonHeader, IonLabel, IonRow, IonTitle, IonToolbar} from '@ionic/angular/standalone';
+import {IonCol, IonContent, IonLabel, IonRow} from '@ionic/angular/standalone';
 import {BackHeaderComponent} from "../../components/headers/back-header/back-header.component";
 import {
     IngredientOptionsComponent
 } from "../../components/ingredient-panel/ingredient-options/ingredient-options.component";
-import {IngredientItemComponent} from "../../components/ingredient-panel/ingredient-item/ingredient-item.component";
 import {IngredientDTO} from "../../models/ingredient.model";
 import {IngredientService} from "../../services/ingredient/ingredient.service";
 import {ActivatedRoute} from "@angular/router";
@@ -16,7 +15,7 @@ import {ActivatedRoute} from "@angular/router";
   templateUrl: './ingredients.page.html',
   styleUrls: ['./ingredients.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, BackHeaderComponent, IngredientOptionsComponent, IonCol, IonLabel, IonRow, IngredientItemComponent]
+  imports: [IonContent, CommonModule, FormsModule, BackHeaderComponent, IngredientOptionsComponent, IonCol, IonLabel, IonRow]
 })
   export class IngredientsPage implements OnInit {
     private activatedRoute = inject(ActivatedRoute);
