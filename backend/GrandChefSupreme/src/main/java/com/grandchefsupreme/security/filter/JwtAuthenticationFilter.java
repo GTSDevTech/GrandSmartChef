@@ -36,12 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String path = request.getServletPath();
-
-        if (path.startsWith("/api/auth") || path.startsWith("/api/uploads")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        System.out.println(
+                "JWT FILTER → " + request.getMethod() + " " + request.getServletPath()
+        );
 
         final String authHeader = request.getHeader("Authorization");
 
@@ -52,6 +49,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String token = authHeader.substring(7);
+
+            if (token.isBlank()) {
+                sendUnauthorized(response, "Token vacío");
+                return;
+            }
             final String username = jwtService.extractUsername(token);
 
             if (username != null &&
@@ -74,7 +76,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     .buildDetails(request)
                     );
 
-                    SecurityContextHolder.getContext()
+                    SecurityContextHolder
+                            .getContext()
                             .setAuthentication(authToken);
                 }
             }
@@ -86,8 +89,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private void sendUnauthorized(HttpServletResponse response, String message)
-            throws IOException {
+    private void sendUnauthorized(
+            HttpServletResponse response,
+            String message
+    ) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");

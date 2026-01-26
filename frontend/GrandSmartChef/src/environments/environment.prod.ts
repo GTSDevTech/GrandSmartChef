@@ -7,6 +7,6 @@ export const environment = {
 */
 export const environment = {
   production: true,
-  apiUrl: 'https://grandsmartchef-app.onrender.com/api',
-  imageBaseUrl: 'https://grandsmartchef-app.onrender.com/api/uploads/profile/'
+  apiUrl: '/api',
+  imageBaseUrl: '/api/uploads/profile/'
 };
