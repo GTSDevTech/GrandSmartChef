@@ -5,12 +5,10 @@ import {
   IonButton,
   IonCol,
   IonContent,
-  IonDatetime, IonDatetimeButton,
   IonGrid,
   IonIcon,
-  IonImg, IonInput,
   IonItem,
-  IonLabel, IonModal,
+  IonLabel,
   IonRow
 } from '@ionic/angular/standalone';
 import {HeaderComponent} from "../../components/headers/main-header/header.component";
@@ -30,9 +28,8 @@ import {DateModalComponent} from "../../components/modals/date-modal/date-modal.
   styleUrls: ['./history.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule,
-    FormsModule, FooterNavComponent, IonCol, IonGrid, IonIcon, IonRow,
-    HistoryCardComponent, RouterModule, IonButton, IonItem, IonLabel
-  ]
+    FormsModule, HeaderComponent, FooterNavComponent, IonCol, IonGrid, IonIcon, IonRow,
+    HistoryCardComponent, DataHistoryUserComponent, RouterModule, IonButton, IonItem, IonLabel, DateModalComponent]
 })
 export class HistoryPage implements OnInit {
 

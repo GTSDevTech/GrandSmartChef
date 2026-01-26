@@ -1,9 +1,12 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {Router, RouterModule} from '@angular/router';
+import { SessionFormComponent } from 'src/app/components/input-forms/session-form/session-form.component';
 import {IonButton, IonContent, IonRow} from "@ionic/angular/standalone";
 import {IonImg} from "@ionic/angular/standalone";
 import {AuthService} from "../../services/auth/auth.service";
+import {ClientService} from "../../services/client/client.service";
 
 @Component({
   selector: 'app-login',
@@ -15,6 +18,7 @@ import {AuthService} from "../../services/auth/auth.service";
     IonImg,
     FormsModule,
     RouterModule,
+    SessionFormComponent,
     IonButton,
     IonRow,
     ]

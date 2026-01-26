@@ -6,6 +6,7 @@ import {BackHeaderComponent} from "../../components/headers/back-header/back-hea
 import {
     IngredientOptionsComponent
 } from "../../components/ingredient-panel/ingredient-options/ingredient-options.component";
+import {IngredientItemComponent} from "../../components/ingredient-panel/ingredient-item/ingredient-item.component";
 import {IngredientDTO} from "../../models/ingredient.model";
 import {IngredientService} from "../../services/ingredient/ingredient.service";
 import {ActivatedRoute} from "@angular/router";
@@ -15,7 +16,7 @@ import {ActivatedRoute} from "@angular/router";
   templateUrl: './ingredients.page.html',
   styleUrls: ['./ingredients.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, BackHeaderComponent, IngredientOptionsComponent, IonCol, IonLabel, IonRow]
+  imports: [IonContent, CommonModule, FormsModule, BackHeaderComponent, IngredientOptionsComponent, IonCol, IonLabel, IonRow, IngredientItemComponent]
 })
   export class IngredientsPage implements OnInit {
     private activatedRoute = inject(ActivatedRoute);

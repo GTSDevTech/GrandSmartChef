@@ -11,6 +11,7 @@ import {BackHeaderComponent} from "../../components/headers/back-header/back-hea
 import {
   IngredientOptionsComponent
 } from "../../components/ingredient-panel/ingredient-options/ingredient-options.component";
+import {CategoryItemComponent} from "../../components/ingredient-panel/category-item/category-item.component";
 import {CategoryDTO} from "../../models/category.model";
 import {IngredientService} from "../../services/ingredient/ingredient.service";
 
@@ -20,7 +21,7 @@ import {IngredientService} from "../../services/ingredient/ingredient.service";
   styleUrls: ['./categories.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule, BackHeaderComponent,
-    IonCol, IngredientOptionsComponent, IonLabel, IonRow]
+    IonCol, CategoryItemComponent, IngredientOptionsComponent, IonLabel, IonRow]
 })
 export class CategoriesPage implements OnInit {
 

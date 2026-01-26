@@ -9,6 +9,7 @@ import {
   IonRow, IonSearchbar,
 } from '@ionic/angular/standalone';
 
+import {HeaderComponent} from "../../../components/headers/main-header/header.component";
 import {Router} from "@angular/router";
 import {ScrollFooterService} from "../../../services/scroll/scroll-footer/scroll-footer.service";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
@@ -23,7 +24,7 @@ import {AlertController, ToastController} from "@ionic/angular";
   templateUrl: './recipe-home.page.html',
   styleUrls: ['./recipe-home.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, IonButton, IonCol, IonIcon, IonRow, CreateRecipeCardPage, IonSearchbar]
+  imports: [IonContent, CommonModule, FormsModule, HeaderComponent, IonButton, IonCol, IonIcon, IonRow, CreateRecipeCardPage, IonSearchbar]
 })
 export class RecipeHomePage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);

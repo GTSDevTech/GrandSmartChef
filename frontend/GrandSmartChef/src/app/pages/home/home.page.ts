@@ -2,8 +2,10 @@ import {Component, effect, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import {HeaderComponent} from "../../components/headers/main-header/header.component";
 import {FooterNavComponent} from "../../components/footer-nav/footer-nav.component";
 import {HomeCardComponent} from "../../components/cards/home-recipe-card/home-card.component";
+import {SearcherComponent} from "../../components/searchers/searcher-home/searcher.component";
 import {FilterComponent} from "../../components/filters/filter-modal/filter.component";
 import {RecipeService} from "../../services/recipe/recipe.service";
 import {ModalService} from "../../services/modal/modal.service";
@@ -19,9 +21,8 @@ import {IngredientService} from "../../services/ingredient/ingredient.service";
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, FooterNavComponent, RouterModule, HomeCardComponent,
-    FilterComponent, IonContent, IonRow, IonCol, IonButton, IonIcon
-  ]
+  imports: [CommonModule, FormsModule, HeaderComponent, FooterNavComponent, RouterModule, HomeCardComponent,
+    SearcherComponent, FilterComponent, IonContent, IonRow, IonCol, IonButton, IonIcon]
 })
 export class HomePage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);

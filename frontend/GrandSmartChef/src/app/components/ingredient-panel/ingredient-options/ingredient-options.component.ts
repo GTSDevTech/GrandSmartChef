@@ -1,5 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {IonButton, IonChip, IonCol, IonImg, IonLabel, IonRow} from "@ionic/angular/standalone";
+import {SearcherIngredientComponent} from "../../searchers/searcher-ingredient/searcher-ingredient.component";
 import {Router} from "@angular/router";
 import {IngredientService} from "../../../services/ingredient/ingredient.service";
 import {RecipeService} from "../../../services/recipe/recipe.service";
@@ -12,6 +13,7 @@ import {RecipeService} from "../../../services/recipe/recipe.service";
     IonRow,
     IonImg,
     IonButton,
+    SearcherIngredientComponent,
     IonCol,
     IonChip,
     IonLabel

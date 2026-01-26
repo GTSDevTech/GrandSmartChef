@@ -60,6 +60,8 @@ import {UnitsModalComponent} from "../../../components/modals/create-recipe-moda
     IonFab,
     IonFabButton,
     IngredientModalComponent,
+    TagModalComponent,
+    UnitsModalComponent,
   ],
 })
   export class RecipeFormPage implements OnInit {

@@ -20,13 +20,7 @@ import {
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,
-    FooterNavComponent, CollectionComponent,
-    RouterModule, CollectionModalComponent,
-    IonContent, IonGrid, IonRow,
-    IonCol, IonIcon, IonButton,
-    AddRecipeToCollectionModalComponent
-  ]
+  imports: [CommonModule, FormsModule, HeaderComponent, FooterNavComponent, CollectionComponent, RouterModule, CollectionModalComponent, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, AddRecipeToCollectionModalComponent]
 })
 export class FavoritesPage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
