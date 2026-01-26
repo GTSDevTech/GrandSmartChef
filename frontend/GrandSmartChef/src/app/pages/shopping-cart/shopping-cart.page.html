@@ -28,10 +28,10 @@
         </ion-button>
       </ion-col>
     </ion-row>
-    @for(listcart of shoppingLists(); track listcart.id ){
+    @for(listCart of shoppingLists(); track listCart.id ){
       <ion-col>
         <app-ingredient-card
-          [shoppingList]="listcart"
+          [shoppingList]="listCart"
           (ingredientToggled)="recalculateProgress()">
         </app-ingredient-card>
       </ion-col>

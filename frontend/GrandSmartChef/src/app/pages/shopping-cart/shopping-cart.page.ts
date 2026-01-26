@@ -1,6 +1,7 @@
 import {Component, effect, inject, OnInit} from '@angular/core';
 import {CommonModule, Location} from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {HeaderComponent} from "../../components/headers/main-header/header.component";
 import {FooterNavComponent} from "../../components/footer-nav/footer-nav.component";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {
@@ -9,7 +10,8 @@ import {
   IonContent,
   IonGrid,
   IonIcon,
-  IonRow
+  IonRow,
+
 } from "@ionic/angular/standalone";
 import {ProgressBarComponent} from "../../components/progress-bar/progress-bar.component";
 import {IngredientCardComponent} from "../../components/cards/list-ingredient-card/ingredient-card.component";
@@ -24,14 +26,10 @@ import {Router} from "@angular/router";
   styleUrls: ['./shopping-cart.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
+    CommonModule, FormsModule,
     FooterNavComponent,
     IonContent, IonGrid,
-    IonRow, IonCol, IonIcon,
-    ProgressBarComponent,
-    IngredientCardComponent,
-    IonButton]
+    IonRow, IonCol, IonIcon, ProgressBarComponent, IngredientCardComponent, IonButton, HeaderComponent]
 })
 export class ShoppingCartPage implements OnInit {
   private scrollFooter = inject(ScrollFooterService);
