@@ -1,7 +1,7 @@
 spring:
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://jdbc:postgresql://dpg-d5rkp615pdvs739qqco0-a.frankfurt-postgres.render.com:5432/grandsmartchefdb?sslmode=require}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://dpg-d5rkp615pdvs739qqco0-a.frankfurt-postgres.render.com:5432/grandsmartchefdb?sslmode=require}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:uck1aQzzyN8rH27GfMcz0sx2pdIMKIvh}
     driver-class-name: org.postgresql.Driver
