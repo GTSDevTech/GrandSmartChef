@@ -23,3 +23,6 @@ application:
       secret-key: NzY4ZjI2MTMxZjg0ZjU5MWQzNjE2ZjQ1ZThkZGI5NGE3NDcyZjRmMTY2ZjQ5NzUw
       expiration-ms: 3600000
 
+server:
+  port: ${PORT:8080}
+  address: 0.0.0.0

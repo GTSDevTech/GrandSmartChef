@@ -1,6 +1,7 @@
 package com.grandchefsupreme.security.config;
 
 import com.grandchefsupreme.security.filter.JwtAuthenticationFilter;
+import static org.springframework.security.config.Customizer.withDefaults;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +52,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URLS).permitAll()
                         .anyRequest().authenticated()
