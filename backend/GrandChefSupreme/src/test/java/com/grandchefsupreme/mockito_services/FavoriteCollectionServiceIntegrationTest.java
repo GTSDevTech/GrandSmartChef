@@ -79,7 +79,7 @@ public class FavoriteCollectionServiceIntegrationTest {
             @DisplayName("Add Recipe To Collection Collection Not Extists")
             void addRecipeToCollectionNotExists() {
                 FavoriteCollectionDTO favoriteCollectionDTO = Mockito.mock(FavoriteCollectionDTO.class);
-                favoriteCollectionDTO.setId(1L);
+
                 //GIVEN
 
                 assertThrows(NotFoundException.class,
@@ -103,6 +103,7 @@ public class FavoriteCollectionServiceIntegrationTest {
                 assertThrows(NotFoundException.class,
                     () -> {
                         favoriteCollectionService.addFavoriteRecipeToCollection(1L, 99L);
+
                         Mockito.verify(favoriteCollectionRepository, Mockito.never()).saveAndFlush(Mockito.any(FavoriteCollection.class));
                         Mockito.verify(recipeRepository, Mockito.times(1)).findById(Mockito.anyLong());
                         Mockito.verify(favoriteCollectionRepository, Mockito.times(1)).findById(Mockito.anyLong());

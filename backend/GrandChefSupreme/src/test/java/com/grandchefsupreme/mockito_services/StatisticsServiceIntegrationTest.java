@@ -1,11 +1,9 @@
 package com.grandchefsupreme.mockito_services;
 
-import com.grandchefsupreme.dto.ClientDTO;
 import com.grandchefsupreme.dto.TopClientDTO;
 import com.grandchefsupreme.dto.TopIngredientsDTO;
 import com.grandchefsupreme.repository.ClientRepository;
 import com.grandchefsupreme.repository.IngredientRepository;
-import com.grandchefsupreme.repository.RecipeRepository;
 import com.grandchefsupreme.service.StatisticService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -76,6 +74,8 @@ public class StatisticsServiceIntegrationTest {
             //WHEN
             Mockito.verify(clientRepository, Mockito.times(1)).findClientByTopRecipes();
             Mockito.verify(clientRepository).findClientByTopRecipes();
+            Mockito.verifyNoMoreInteractions(clientRepository);
+
 
         }
 

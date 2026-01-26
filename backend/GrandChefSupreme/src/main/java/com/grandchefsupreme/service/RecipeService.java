@@ -177,7 +177,7 @@ public class RecipeService {
 
                 for (Tag tag : recipe.getTags()) {
                     Tag resolved = tagRepository
-                            .findByNameIgnoreCase(tag.getName())
+                                .findByNameIgnoreCase(tag.getName())
                             .orElseGet(() -> tagRepository.save(tag));
 
                     resolvedTags.add(resolved);

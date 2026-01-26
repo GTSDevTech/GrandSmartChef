@@ -169,7 +169,7 @@ public class HistoryServiceTest {
                     .orElseThrow(()-> new AssertionError("La historia no se ha guardado en BBDD"));
 
             assertAll("History Created Successfully - Positive Cases",
-                    () -> assertNotNull(findHistory.getId()),
+
                     () -> assertNotNull(findHistory.getId(), "La entidad persistida debe tener id"),
                     () -> assertEquals(client.getId(),
                             findHistory.getClient().getId(),
@@ -202,10 +202,13 @@ public class HistoryServiceTest {
         @Test
         @DisplayName("Falla si el clientId es null - Negative Case")
         void failWhenClientIdIsNull() {
+
             HistoryDTO historyDTO = new HistoryDTO();
             historyDTO.setClientId(null);
             historyDTO.setRecipe(recipeCardDTO);
             historyDTO.setDate("2000-01-01");
+
+
             assertThrows(BadRequestException.class,
                     () -> historyService.createHistory(historyDTO),
                     "Debería fallar por constraint NOT NULL en id_user");
@@ -275,9 +278,11 @@ public class HistoryServiceTest {
             historyRepository.findById(historySaved.getId())
                     .orElseThrow(() -> new AssertionError("La historial de la receta no se ha guardado"));
 
+            //THEN
             LocalDate today = LocalDate.now();
             List<HistoryDTO> findHistoryDTO = historyService.getRecipesLast7daysByClient(today, client.getId());
 
+            //WHEN
             assertAll("Search History successfully",
                     () -> assertEquals(findHistoryDTO.getFirst().getDate(),
                             LocalDate.parse(historyDTO.getDate())
@@ -295,7 +300,6 @@ public class HistoryServiceTest {
                             "La receta devuelta debe coincidir")
 
             );
-
 
         }
 

@@ -2,14 +2,12 @@ package com.grandchefsupreme.mockito_services;
 
 import com.grandchefsupreme.dto.HistoryDTO;
 import com.grandchefsupreme.dto.RecipeCardDTO;
-import com.grandchefsupreme.dto.ShoppingListDTO;
 import com.grandchefsupreme.exceptions.BadRequestException;
 import com.grandchefsupreme.mapper.HistoryMapper;
 import com.grandchefsupreme.model.History;
 import com.grandchefsupreme.model.Recipe;
 import com.grandchefsupreme.repository.HistoryRepository;
 import com.grandchefsupreme.repository.RecipeRatingRepository;
-import com.grandchefsupreme.repository.RecipeRepository;
 import com.grandchefsupreme.service.HistoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +19,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -191,7 +188,7 @@ public class HistoryServiceIntegrationTest {
 
 
     @Nested
-    @DisplayName("Create History of Recipes Successfully")
+    @DisplayName("Search History of Recipes Successfully")
     class SearchRecipesHistorySuccessfully{
 
 
@@ -259,7 +256,7 @@ public class HistoryServiceIntegrationTest {
             );
             Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
             Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
-            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+
         }
 
 
@@ -283,7 +280,7 @@ public class HistoryServiceIntegrationTest {
             );
             Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
             Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
-            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+
         }
 
 
@@ -307,7 +304,7 @@ public class HistoryServiceIntegrationTest {
             );
             Mockito.verify(historyMapper, Mockito.never()).toDTO(Mockito.any(History.class));
             Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
-            Mockito.verify(recipeRatingRepository, Mockito.never()).findAverageRatingByRecipeId(Mockito.anyLong());
+
         }
     }
 

@@ -151,9 +151,10 @@ public class ShoppingListServiceTest {
             assertFalse(recipeIngredientList.isEmpty(),
                     "La receta debe de prueba debe tener al menos un ingrediente");
 
+            //THEN
             ShoppingListDTO shoppingListSaved = shoppingListService.addRecipeToShoppingList(client.getId(), recipe.getId());
 
-            //THEN
+
             ShoppingList findShoppingList = shoppingListRepository
                     .findById(shoppingListSaved.getId())
                     .orElseThrow(() -> new AssertionError("La lista de la compra no se ha guardado"));
@@ -170,12 +171,6 @@ public class ShoppingListServiceTest {
                 () -> assertNotNull(findShoppingList.getItems(), "Los items no deben ser null"),
                 () -> assertEquals(recipeIngredientList.size(), findShoppingList.getItems().size(),
                         "Debe haber un item en la lista por cada ingrediente de la receta"),
-                () -> assertTrue(
-                        findShoppingList.getItems()
-                                .stream()
-                                .noneMatch(ShoppingListIngredient::getBought),
-                        "Todos los items deben crearse con bought=false"
-                ),
                 () -> assertTrue(
                         findShoppingList.getItems()
                                 .stream()

@@ -78,6 +78,7 @@ public class StatisticsServiceTest {
         clientRepository.deleteAll();
         ingredientRepository.deleteAll();
         ingredientCategoryRepository.deleteAll();
+
         IngredientCategory ingredientCategory = new IngredientCategory();
         ingredientCategory.setName("Base");
         ingredientCategory.setDescription("Categoría base para tests");
@@ -237,7 +238,9 @@ public class StatisticsServiceTest {
         @Test
         @DisplayName("Return Empty List When No Recipes - Negative Case")
         void showIngredientRankWhenNoRecipesReturnsEmptyList() {
+
             List<TopIngredientsDTO> result = stadisticsService.getTop5Ingredients();
+
             assertAll("Top ingredientes - sin datos",
                     () -> assertNotNull(result, "La lista no debe ser null"),
                     () -> assertTrue(result.isEmpty(),
@@ -288,8 +291,11 @@ public class StatisticsServiceTest {
             favoriteCollectionService.addFavoriteRecipeToCollection(savedCol1.getId(), receta.getId());
             favoriteCollectionService.addFavoriteRecipeToCollection(savedCol2.getId(), receta.getId());
 
+            //THEN
+
             List<TopClientDTO> result = stadisticsService.getTopRecipes();
 
+            //WHEN
             assertAll("Usuarios populares - Caso positivo",
                     () -> assertNotNull(result, "La lista no debe ser null"),
                     () -> assertFalse(result.isEmpty(), "Debe devolver al menos un usuario"),

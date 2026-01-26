@@ -280,7 +280,8 @@ public class RecipeServiceTest {
                 recipeDTO.setIngredients(new ArrayList<>(List.of(recipeIngredientDTO)));
                 recipeDTO.setSteps(new ArrayList<>(List.of(recipeStepDTO)));
 
-                assertThrows(EntityNotFoundException.class, () -> recipeService.createRecipe(recipeDTO, null),
+                assertThrows(EntityNotFoundException.class,
+                        () -> recipeService.createRecipe(recipeDTO, null),
                         "Ingrediente no existente");
             }
 
@@ -319,8 +320,7 @@ public class RecipeServiceTest {
 
                 assertThrows(BadRequestException.class,
                         () -> recipeService.createRecipe(recipeDTO, null));
-
-            }
+                }
 
             @Test
             @DisplayName("Negative Case - Ingredient is null")
@@ -355,19 +355,21 @@ public class RecipeServiceTest {
                 recipeDTO.setSteps(new ArrayList<>(List.of(recipeStepDTO)));
 
 
-                assertThrows(BadRequestException.class, () -> recipeService.createRecipe(recipeDTO, null));
+                assertThrows(BadRequestException.class,
+                        () -> recipeService.createRecipe(recipeDTO, null));
 
             }
 
             @Test
             @DisplayName("Negative Case - Recipe is null")
-            void failWhenRecipeIsNull() {
+            void failWhenRecipeIsNull() throws IOException {
 
                 //GIVEN
                 RecipeDTO recipeDTO = null;
 
-                assertThrows(BadRequestException.class, () -> recipeService.createRecipe(recipeDTO, null));
 
+                assertThrows(BadRequestException.class,
+                        () -> recipeService.createRecipe(recipeDTO, null));
             }
 
         }
@@ -557,9 +559,10 @@ public class RecipeServiceTest {
         class filterRecipes {
 
             @Test
-            @DisplayName("Sin usuario ni ingredientes - Caso Positivo")
+            @DisplayName("Sin filtros de usuario ni ingredientes - Caso Positivo")
             void searchAllWhenNoFilters() throws IOException {
                 loadRecipeByFilter();
+
                 List<RecipeCardDTO> result = recipeService.searchRecipes(null, null);
 
                 assertAll(
@@ -579,13 +582,13 @@ public class RecipeServiceTest {
             void searchByUserOnly() throws IOException {
                 loadRecipeByFilter();
                 Long userId = client.getId();
+
                 List<RecipeCardDTO> result = recipeService.searchRecipes(userId, null);
 
-                assertAll(
-                        () -> assertThat(result)
+                assertThat(result)
                                 .as("La lista no debe ser nula")
-                                .isNotNull()
-                );
+                                .isNotNull();
+
             }
 
 
@@ -641,7 +644,7 @@ public class RecipeServiceTest {
         void searchByInvalidIngredientOnly() throws IOException {
             loadRecipeByFilter();
 
-            List<Long> ingredientIds = List.of(999L); // id que no existe
+            List<Long> ingredientIds = List.of(999L);
 
             List<RecipeCardDTO> result = recipeService.searchRecipes(null, ingredientIds);
 

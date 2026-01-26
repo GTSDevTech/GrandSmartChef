@@ -6,7 +6,6 @@ import com.grandchefsupreme.model.Client;
 import com.grandchefsupreme.security.service.AuthenticationService;
 import com.grandchefsupreme.security.service.JwtService;
 import com.grandchefsupreme.service.ClientService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,13 +32,6 @@ public class AuthenticationServiceIntegrationTest {
     public JwtService jwtService;
 
 
-    @BeforeAll
-    static void setUp()
-    {
-
-
-
-    }
 
     @Nested
     @DisplayName("Authentication - Positive Cases")
@@ -80,7 +72,7 @@ public class AuthenticationServiceIntegrationTest {
     class ClientNegativeCases{
 
         @Test
-        @DisplayName("Register Client with null DTO and Errors - Negative Case")
+        @DisplayName("Register Client with Null DTO and Errors - Negative Case")
         void createClientWithErrors() {
             //GIVEN
 

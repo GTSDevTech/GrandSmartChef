@@ -74,14 +74,22 @@ public class RecipeServiceIntegrationTest {
             MultipartFile file = Mockito.mock(MultipartFile.class);
             Mockito.when(file.isEmpty()).thenReturn(false);
 
+            Tag tag = Mockito.mock(Tag.class);
+            Mockito.when(tag.getName()).thenReturn("testTag");
+
+            Mockito.when(tagRepository.findByNameIgnoreCase("testTag"))
+                    .thenReturn(Optional.of(tag));
+
+            Recipe recipe = Mockito.mock(Recipe.class);
+            Mockito.when(recipe.getTags()).thenReturn(new HashSet<>(List.of(tag)));
 
             RecipeDTO recipeDTO = new RecipeDTO();
-            recipeDTO.setTags(new HashSet<>(List.of(new TagDTO())));
             recipeDTO.setIngredients(new ArrayList<>(List.of(new RecipeIngredientDTO())));
             recipeDTO.setSteps(new ArrayList<>(List.of(new RecipeStepDTO())));
+            recipeDTO.setTags(new HashSet<>(List.of(Mockito.mock(TagDTO.class))));
 
             //GIVEN
-            Mockito.when(recipeDetailMapper.toEntity(Mockito.any(RecipeDTO.class))).thenReturn(new Recipe());
+            Mockito.when(recipeDetailMapper.toEntity(Mockito.any(RecipeDTO.class))).thenReturn(recipe);
             Mockito.when(fileStorageUtil.saveProfilePhoto(Mockito.any(MultipartFile.class))).thenReturn("uploads/recipe/photo.png");
             Mockito.when(recipeRepository.saveAndFlush(Mockito.any(Recipe.class))).thenReturn(Mockito.mock(Recipe.class));
             Mockito.when(recipeDetailMapper.toDto(Mockito.any(Recipe.class))).thenReturn(Mockito.mock(RecipeDTO.class));
@@ -93,7 +101,7 @@ public class RecipeServiceIntegrationTest {
 
             Mockito.verify(recipeDetailMapper).toEntity(Mockito.any(RecipeDTO.class));
             Mockito.verify(ingredientRepository, Mockito.times(0)).findById(Mockito.anyLong());
-            Mockito.verify(tagRepository ,Mockito.times(0)).findByNameIgnoreCase(Mockito.anyString());
+            Mockito.verify(tagRepository ,Mockito.times(1)).findByNameIgnoreCase(Mockito.anyString());
             Mockito.verify(tagRepository,Mockito.times(0)).save(Mockito.any(Tag.class));
             Mockito.verify(fileStorageUtil, Mockito.times(1)).saveProfilePhoto(Mockito.any(MultipartFile.class));
             Mockito.verify(recipeRepository, Mockito.times(1)).saveAndFlush(Mockito.any(Recipe.class));
@@ -139,7 +147,9 @@ public class RecipeServiceIntegrationTest {
                     BadRequestException.class,
                     () -> {
                         Mockito.when(recipeDTO.getIngredients()).thenReturn(null);
+
                         recipeService.createRecipe(recipeDTO, null);
+
                         Mockito.verify(recipeRepository, Mockito.never()).saveAndFlush(Mockito.any(Recipe.class));
                         Mockito.verify(recipeDetailMapper, Mockito.never()).toDto(Mockito.any(Recipe.class));
                         Mockito.verify(recipeDetailMapper, Mockito.never()).toEntity(Mockito.any(RecipeDTO.class));
