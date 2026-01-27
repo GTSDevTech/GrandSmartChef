@@ -4,11 +4,85 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98728de7-52d5-426c-8697-c13b71fb6d22" name="Changes" comment="" />
+    <list default="true" id="98728de7-52d5-426c-8697-c13b71fb6d22" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/GrandChefSupreme/src/main/java/com/grandchefsupreme/config/StaticResourceConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/GrandChefSupreme/src/main/java/com/grandchefsupreme/security/config/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/GrandChefSupreme/src/main/java/com/grandchefsupreme/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/GrandChefSupreme/src/main/java/com/grandchefsupreme/security/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/GrandChefSupreme/src/main/resources/application-postgres.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/GrandChefSupreme/src/main/resources/application-postgres.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/nginx.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/history-card/history-card.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/history-card/history-card.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/home-recipe-card/home-card.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/home-recipe-card/home-card.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/home-recipe-card/home-card.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/home-recipe-card/home-card.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/list-ingredient-card/ingredient-card.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/cards/list-ingredient-card/ingredient-card.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/collection/collection.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/collection/collection.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/collection/collection.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/collection/collection.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/filters/filter-modal/filter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/filters/filter-modal/filter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/filters/filter-profile/filter-profile.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/filters/filter-profile/filter-profile.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/footer-nav/footer-nav.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/footer-nav/footer-nav.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/headers/back-header/back-header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/headers/back-header/back-header.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/headers/shared-header/shared-header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/headers/shared-header/shared-header.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/img-profile/img-profile.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/img-profile/img-profile.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/input-forms/register-form/register-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/input-forms/register-form/register-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/add-recipe-to-collection-modal/add-recipe-to-collection-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/add-recipe-to-collection-modal/add-recipe-to-collection-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/choose-color/choose-color.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/choose-color/choose-color.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/collection-modal/collection-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/collection-modal/collection-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/create-recipe-modal/ingredient-modal/ingredient-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/create-recipe-modal/ingredient-modal/ingredient-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/modal-rate/modal-rate.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/modals/modal-rate/modal-rate.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/option-panel/desc-shared-card/desc-shared-card.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/option-panel/desc-shared-card/desc-shared-card.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/pop-overs/pop-over-option/pop-over-option.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/pop-overs/pop-over-option/pop-over-option.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/progress-bar/progress-bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/components/progress-bar/progress-bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/admin/create-recipe-card/create-recipe-card.page.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/admin/create-recipe-card/create-recipe-card.page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/admin/create-recipe-card/create-recipe-card.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/admin/create-recipe-card/create-recipe-card.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/admin/recipe-form/recipe-form.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/admin/recipe-form/recipe-form.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/contact/contact.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/contact/contact.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/favorites/favorites.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/favorites/favorites.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/help/help.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/help/help.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/history/history.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/history/history.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/home/home.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/home/home.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/info/info.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/info/info.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/ingredient-categories/categories.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/ingredient-categories/categories.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/ingredients/ingredients.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/ingredients/ingredients.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/recipe-detail/main-recipe.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/recipe-detail/main-recipe.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/register/register.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/register/register.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/settings/settings.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/settings/settings.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/shopping-cart/shopping-cart.page.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/pages/shopping-cart/shopping-cart.page.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/client/client.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/client/client.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/collection/collection.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/collection/collection.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/createRecipe/create-recipe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/createRecipe/create-recipe.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/history/history.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/history/history.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/ingredient/ingredient.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/ingredient/ingredient.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/modal/modal.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/modal/modal.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/recipe/recipe.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/recipe/recipe.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/shoppingList/shopping-list.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/app/services/shoppingList/shopping-list.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/environments/environment.prod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/environments/environment.prod.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx/nginx.conf" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,7 +114,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "android.gradle.sync.needed": "true",
+    "git-widget-placeholder": "Merging main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -55,8 +130,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
-        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
       </set>
     </attachedChunks>
   </component>
@@ -71,6 +146,7 @@
       <workItem from="1769446102527" duration="923000" />
       <workItem from="1769447076303" duration="105000" />
       <workItem from="1769447207288" duration="16161000" />
+      <workItem from="1769511831934" duration="99000" />
     </task>
     <servers />
   </component>
