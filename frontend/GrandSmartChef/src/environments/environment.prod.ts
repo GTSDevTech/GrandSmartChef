@@ -8,5 +8,7 @@ export const environment = {
 export const environment = {
   production: true,
   apiUrl: '/api',
-  imageBaseUrl: '/api/uploads/profile/'
+  // imageBaseUrl: 'http://localhost:8080/api/uploads/profile/'
+
+  imageBaseUrl: 'https://grandsmartchef-app.onrender.com/api/uploads/profile/'
 }
