@@ -58,8 +58,9 @@ export class FavoritesPage implements OnInit {
 
   onCollectionDeleted(id: number) {
     if (!id) return;
-
-    this.collectionService.deleteCollection(id).subscribe();
+    this.collectionService.deleteCollection(id).subscribe({
+      error: (err) => console.error('delete failed', err)
+    });
   }
 
   goToBack() {
