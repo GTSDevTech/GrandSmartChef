@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnInit, Signal, signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal} from '@angular/core';
 import {CommonModule, Location} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -30,7 +30,13 @@ import {environment} from "../../../environments/environment.prod";
   styleUrls: ['./main-recipe.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule,
-    IonRow, IonButton, IonIcon, IonCol, IonGrid, IonList, IonItem, IonLabel, IonText, ModalRateComponent, CollectionModalComponent, FooterNavComponent, IonImg]
+    IonRow, IonButton, IonIcon,
+    IonCol, IonGrid, IonList,
+    IonItem, IonLabel, IonText,
+    ModalRateComponent,
+    CollectionModalComponent,
+    FooterNavComponent, IonImg
+  ]
 })
 export class MainRecipePage implements OnInit {
   private location = inject(Location);

@@ -1,4 +1,4 @@
-import {Component, OnInit, effect, inject, signal} from '@angular/core';
+import {Component, OnInit, effect, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ScrollFooterService } from '../../services/scroll/scroll-footer/scroll-footer.service';
@@ -14,7 +14,7 @@ import {IonButton, IonFooter, IonGrid, IonIcon, IonRow, IonToolbar} from "@ionic
 export class FooterNavComponent implements OnInit {
   hidden = false;
   private scrollFooter = inject(ScrollFooterService);
-  private isPopoverOpen: true | undefined;
+
 
   constructor() {
     effect(() => {

@@ -1,6 +1,6 @@
 <ion-card
-  [style.border]="'2px solid ' + collection()?.color"
-  [style.box-shadow]="'-8px 8px 14px ' + collection()?.color + '50'"
+  [style.border]="'2px solid ' + collection().color"
+  [style.box-shadow]="'-8px 8px 14px ' + collection().color + '50'"
   class="favorite-card">
   <ion-fab horizontal="end" class="card-fab">
     <ion-fab-button size="small" class="option-button-card">
@@ -22,21 +22,21 @@
     </ion-fab-list>
   </ion-fab>
   <ion-card-header
-    [style.background]="collection()?.color"
+    [style.background]="collection().color"
     class="header-collection ion-padding-horizontal ion-padding">
     <ion-card-subtitle
-      [style.background]="collection()?.color"
+      [style.background]="collection().color"
       class="ion-display-flex ion-text-end ion-justify-content-between">
       <ion-item
         lines="none" class="name-collection no-bg-item">
-        <span class="counter-recipe">({{collection()?.recipes?.length ?? 0}})</span>
-        <ion-label>{{collection()?.title}}</ion-label>
+        <span class="counter-recipe">({{collection().recipes?.length ?? 0}})</span>
+        <ion-label>{{collection().title}}</ion-label>
       </ion-item>
     </ion-card-subtitle>
   </ion-card-header>
   <ion-card-content class="ion-margin-vertical">
     <ion-list >
-      @for(recipe of collection()?.recipes; track recipe.id){
+      @for(recipe of collection().recipes; track recipe.id){
         <ion-item
           (click)= navToRecipe(recipe.id)
           [button]="true">

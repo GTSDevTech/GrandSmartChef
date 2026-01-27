@@ -1,5 +1,5 @@
 # Etapa de build
-FROM node:20 AS build
+FROM node:22 AS build
 WORKDIR /app
 
 # Copia package.json y package-lock.json e instala dependencias

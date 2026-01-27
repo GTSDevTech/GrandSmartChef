@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, OnInit, output, signal} from '@angular/core';
+import {Component, computed, inject,OnInit, signal} from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -11,8 +11,7 @@ import {
 } from "@ionic/angular/standalone";
 import {ModalService} from "../../../../services/modal/modal.service";
 import {IngredientDTO} from "../../../../models/ingredient.model";
-import {PreferenceDTO} from "../../../../models/preference.model";
-import {TagDTO} from "../../../../models/tag.model";
+
 
 @Component({
     selector: 'app-ingredient-modal',

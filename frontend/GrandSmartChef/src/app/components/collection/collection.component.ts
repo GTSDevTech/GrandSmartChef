@@ -1,4 +1,4 @@
-import {Component, inject, Input, input, OnInit, output} from '@angular/core';
+import {Component, inject, input, OnInit, output} from '@angular/core';
 import {
   IonButton,
   IonCard,
@@ -13,7 +13,6 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonNote,
   IonThumbnail
 } from "@ionic/angular/standalone";
 import {FavoriteCollectionDTO} from "../../models/collection.model";

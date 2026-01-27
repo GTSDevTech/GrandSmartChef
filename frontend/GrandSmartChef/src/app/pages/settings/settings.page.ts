@@ -4,23 +4,27 @@ import { FormsModule } from '@angular/forms';
 import {
   IonButton,
   IonCard, IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle, IonCardTitle, IonCol,
+  IonCol,
   IonContent,
-  IonHeader, IonIcon, IonItem, IonLabel, IonList,
-  IonRow, IonSegment, IonThumbnail,
-  IonTitle, IonToggle,
-  IonToolbar
+  IonIcon, IonItem, IonLabel, IonList,
+  IonRow,
+  IonToggle,
 } from '@ionic/angular/standalone';
 import {SharedHeaderComponent} from "../../components/headers/shared-header/shared-header.component";
-import {DescSharedCardComponent} from "../../components/option-panel/desc-shared-card/desc-shared-card.component";
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, SharedHeaderComponent, DescSharedCardComponent, IonRow, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonList, IonItem, IonThumbnail, IonLabel, IonToggle, IonIcon, IonCol, IonButton, IonSegment]
+  imports: [IonContent,
+    CommonModule, FormsModule,
+    SharedHeaderComponent,
+    IonRow, IonCard,
+    IonCardContent, IonList, IonItem,
+    IonLabel, IonToggle,
+    IonIcon, IonCol, IonButton
+  ]
 })
 export class SettingsPage implements OnInit {
 

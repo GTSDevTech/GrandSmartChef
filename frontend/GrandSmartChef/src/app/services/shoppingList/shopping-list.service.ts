@@ -2,7 +2,7 @@ import {inject, Injectable, signal} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
-import {catchError, Observable, tap, throwError} from "rxjs";
+import {Observable, tap, throwError} from "rxjs";
 import {ShoppingListDTO} from "../../models/shoppingList.model";
 
 @Injectable({

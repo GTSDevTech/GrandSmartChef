@@ -34,7 +34,7 @@
 
 
       <ion-row class="tags-row">
-        @for (tag of recipe()?.tags; track tag.id) {
+        @for (tag of recipe().tags; track tag.id) {
           <ion-col size="auto" class="ion-no-padding">
             <ion-button class="button-tags" shape="round" size="small">{{tag.name}}</ion-button>
           </ion-col>

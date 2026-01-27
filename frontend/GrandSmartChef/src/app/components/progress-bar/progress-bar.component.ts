@@ -8,7 +8,6 @@ import {ShoppingProgressService} from "../../services/shopping-progress-bar/shop
     styleUrls: ['./progress-bar.component.scss'],
     imports: [
         IonCol,
-        IonItem,
         IonLabel,
         IonProgressBar,
         IonRow

@@ -1,4 +1,4 @@
-import {Component, inject, ElementRef, ViewChild, OnInit, signal, NgIterable, effect} from '@angular/core';
+import {Component, inject, ElementRef, ViewChild, OnInit, signal, effect} from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -15,7 +15,6 @@ import {
   IonList,
   IonRow,
   IonTextarea,
-  IonModal, IonSearchbar, IonSelect, IonSelectOption,
 } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { ScrollFooterService } from '../../../services/scroll/scroll-footer/scroll-footer.service';

@@ -1,8 +1,6 @@
 import {inject, Injectable, signal} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {AuthService} from "../auth/auth.service";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
-import {throwError} from "rxjs";
 import {RecipeCardDTO} from "../../models/recipe-card.model";
 import {RecipeDTO} from "../../models/recipe.model";
 

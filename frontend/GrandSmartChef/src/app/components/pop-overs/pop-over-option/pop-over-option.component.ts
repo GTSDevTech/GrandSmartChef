@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {IonButton, IonCol, IonContent, IonIcon, IonImg, IonItem, IonList, IonPopover} from "@ionic/angular/standalone";
 import {RouterLink} from "@angular/router";
 import {AuthService} from "../../../services/auth/auth.service";

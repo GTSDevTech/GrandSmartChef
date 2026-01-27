@@ -1,5 +1,5 @@
-import {Component, EventEmitter, inject, OnInit, Output, output, signal} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {FormBuilder,FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {
   IonButton,
   IonIcon,
@@ -7,7 +7,6 @@ import {
   IonItem,
   IonRow
 } from "@ionic/angular/standalone";
-import {RouterLink} from "@angular/router";
 
 @Component({
     selector: 'app-register-form',

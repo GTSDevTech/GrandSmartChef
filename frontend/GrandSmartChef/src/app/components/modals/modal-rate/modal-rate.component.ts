@@ -1,33 +1,28 @@
 import {
-  AfterViewInit,
   Component,
   computed,
-  effect,
   inject,
   input,
   OnInit,
   output,
   signal,
-  ViewChild
 } from '@angular/core';
 import {
-  IonAvatar,
   IonButton,
   IonButtons, IonCol,
-  IonContent, IonHeader, IonIcon, IonImg,
-  IonItem, IonLabel,
-  IonList,
-  IonModal, IonRange, IonRow, IonTextarea,
+  IonContent,
+  IonIcon,
+  IonLabel,
+  IonModal,IonRow, IonTextarea,
   IonTitle,
   IonToolbar
 } from "@ionic/angular/standalone";
 import {ModalService} from "../../../services/modal/modal.service";
 import {RatingService} from "../../../services/rating/rating.service";
 import {AuthService} from "../../../services/auth/auth.service";
-import {ToastController} from "@ionic/angular";
 import {ToastType} from "../../../models/Enums/ToastType";
 import {ToastService} from "../../../services/toast/toast-manager.service";
-import {error} from "@angular/compiler-cli/src/transformers/util";
+
 
 @Component({
   selector: 'app-modal-rate',

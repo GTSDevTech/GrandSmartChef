@@ -5,14 +5,11 @@ import {
   IonCol,
   IonContent,
   IonGrid,
-  IonHeader,
   IonIcon,
   IonImg,
   IonRow, IonText,
-  IonTitle,
-  IonToolbar
+
 } from '@ionic/angular/standalone';
-import {IonicModule} from "@ionic/angular";
 import {RegisterFormComponent} from "../../components/input-forms/register-form/register-form.component";
 import {Router, RouterLink} from "@angular/router";
 import {AuthService} from "../../services/auth/auth.service";
@@ -22,7 +19,16 @@ import {AuthService} from "../../services/auth/auth.service";
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RegisterFormComponent, IonCol, IonGrid, IonIcon, IonRow, IonImg, IonContent, RouterLink, IonText]
+  imports: [
+    CommonModule,
+    FormsModule,
+    RegisterFormComponent,
+    IonCol,
+    IonGrid, IonIcon,
+    IonRow, IonImg,
+    IonContent,
+    RouterLink, IonText
+  ]
 })
 export class RegisterPage implements OnInit {
   private auth = inject(AuthService);

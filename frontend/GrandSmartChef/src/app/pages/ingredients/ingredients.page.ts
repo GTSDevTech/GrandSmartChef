@@ -1,7 +1,7 @@
-import {Component, inject, input, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonCol, IonContent, IonHeader, IonLabel, IonRow, IonTitle, IonToolbar} from '@ionic/angular/standalone';
+import {IonCol, IonContent, IonLabel, IonRow} from '@ionic/angular/standalone';
 import {BackHeaderComponent} from "../../components/headers/back-header/back-header.component";
 import {
     IngredientOptionsComponent

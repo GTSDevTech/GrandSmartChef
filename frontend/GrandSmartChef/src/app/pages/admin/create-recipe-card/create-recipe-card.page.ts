@@ -1,16 +1,16 @@
-import {Component, inject, input, OnInit, output} from '@angular/core';
+import {Component, inject, input, output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
   IonCard,
   IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol,
-  IonContent, IonGrid,
-  IonHeader, IonIcon, IonImg, IonRow,
-  IonTitle,
-  IonToolbar
+  IonGrid,
+  IonIcon,
+  IonRow,
+
 } from '@ionic/angular/standalone';
-import {Router, RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {environment} from "../../../../environments/environment.prod";
 

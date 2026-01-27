@@ -5,12 +5,10 @@ import {
   IonButton,
   IonCol,
   IonContent,
-  IonDatetime, IonDatetimeButton,
   IonGrid,
   IonIcon,
-  IonImg, IonInput,
   IonItem,
-  IonLabel, IonModal,
+  IonLabel,
   IonRow
 } from '@ionic/angular/standalone';
 import {HeaderComponent} from "../../components/headers/main-header/header.component";

@@ -1,9 +1,7 @@
 import {inject, Injectable, signal} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {AuthService} from "../auth/auth.service";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {HistoryDTO} from "../../models/history.model";
-import {Observable, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
