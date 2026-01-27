@@ -9,4 +9,4 @@ export const environment = {
   production: true,
   apiUrl: '/api',
   imageBaseUrl: '/api/uploads/profile/'
-};
+}
