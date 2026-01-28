@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 import { ClientDTO } from '../../models/client.model';
 import { ClientLoginDTO } from '../../models/client-login.model';
 import {tap} from "rxjs";

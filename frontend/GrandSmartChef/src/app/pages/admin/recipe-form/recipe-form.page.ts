@@ -27,7 +27,7 @@ import { IngredientDTO } from '../../../models/ingredient.model';
 import { IngredientService } from '../../../services/ingredient/ingredient.service';
 import {TagService} from "../../../services/tag/tag.service";
 import {ToastController} from "@ionic/angular";
-import {environment} from "../../../../environments/environment.prod";
+import {environment} from "../../../../environments/environment";
 import {UnitDTO} from "../../../models/unit.model";
 import {UnitService} from "../../../services/unit/unit.service";
 import {

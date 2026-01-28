@@ -21,7 +21,7 @@ import {ActionSheetController, ToastController} from "@ionic/angular";
 import {FooterNavComponent} from "../../components/footer-nav/footer-nav.component";
 import {ScrollFooterService} from "../../services/scroll/scroll-footer/scroll-footer.service";
 import {ShoppingListService} from "../../services/shoppingList/shopping-list.service";
-import {environment} from "../../../environments/environment.prod";
+import {environment} from "../../../environments/environment";
 
 
 @Component({

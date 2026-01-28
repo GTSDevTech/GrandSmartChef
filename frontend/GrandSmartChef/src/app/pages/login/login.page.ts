@@ -42,7 +42,14 @@ export class LoginPage {
           formData.redirectToCreate ? '/recipe-home' : '/home'
         ]);
       },
-      error: () => alert('Credenciales inválidas')
+      error: (err) => {
+        console.error('[LOGIN] status:', err?.status);
+        console.error('[LOGIN] url:', err?.url);
+        console.error('[LOGIN] message:', err?.message);
+        console.error('[LOGIN] error body:', err?.error);
+        console.error('[LOGIN] full:', JSON.stringify(err, null, 2));
+        alert('Error login (mira Logcat)');
+      }
     });
   }
 }

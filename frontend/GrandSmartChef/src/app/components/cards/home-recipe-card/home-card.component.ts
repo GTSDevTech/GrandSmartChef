@@ -11,7 +11,7 @@ import {
 import {RouterLink} from "@angular/router";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
 import {CollectionService} from "../../../services/collection/collection.service";
-import {environment} from "../../../../environments/environment.prod";
+import {environment} from "../../../../environments/environment";
 import {RatingService} from "../../../services/rating/rating.service";
 
 @Component({

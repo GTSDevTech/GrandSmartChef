@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: '/api',
-  imageBaseUrl: 'http://localhost:8080/api/uploads/profile/'
+  apiUrl: 'https://grandsmartchef-app.onrender.com/api',
+  imageBaseUrl: 'https://grandsmartchef-app.onrender.com'
+
 };
 
 /*
