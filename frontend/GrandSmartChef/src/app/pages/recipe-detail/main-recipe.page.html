@@ -7,15 +7,16 @@
     alt="Imagen de la receta"></ion-img>
     <ion-row class="header-buttons">
       <ion-col size="6" class="col-back-button">
-        <ion-button fill="clear" class="circle-button" (click)="onClose()">
+        <ion-button fill="clear" class="circle-button"
+                    (click)="onClose($event)" (tap)="onClose($event)">
           <ion-icon size="large" name="arrow-back" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
       <ion-col size="6" class="col-favorite-button">
         <ion-button
-          (click)="openFavoriteSelector(recipe()!)"
           fill="clear"
-          class="circle-button">
+          class="circle-button"
+          (click)="onFavoriteClick($event)">
           <ion-icon
             [style.color]="isInFavorites() ? 'var(--primary-orange-color)' : 'white'"
             size="large"

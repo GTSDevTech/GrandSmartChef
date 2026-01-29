@@ -16,6 +16,9 @@ h3{
     object-fit: cover;
   }
 }
+.image-header ion-img {
+  pointer-events: none;
+}
 
 .detail-item{
   display: flex;
@@ -42,6 +45,7 @@ h3{
   padding: 0 16px;
   z-index: 99999;
   display: flex;
+  pointer-events: none;
   align-items: center;
   justify-content: space-between;
 }
@@ -66,6 +70,16 @@ h3{
   display: flex;
   align-items: center;
   justify-content: right;
+}
+
+.col-back-button,
+.col-favorite-button,
+.circle-button {
+  pointer-events: auto;
+}
+
+.circle-button {
+  touch-action: manipulation;
 }
 
 
