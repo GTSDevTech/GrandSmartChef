@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98728de7-52d5-426c-8697-c13b71fb6d22" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/GrandChefSupreme/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/GrandChefSupreme/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/android/app/capacitor.build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/android/app/capacitor.build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/android/capacitor.settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/android/capacitor.settings.gradle" afterDir="false" />
-    </list>
+    <list default="true" id="98728de7-52d5-426c-8697-c13b71fb6d22" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,6 +81,7 @@
       <workItem from="1769511831934" duration="99000" />
       <workItem from="1769512054689" duration="1066000" />
       <workItem from="1769513147935" duration="3460000" />
+      <workItem from="1769593257290" duration="32000" />
     </task>
     <servers />
   </component>
