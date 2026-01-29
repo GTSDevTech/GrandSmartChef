@@ -12,7 +12,7 @@ import {
   IonList, IonModal, IonRow, IonSearchbar, IonToolbar,
 } from "@ionic/angular/standalone";
 import {forkJoin} from "rxjs";
-import {environment} from "../../../../environments/environment.prod";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-add-recipe-to-collection-sheet',

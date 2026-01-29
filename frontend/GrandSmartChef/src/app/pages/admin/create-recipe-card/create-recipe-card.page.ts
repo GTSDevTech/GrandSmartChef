@@ -12,7 +12,7 @@ import {
 } from '@ionic/angular/standalone';
 import {Router} from "@angular/router";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
-import {environment} from "../../../../environments/environment.prod";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-create-recipe-card',

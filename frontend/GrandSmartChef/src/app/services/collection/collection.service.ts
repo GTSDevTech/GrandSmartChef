@@ -89,6 +89,7 @@ export class CollectionService {
       `${this.apiUrl}/${collectionId}/remove/${recipeId}`
     ).pipe(
       tap(() => {
+        this.loaded = false;
         this._collections.update(cols =>
           cols.map(c =>
             c.id !== collectionId

@@ -9,7 +9,7 @@ import {
 } from "@ionic/angular/standalone";
 import {HistoryDTO} from "../../../models/history.model";
 import {RecipeCardDTO} from "../../../models/recipe-card.model";
-import {environment} from "../../../../environments/environment.prod";
+import {environment} from "../../../../environments/environment";
 import {RatingService} from "../../../services/rating/rating.service";
 
 @Component({

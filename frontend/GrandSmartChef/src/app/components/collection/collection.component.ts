@@ -21,7 +21,7 @@ import {CollectionService} from "../../services/collection/collection.service";
 
 import {ModalService} from "../../services/modal/modal.service";
 import {Router} from "@angular/router";
-import {environment} from "../../../environments/environment.prod";
+import {environment} from "../../../environments/environment";
 
 
 @Component({
