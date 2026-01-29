@@ -17,7 +17,7 @@ spring:
 
 application:
   storage:
-    profile-photos: /data/uploads/profile
+    profile-photos: ${APPLICATION_STORAGE_PROFILE_PHOTOS:./uploads/profile-photos}
   security:
     jwt:
       secret-key: NzY4ZjI2MTMxZjg0ZjU5MWQzNjE2ZjQ1ZThkZGI5NGE3NDcyZjRmMTY2ZjQ5NzUw

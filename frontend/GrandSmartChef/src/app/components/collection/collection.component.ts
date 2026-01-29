@@ -102,7 +102,11 @@ export class CollectionComponent  implements OnInit {
     if (!imageUrl) {
       return '/assets/images/recipes/default_profile_image.png';
     }
-    console.log(`${this.backendUrl}${imageUrl}`);
+
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
     return `${this.backendUrl}${imageUrl}`;
   }
 

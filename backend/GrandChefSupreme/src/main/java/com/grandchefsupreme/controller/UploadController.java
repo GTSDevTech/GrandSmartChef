@@ -17,7 +17,7 @@ public class UploadController {
 
     private final Path root = Paths.get("/data/uploads/profile");
 
-    @CrossOrigin(origins = "http://localhost:4200")
+//    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/{filename:.+}")
     public ResponseEntity<UrlResource> getFile(@Valid @PathVariable String filename) {
         try {

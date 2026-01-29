@@ -132,6 +132,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Cloudinary -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.39.0</version>
+        </dependency>
+
         <!-- Suite engine (versión alineada) -->
         <dependency>
             <groupId>org.junit.platform</groupId>

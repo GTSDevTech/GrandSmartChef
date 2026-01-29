@@ -107,17 +107,16 @@ public class ClientService {
                 client.setEmail(registerStep2DTO.getEmail());
             }
         }
-
         if (photoFile != null && !photoFile.isEmpty()) {
-            String photoPath = fileStorageUtil.saveProfilePhoto(photoFile);
-            client.setPhotoProfile(photoPath);
-        } else if (client.getPhotoProfile() == null || client.getPhotoProfile().isEmpty()) {
-            String DEFAULT_PHOTO = "uploads/profile/default_profile_image.png";
-            client.setPhotoProfile(DEFAULT_PHOTO);
+            String publicId = fileStorageUtil.saveProfilePhoto(photoFile);
+            client.setPhotoProfile(publicId);
+        } else if (client.getPhotoProfile() == null || client.getPhotoProfile().isBlank()) {
+
+            String DEFAULT_PHOTO_PUBLIC_ID = "uploads/profile/default_profile_image";
+            client.setPhotoProfile(DEFAULT_PHOTO_PUBLIC_ID);
         }
+
         return clientRepository.saveAndFlush(client);
-
-
     }
 
     public void getClientByUsername(String username) {

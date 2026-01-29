@@ -296,6 +296,11 @@ removeFromCollection(collectionId: number, recipeId: number, showToast = true) {
     if (!imageUrl) {
       return '/assets/images/recipes/default_profile_image.png';
     }
+
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
     return `${this.backendUrl}${imageUrl}`;
   }
 

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: GrandSmartChef-App
+    runtime: docker
+    plan: free
+    dockerfilePath: backend/GrandChefSupreme/Dockerfile
+    dockerContext: backend/GrandChefSupreme
+    envVars:
+      - key: CLOUDINARY_URL
+        value: cloudinary://251237652848468:mspZN6heALbd1XWLEwFJ-I8QjW4@dw2sxbcfr
+
+
+
