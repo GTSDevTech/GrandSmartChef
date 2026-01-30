@@ -45,7 +45,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "android.gradle.sync.needed": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -101,6 +101,7 @@
       <workItem from="1769593257290" duration="32000" />
       <workItem from="1769726449456" duration="401000" />
       <workItem from="1769727715219" duration="4607000" />
+      <workItem from="1769734674351" duration="47000" />
     </task>
     <servers />
   </component>
@@ -113,7 +114,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/backend/GrandChefSupreme/src/main/java/com/grandchefsupreme/security/auth/AuthenticationController.java</url>
           <line>46</line>
-          <properties class="com.grandchefsupreme.security.auth.AuthenticationController" method="completeProfile">
+          <properties class="com.grandchefsupreme.security.auth.AuthenticationController">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -122,7 +123,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/backend/GrandChefSupreme/src/main/java/com/grandchefsupreme/service/ClientService.java</url>
           <line>74</line>
-          <properties class="com.grandchefsupreme.service.ClientService" method="updateProfile">
+          <properties class="com.grandchefsupreme.service.ClientService">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
