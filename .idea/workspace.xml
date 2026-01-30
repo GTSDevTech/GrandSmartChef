@@ -45,7 +45,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "android.gradle.sync.needed": "true",
-    "git-widget-placeholder": "Merging main",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -102,6 +102,7 @@
       <workItem from="1769726449456" duration="401000" />
       <workItem from="1769727715219" duration="4607000" />
       <workItem from="1769734674351" duration="47000" />
+      <workItem from="1769735036327" duration="1136000" />
     </task>
     <servers />
   </component>
