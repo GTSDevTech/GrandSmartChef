@@ -127,12 +127,19 @@ export class AddRecipeToCollectionModalComponent implements OnInit {
     );
   }
 
+
   getRecipeImage(imageUrl?: string | null): string {
     if (!imageUrl) {
       return '/assets/images/recipes/default_profile_image.png';
     }
+
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
     return `${this.backendUrl}${imageUrl}`;
   }
+
 
   close() {
     this.modalService.close('add-recipe-to-collection');

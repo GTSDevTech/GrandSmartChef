@@ -107,7 +107,13 @@ export class AuthService {
     if (!user || !user.photoProfile) {
       return '/assets/images/users/default_profile_image.png';
     }
-    return `${this.backendUrl}${user.photoProfile}`;
+
+    if (user.photoProfile.startsWith('http://') || user.photoProfile.startsWith('https://')) {
+      return user.photoProfile;
+    }
+
+    return '/assets/images/users/default_profile_image.png';
+
   }
 
 

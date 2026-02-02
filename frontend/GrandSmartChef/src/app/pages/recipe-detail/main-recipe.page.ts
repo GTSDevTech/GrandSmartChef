@@ -87,15 +87,16 @@ export class MainRecipePage implements OnInit {
 
   }
 
-  onClose() {
+  onClose(ev?: Event) {
+    ev?.preventDefault();
+    ev?.stopPropagation();
     this.location.back();
   }
+
 
   openModalRate() {
     this.modalService.open('rate');
   }
-
-
 
 
   addToFavorite(collectionId: number, recipe: RecipeDTO): void {
@@ -135,7 +136,21 @@ export class MainRecipePage implements OnInit {
 
   }
 
-  async openFavoriteSelector(recipe: RecipeDTO) {
+  onFavoriteClick(ev?: Event) {
+    ev?.preventDefault();
+    ev?.stopPropagation();
+
+    const r = this.recipe();
+    if (!r) return; // en prod puede tardar más en llegar
+
+    this.openFavoriteSelector(r);
+  }
+
+
+  async openFavoriteSelector(recipe: RecipeDTO, ev?: Event) {
+    ev?.preventDefault();
+    ev?.stopPropagation();
+
     if (!this.user?.id) return;
 
     const recipeId = recipe.id;
@@ -145,7 +160,6 @@ export class MainRecipePage implements OnInit {
       await this.openAddToCollection(recipe);
       return;
     }
-
     await this.openRemoveFromCollection(recipeId);
   }
 
@@ -261,7 +275,7 @@ removeFromCollection(collectionId: number, recipeId: number, showToast = true) {
     this.shoppingListService.addRecipeToCart(userId, recipeId).subscribe({
       next: () => {
         this.toast.create({message: "Receta añadida correctamente a tu lista de Compras", duration: 2000})
-          .then(t => t.present);
+          .then(t => t.present());
       },
       error: () => {
         this.toast.create({message: 'Error al añadir a la lista de compras', duration: 2000})
@@ -282,6 +296,11 @@ removeFromCollection(collectionId: number, recipeId: number, showToast = true) {
     if (!imageUrl) {
       return '/assets/images/recipes/default_profile_image.png';
     }
+
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
     return `${this.backendUrl}${imageUrl}`;
   }
 

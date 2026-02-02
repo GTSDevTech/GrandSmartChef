@@ -62,31 +62,28 @@ export class CollectionComponent  implements OnInit {
     console.log('COLLECTION INPUT:', this.collection());
   }
 
-  async confirmDelete(){
+  async confirmDelete(ev?: Event) {
+    ev?.preventDefault();
+    ev?.stopPropagation();
+
     const alert = await this.alertController.create({
       header: 'Eliminar colección',
       message: '¿Seguro que quieres eliminar esta colección?',
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
+        { text: 'Cancelar', role: 'cancel', cssClass: 'secondary' },
         {
           text: 'Borrar',
           role: 'confirm',
           handler: () => {
             const id = this.collection().id;
-            if (id) {
-              this.deleted.emit(id);
-            }
+            if (id) this.deleted.emit(id);
           }
         }
       ]
     });
+
     await alert.present();
   }
-
 
 
   addRecipe() {
@@ -105,7 +102,11 @@ export class CollectionComponent  implements OnInit {
     if (!imageUrl) {
       return '/assets/images/recipes/default_profile_image.png';
     }
-    console.log(`${this.backendUrl}${imageUrl}`);
+
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
     return `${this.backendUrl}${imageUrl}`;
   }
 

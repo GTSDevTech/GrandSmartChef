@@ -1,12 +1,11 @@
-  // This file can be replaced during build by using the `fileReplacements` array.
+// This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
   production: false,
-  apiUrl: 'https://grandsmartchef-app.onrender.com/api',
-  imageBaseUrl: 'https://grandsmartchef-app.onrender.com'
-
+  apiUrl: '/api',
+  imageBaseUrl: 'http://localhost:8080/api/uploads/profile/'
 };
 
 /*
@@ -15,5 +14,19 @@ export const environment = {
  *
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
+
+Desarrollo con Conexión desde el emulador Android y Capacitor + WEB:
+const API_WEB = '/api';
+const API_RENDER = 'https://grandsmartchef-app.onrender.com/api';
+
+export const environment = {
+  production: false,
+  apiUrl: Capacitor.isNativePlatform() ? API_RENDER : API_WEB,
+  imageBaseUrl: Capacitor.isNativePlatform()
+    ? 'https://grandsmartchef-app.onrender.com'
+    : ''
+};
+
+
  */
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
