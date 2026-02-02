@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98728de7-52d5-426c-8697-c13b71fb6d22" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/GrandSmartChef/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/GrandSmartChef/nginx.conf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
