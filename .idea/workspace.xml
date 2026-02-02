@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98728de7-52d5-426c-8697-c13b71fb6d22" name="Changes" comment="" />
+    <list default="true" id="98728de7-52d5-426c-8697-c13b71fb6d22" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,7 +57,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "ts.external.directory.path": "C:\\Users\\Torre_I9\\Documents\\DAM_24_25_SAFA_REYES\\2_DAM\\Recetas\\GrandSmartChef\\frontend\\GrandSmartChef\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "C:\\Users\\DAM\\Documents\\DAM_SAFA_REYES\\Cocina\\GrandSmartChef\\GrandSmartChef\\frontend\\GrandSmartChef\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -82,6 +84,7 @@
       <workItem from="1769512054689" duration="1066000" />
       <workItem from="1769513147935" duration="3460000" />
       <workItem from="1769593257290" duration="32000" />
+      <workItem from="1769679913277" duration="1553000" />
     </task>
     <servers />
   </component>
